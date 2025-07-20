@@ -3,13 +3,23 @@
 
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import { Download, Share2 } from 'lucide-react';
+import { Download, Share2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SummarizationTool from '@/components/features/summarization-tool';
 import { useBooks } from '@/hooks/use-books';
 import { useToast } from '@/hooks/use-toast';
-import PdfViewer from '@/components/features/pdf-viewer';
+import dynamic from 'next/dynamic';
+
+const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex justify-center items-center h-96 border rounded-lg bg-muted/20">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    </div>
+  ),
+});
+
 
 export default function BookDetailPage() {
   const params = useParams();
