@@ -60,12 +60,12 @@ export default function ManageBooksPage() {
     const form = e.currentTarget;
     const formData = new FormData(form);
     const imageFile = formData.get('coverImage') as File;
-    const pdfFile = formData.get('bookPdf') as File;
+    const bookFile = formData.get('bookFile') as File;
 
-    if (!pdfFile || pdfFile.size === 0) {
+    if (!bookFile || bookFile.size === 0) {
         toast({
             title: "Upload Error",
-            description: "A PDF document is required to upload a book.",
+            description: "A document file (PDF, Word, PPT) is required to upload a book.",
             variant: "destructive"
         });
         return;
@@ -81,7 +81,7 @@ export default function ManageBooksPage() {
     }
 
     try {
-        const pdfUri = await readFileAsDataURL(pdfFile);
+        const fileUri = await readFileAsDataURL(bookFile);
         let coverImageUri = 'https://placehold.co/300x450.png';
 
         if (imageFile && imageFile.size > 0) {
@@ -96,7 +96,7 @@ export default function ManageBooksPage() {
             year: formData.get('year') as string,
             description: formData.get('description') as string,
             coverImage: coverImageUri,
-            pdfUrl: pdfUri,
+            pdfUrl: fileUri,
             dataAiHint: 'book cover'
         };
         
@@ -276,8 +276,8 @@ export default function ManageBooksPage() {
                 <Input id="coverImage" name="coverImage" type="file" accept="image/*" className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="bookPdf" className="text-right">Book PDF</Label>
-                <Input id="bookPdf" name="bookPdf" type="file" accept=".pdf" className="col-span-3" required />
+                <Label htmlFor="bookFile" className="text-right">Document File</Label>
+                <Input id="bookFile" name="bookFile" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx" className="col-span-3" required />
               </div>
             </div>
             <DialogFooter>
