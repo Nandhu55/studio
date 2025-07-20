@@ -42,6 +42,7 @@ export default function BookDetailPage() {
     );
   }
 
+  const hasPdf = book.pdfUrl && book.pdfUrl.startsWith('data:application/pdf;base64,');
   const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
 
   const handleShare = async () => {
@@ -70,7 +71,7 @@ export default function BookDetailPage() {
   };
 
   const handleDownload = async () => {
-    if (!book.pdfUrl || book.pdfUrl === '#') {
+    if (!hasPdf) {
       toast({
           title: "Download Unavailable",
           description: "No PDF document is available for this book.",
@@ -130,12 +131,14 @@ export default function BookDetailPage() {
               />
             </div>
             <div className="mt-6 space-y-2">
-                <Button className="w-full" size="lg" onClick={() => setIsReading(true)}>
-                    <BookOpen className="mr-2 h-5 w-5" />
-                    Read Now
-                </Button>
+                {hasPdf && (
+                    <Button className="w-full" size="lg" onClick={() => setIsReading(true)}>
+                        <BookOpen className="mr-2 h-5 w-5" />
+                        Read Now
+                    </Button>
+                )}
                 <div className="flex flex-col sm:flex-row gap-2">
-                    <Button className="w-full" variant="secondary" onClick={handleDownload}>
+                    <Button className="w-full" variant="secondary" onClick={handleDownload} disabled={!hasPdf}>
                         <Download className="mr-2 h-5 w-5" />
                         Download
                     </Button>

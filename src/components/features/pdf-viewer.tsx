@@ -5,10 +5,11 @@ import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useResizeDetector } from 'react-resize-detector';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -40,6 +41,18 @@ export default function PdfViewer({ file }: PdfViewerProps) {
   
   const goToPrevPage = () => setPageNumber(prev => Math.max(prev - 1, 1));
   const goToNextPage = () => setPageNumber(prev => Math.min(prev + 1, numPages!));
+
+  if (!file || !file.startsWith('data:application/pdf;base64,')) {
+    return (
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>PDF Not Available</AlertTitle>
+          <AlertDescription>
+            A readable PDF document is not available for this book. It may need to be uploaded again.
+          </AlertDescription>
+        </Alert>
+    );
+  }
 
   return (
     <div className="space-y-4">
