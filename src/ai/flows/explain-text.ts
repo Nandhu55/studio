@@ -2,18 +2,12 @@
 'use server';
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-export const ExplainTextInputSchema = z.object({
-  question: z.string().describe('The user question to be answered.'),
-  context: z.string().describe('The content of the book or chapter to provide context for the question.'),
-});
-export type ExplainTextInput = z.infer<typeof ExplainTextInputSchema>;
-
-export const ExplainTextOutputSchema = z.object({
-  explanation: z.string().describe('The explanation of the text.'),
-});
-export type ExplainTextOutput = z.infer<typeof ExplainTextOutputSchema>;
+import {
+  ExplainTextInputSchema,
+  type ExplainTextInput,
+  ExplainTextOutputSchema,
+  type ExplainTextOutput,
+} from '@/ai/flows/types';
 
 export async function explainText(input: ExplainTextInput): Promise<ExplainTextOutput> {
   return explainTextFlow(input);

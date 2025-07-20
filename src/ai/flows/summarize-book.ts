@@ -1,21 +1,13 @@
-// Summarize the content of a book or chapter using generative AI.
 
 'use server';
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const SummarizeBookInputSchema = z.object({
-  content: z.string().describe('The content of the book or chapter to summarize.'),
-  bookTitle: z.string().describe('The title of the book.'),
-  chapterTitle: z.string().optional().describe('The title of the chapter, if summarizing a specific chapter.'),
-});
-export type SummarizeBookInput = z.infer<typeof SummarizeBookInputSchema>;
-
-const SummarizeBookOutputSchema = z.object({
-  summary: z.string().describe('The summary of the book or chapter.'),
-});
-export type SummarizeBookOutput = z.infer<typeof SummarizeBookOutputSchema>;
+import {
+  SummarizeBookInputSchema,
+  type SummarizeBookInput,
+  SummarizeBookOutputSchema,
+  type SummarizeBookOutput,
+} from '@/ai/flows/types';
 
 export async function summarizeBook(input: SummarizeBookInput): Promise<SummarizeBookOutput> {
   return summarizeBookFlow(input);
