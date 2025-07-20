@@ -1,9 +1,10 @@
+
 'use client';
 
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { BookMarked, LayoutDashboard, LogOut, Users, Book, Shapes, Home, User } from 'lucide-react';
+import { BookMarked, LayoutDashboard, LogOut, Users, Book, Shapes, Home, User, FileText } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -33,6 +34,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const getPageTitle = () => {
     if (pathname === '/admin/dashboard') return 'Dashboard';
     if (pathname === '/admin/manage-books') return 'Manage Books';
+    if (pathname === '/admin/manage-question-papers') return 'Manage Exam Papers';
     if (pathname === '/admin/manage-users') return 'Manage Users';
     if (pathname === '/admin/manage-categories') return 'Manage Categories';
     return 'Admin Panel';
@@ -80,6 +82,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Link href="/admin/manage-books">
                     <Book />
                     <span>Manage Books</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Manage Exam Papers" isActive={pathname === '/admin/manage-question-papers'}>
+                  <Link href="/admin/manage-question-papers">
+                    <FileText />
+                    <span>Manage Exam Papers</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

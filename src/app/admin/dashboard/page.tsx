@@ -1,20 +1,24 @@
+
 'use client';
 
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Book, Shapes } from 'lucide-react';
+import { Users, Book, Shapes, FileText } from 'lucide-react';
 import { useBooks } from '@/hooks/use-books';
 import { useUsers } from '@/hooks/use-users';
 import { useCategories } from '@/hooks/use-categories';
+import { useQuestionPapers } from '@/hooks/use-question-papers';
 
 export default function AdminDashboard() {
   const { books } = useBooks();
   const { users } = useUsers();
   const { categories } = useCategories();
+  const { questionPapers } = useQuestionPapers();
 
   const totalBooks = books.length;
   const totalUsers = users.length;
   const totalCategories = categories.filter(c => c !== 'All').length;
+  const totalQuestionPapers = questionPapers.length;
 
   return (
     <div className="space-y-6">
@@ -25,7 +29,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -46,6 +50,15 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Exam Papers</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalQuestionPapers}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Categories</CardTitle>
             <Shapes className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -59,7 +72,7 @@ export default function AdminDashboard() {
         <div>
           <h3 className="text-xl font-semibold">Quick Links</h3>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
             <Link href="/admin/manage-books" className="block">
                 <Card className="hover:bg-muted/50 transition-colors">
                     <CardHeader>
@@ -67,6 +80,16 @@ export default function AdminDashboard() {
                     </CardHeader>
                     <CardContent>
                         <p className="text-muted-foreground">View, upload, and delete books from the library.</p>
+                    </CardContent>
+                </Card>
+            </Link>
+            <Link href="/admin/manage-question-papers" className="block">
+                <Card className="hover:bg-muted/50 transition-colors">
+                    <CardHeader>
+                        <CardTitle>Manage Exam Papers</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground">Upload and manage past exam question papers.</p>
                     </CardContent>
                 </Card>
             </Link>
