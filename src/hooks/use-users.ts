@@ -33,10 +33,14 @@ export function useUsers() {
     }
   };
 
-  const addUser = (user: Omit<User, 'avatarUrl'>) => {
+  const addUser = (user: Omit<User, 'avatarUrl' | 'course' | 'year' | 'semester' | 'phone'>) => {
     const newUser: User = {
       ...user,
-      avatarUrl: 'https://placehold.co/100x100.png'
+      avatarUrl: 'https://placehold.co/100x100.png',
+      course: '',
+      year: '',
+      semester: '',
+      phone: '',
     }
     const updatedUsers = [...users, newUser];
     updateStoredUsers(updatedUsers);

@@ -9,9 +9,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Edit, Sun, Moon, Palette, Camera } from 'lucide-react';
+import { User, Mail, Edit, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, GraduationCap, Phone } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useUsers } from '@/hooks/use-users';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { years, semesters } from '@/lib/data';
 
 export default function ProfilePage() {
   const { toast } = useToast();
@@ -24,13 +26,18 @@ export default function ProfilePage() {
   const [name, setName] = useState(currentUser?.name || 'B.Tech Student');
   const [email, setEmail] = useState(currentUser?.email || 'student@example.com');
   const [avatarUrl, setAvatarUrl] = useState(currentUser?.avatarUrl || 'https://placehold.co/100x100.png');
+  const [course, setCourse] = useState(currentUser?.course || '');
+  const [year, setYear] = useState(currentUser?.year || '');
+  const [semester, setSemester] = useState(currentUser?.semester || '');
+  const [phone, setPhone] = useState(currentUser?.phone || '');
+
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleProfileUpdate = (e: React.FormEvent) => {
     e.preventDefault();
     if (currentUser) {
-      updateUser(currentUser.id, { name });
+      updateUser(currentUser.id, { name, course, year, semester, phone });
       toast({
         title: 'Profile Updated',
         description: 'Your profile information has been successfully updated.',
@@ -96,22 +103,70 @@ export default function ProfilePage() {
         <Separator />
         <CardContent className="pt-6">
           <form onSubmit={handleProfileUpdate} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <span>Full Name</span>
-              </Label>
-              <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  <span>Full Name</span>
+                </Label>
+                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email" className="flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  <span>Email Address</span>
+                </Label>
+                <Input id="email" type="email" value={email} disabled />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email" className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <span>Email Address</span>
-              </Label>
-              <Input id="email" type="email" value={email} disabled />
-              <p className="text-xs text-muted-foreground">Email address cannot be changed.</p>
+             <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <Label htmlFor="course" className="flex items-center gap-2">
+                        <BookCopy className="h-4 w-4" />
+                        <span>Course/Branch</span>
+                    </Label>
+                    <Input id="course" value={course} onChange={(e) => setCourse(e.target.value)} placeholder="e.g., Computer Science"/>
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="phone" className="flex items-center gap-2">
+                        <Phone className="h-4 w-4" />
+                        <span>Phone Number</span>
+                    </Label>
+                    <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="e.g., 123-456-7890"/>
+                </div>
             </div>
-            <Button type="submit" className="w-full">
+            <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <Label htmlFor="year" className="flex items-center gap-2">
+                        <CalendarDays className="h-4 w-4" />
+                        <span>Year</span>
+                    </Label>
+                    <Select value={year} onValueChange={setYear}>
+                        <SelectTrigger id="year">
+                            <SelectValue placeholder="Select your year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="semester" className="flex items-center gap-2">
+                        <GraduationCap className="h-4 w-4" />
+                        <span>Semester</span>
+                    </Label>
+                    <Select value={semester} onValueChange={setSemester}>
+                        <SelectTrigger id="semester">
+                            <SelectValue placeholder="Select your semester" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {semesters.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+
+            <Button type="submit" className="w-full !mt-8">
               <Edit className="mr-2 h-4 w-4" />
               Update Profile
             </Button>
