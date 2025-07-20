@@ -88,7 +88,7 @@ export default function ManageQuestionPapersPage() {
             year: formData.get('year') as string,
             semester: formData.get('semester') as string,
             university: formData.get('university') as string,
-            type: formData.get('type') as 'Midterm' | 'Final' | 'Quiz',
+            type: formData.get('type') as 'Mid-1' | 'Mid-2' | 'Semester End' | 'Quiz',
             downloadUrl: fileUri,
         };
         
@@ -272,8 +272,9 @@ export default function ManageQuestionPapersPage() {
                         <SelectValue placeholder="Select paper type" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="Midterm">Midterm</SelectItem>
-                        <SelectItem value="Final">Final</SelectItem>
+                        <SelectItem value="Mid-1">Mid-1</SelectItem>
+                        <SelectItem value="Mid-2">Mid-2</SelectItem>
+                        <SelectItem value="Semester End">Semester End</SelectItem>
                         <SelectItem value="Quiz">Quiz</SelectItem>
                     </SelectContent>
                 </Select>
