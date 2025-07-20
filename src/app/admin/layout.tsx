@@ -1,7 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { BookMarked, LayoutDashboard, LogOut } from 'lucide-react';
 import {
   SidebarProvider,
@@ -18,6 +19,16 @@ import {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isAdmin = sessionStorage.getItem('isAdmin');
+      if (isAdmin !== 'true') {
+        router.replace('/login');
+      }
+    }
+  }, [router]);
 
   return (
     <SidebarProvider>
