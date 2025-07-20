@@ -34,7 +34,7 @@ export default function ProfilePage() {
 
       <Card>
         <CardHeader className="flex flex-col items-center text-center">
-          <Avatar className="h-24 w-24 mb-4 border-4 border-primary">
+          <Avatar className="h-24 w-24 mb-4 border-4 border-cyan-400">
             <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person portrait" />
             <AvatarFallback>
               <User className="w-10 h-10" />

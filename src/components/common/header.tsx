@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -32,50 +33,52 @@ export default function Header() {
             B-Tech Hub
           </span>
         </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-              <Avatar className="h-10 w-10 border-2 border-cyan-400/50 hover:border-primary transition-colors duration-300">
-                <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person portrait" />
-                <AvatarFallback>
-                  <User />
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">B.Tech Student</p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  student@example.com
-                </p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-             <DropdownMenuItem asChild>
-                <Link href="/profile">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </Link>
-              </DropdownMenuItem>
-            {isAdmin && (
+        <div className="flex items-center gap-2">
+           <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Avatar className="h-10 w-10 border-2 border-cyan-400/50 hover:border-primary transition-colors duration-300">
+                  <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person portrait" />
+                  <AvatarFallback>
+                    <User />
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">B.Tech Student</p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    student@example.com
+                  </p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/admin/dashboard">
-                  <LayoutDashboard className="mr-2 h-4 w-4" />
-                  <span>Admin Dashboard</span>
+                  <Link href="/profile">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+              {isAdmin && (
+                <DropdownMenuItem asChild>
+                  <Link href="/admin/dashboard">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    <span>Admin Dashboard</span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/login">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
                 </Link>
               </DropdownMenuItem>
-            )}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/login">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );
