@@ -8,18 +8,38 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useUsers } from '@/hooks/use-users';
+import { useToast } from '@/hooks/use-toast';
 
 export default function SignupPage() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const { addUser } = useUsers();
+  const { toast } = useToast();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push('/');
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+
+    addUser({
+      id: String(Date.now()),
+      name,
+      email,
+      signedUpAt: new Date().toISOString(),
+    });
+
+    toast({
+        title: "Account Created",
+        description: "You can now log in with your credentials.",
+    });
+
+    router.push('/login');
   };
 
   return (
@@ -42,21 +62,21 @@ export default function SignupPage() {
                 <Label htmlFor="name">Full Name</Label>
                  <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input id="name" placeholder="John Doe" required className="pl-10" />
+                  <Input id="name" name="name" placeholder="John Doe" required className="pl-10" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input id="email" type="email" placeholder="student@example.com" required className="pl-10" />
+                  <Input id="email" name="email" type="email" placeholder="student@example.com" required className="pl-10" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input id="password" type="password" placeholder="••••••••" required className="pl-10" />
+                  <Input id="password" name="password" type="password" placeholder="••••••••" required className="pl-10" />
                 </div>
               </div>
               <Button type="submit" className="w-full !mt-6">Create Account</Button>

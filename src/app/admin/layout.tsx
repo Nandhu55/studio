@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { BookMarked, LayoutDashboard, LogOut } from 'lucide-react';
+import { BookMarked, LayoutDashboard, LogOut, Users, Book } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -30,6 +30,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [router]);
 
+  const getPageTitle = () => {
+    if (pathname === '/admin/dashboard') return 'Dashboard';
+    if (pathname === '/admin/manage-books') return 'Manage Books';
+    if (pathname === '/admin/manage-users') return 'Manage Users';
+    return 'Admin Panel';
+  }
+
   return (
     <SidebarProvider>
         <Sidebar>
@@ -48,6 +55,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Link href="/admin/dashboard">
                     <LayoutDashboard />
                     <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Manage Books" isActive={pathname === '/admin/manage-books'}>
+                  <Link href="/admin/manage-books">
+                    <Book />
+                    <span>Manage Books</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Manage Users" isActive={pathname === '/admin/manage-users'}>
+                  <Link href="/admin/manage-users">
+                    <Users />
+                    <span>Manage Users</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -71,7 +94,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <div className="md:hidden">
                     <SidebarTrigger />
                 </div>
-                <h1 className="font-headline text-2xl font-bold ml-4 md:ml-0">Dashboard</h1>
+                <h1 className="font-headline text-2xl font-bold ml-4 md:ml-0">{getPageTitle()}</h1>
             </header>
             <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
         </SidebarInset>
