@@ -2,17 +2,19 @@
 'use client';
 
 import { useState } from 'react';
+import { useTheme } from 'next-themes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Edit } from 'lucide-react';
+import { User, Mail, Edit, Sun, Moon, Palette } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 export default function ProfilePage() {
   const { toast } = useToast();
+  const { setTheme, theme } = useTheme();
   const [name, setName] = useState('B.Tech Student');
   const [email, setEmail] = useState('student@example.com');
 
@@ -66,6 +68,34 @@ export default function ProfilePage() {
               Update Profile
             </Button>
           </form>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Palette className="h-5 w-5" />
+            <span>Appearance</span>
+          </CardTitle>
+          <CardDescription>Choose how B-Tech Hub looks to you.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              variant={theme === 'light' ? 'default' : 'outline'}
+              onClick={() => setTheme('light')}
+            >
+              <Sun className="mr-2 h-4 w-4" />
+              Light
+            </Button>
+            <Button
+              variant={theme === 'dark' ? 'default' : 'outline'}
+              onClick={() => setTheme('dark')}
+            >
+              <Moon className="mr-2 h-4 w-4" />
+              Dark
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
