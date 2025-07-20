@@ -3,8 +3,16 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { BookMarked, LogOut, User, LayoutDashboard, Terminal } from 'lucide-react';
+import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,10 +23,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useUsers } from '@/hooks/use-users';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
   const { users } = useUsers();
+  const { toast } = useToast();
   
   // In a real app, you'd get the current user from session/auth context
   const currentUser = users[0]; 
@@ -39,6 +49,35 @@ export default function Header() {
           </span>
         </Link>
         <div className="flex items-center gap-2">
+            <Button asChild variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10">
+                <Link href="/dashboard">
+                    <Home className="h-5 w-5" />
+                    <span className="sr-only">Home</span>
+                </Link>
+            </Button>
+
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10">
+                        <Phone className="h-5 w-5" />
+                        <span className="sr-only">Contact Us</span>
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                    <DialogTitle>Contact Us</DialogTitle>
+                    <DialogDescription>
+                        For any support or inquiries, please reach out to us.
+                    </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-2">
+                        <p><strong>Email:</strong> support@btech-hub.com</p>
+                        <p><strong>Admin Email:</strong> gnreddy3555@gmail.com</p>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+
            <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
