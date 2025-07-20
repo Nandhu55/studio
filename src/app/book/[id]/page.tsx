@@ -1,16 +1,21 @@
+'use client';
+
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { BookOpen } from 'lucide-react';
-import { books } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SummarizationTool from '@/components/features/summarization-tool';
+import { useBooks } from '@/hooks/use-books';
 
 export default function BookDetailPage({ params }: { params: { id: string } }) {
+  const { books } = useBooks();
   const book = books.find(b => b.id === params.id);
 
   if (!book) {
-    notFound();
+    // Return a loading state or a not found component
+    // notFound() should be used in Server Components. For now, we can show a message.
+     return <div>Loading book details...</div>;
   }
 
   return (

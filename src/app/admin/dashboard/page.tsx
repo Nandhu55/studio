@@ -29,8 +29,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { books as initialBooks, categories, type Book } from '@/lib/data';
+import { categories, type Book } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
+import { useBooks } from '@/hooks/use-books';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,7 +44,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 export default function AdminDashboard() {
-  const [books, setBooks] = useState<Book[]>(initialBooks);
+  const { books, addBook, deleteBook } = useBooks();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
@@ -62,7 +63,7 @@ export default function AdminDashboard() {
       pdfUrl: '#',
       dataAiHint: 'book cover'
     };
-    setBooks(prev => [newBook, ...prev]);
+    addBook(newBook);
     setIsUploadDialogOpen(false);
     toast({
       title: "Book Uploaded",
@@ -77,7 +78,7 @@ export default function AdminDashboard() {
 
   const handleDeleteBook = () => {
     if (bookToDelete) {
-      setBooks(prev => prev.filter(b => b.id !== bookToDelete.id));
+      deleteBook(bookToDelete.id);
       toast({
         title: "Book Deleted",
         description: `"${bookToDelete.title}" has been removed from the library.`,

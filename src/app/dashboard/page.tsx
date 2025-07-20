@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { books, categories } from '@/lib/data';
+import { categories } from '@/lib/data';
 import BookCard from '@/components/common/book-card';
 import { Button } from '@/components/ui/button';
 import { Terminal } from 'lucide-react';
@@ -12,10 +12,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import { useBooks } from '@/hooks/use-books';
 
 
 export default function LibraryPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const { books } = useBooks();
 
   const filteredBooks = selectedCategory === 'All'
     ? books
