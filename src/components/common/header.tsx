@@ -29,7 +29,7 @@ export default function Header() {
         <Link href="/dashboard" className="flex items-center gap-3 group">
           <Terminal className="h-8 w-8 text-cyan-400 group-hover:text-primary transition-colors duration-300" />
           <span className="font-headline text-2xl font-bold text-primary-foreground tracking-tighter group-hover:text-primary transition-colors duration-300">
-            B-Tech eBooks Hub
+            B-Tech Hub
           </span>
         </Link>
         <DropdownMenu>

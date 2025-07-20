@@ -31,7 +31,7 @@ export default function SignupPage() {
           <CardHeader className="text-center">
             <div className="flex justify-center items-center gap-2 mb-2">
               <BookMarked className="h-10 w-10 text-primary" />
-              <h1 className="font-headline text-3xl font-bold text-primary">B-Tech eBooks Hub</h1>
+              <h1 className="font-headline text-3xl font-bold text-primary">B-Tech Hub</h1>
             </div>
             <CardTitle className="font-headline text-2xl">Create an Account</CardTitle>
             <CardDescription>Join our community of learners today</CardDescription>

@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'B-Tech eBooks Hub',
+  title: 'B-Tech Hub',
   description: 'A digital library for B.Tech students with AI-powered summaries.',
 };
 
