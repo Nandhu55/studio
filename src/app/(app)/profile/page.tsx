@@ -7,13 +7,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Edit, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, GraduationCap, Phone } from 'lucide-react';
+import { User, Mail, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, GraduationCap, Phone } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useUsers } from '@/hooks/use-users';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { years, semesters } from '@/lib/data';
 
 export default function ProfilePage() {
   const { toast } = useToast();
@@ -23,27 +20,8 @@ export default function ProfilePage() {
   // For this demo, we'll assume the first user is the logged-in user.
   const currentUser = users[0];
 
-  const [name, setName] = useState(currentUser?.name || 'B.Tech Student');
-  const [email, setEmail] = useState(currentUser?.email || 'student@example.com');
   const [avatarUrl, setAvatarUrl] = useState(currentUser?.avatarUrl || 'https://placehold.co/100x100.png');
-  const [course, setCourse] = useState(currentUser?.course || '');
-  const [year, setYear] = useState(currentUser?.year || '');
-  const [semester, setSemester] = useState(currentUser?.semester || '');
-  const [phone, setPhone] = useState(currentUser?.phone || '');
-
-
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleProfileUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (currentUser) {
-      updateUser(currentUser.id, { name, course, year, semester, phone });
-      toast({
-        title: 'Profile Updated',
-        description: 'Your profile information has been successfully updated.',
-      });
-    }
-  };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -65,19 +43,29 @@ export default function ProfilePage() {
   if (!currentUser) {
     return <div>Loading profile...</div>
   }
+  
+  const ProfileDetailItem = ({ icon: Icon, label, value }: { icon: React.ElementType, label: string, value?: string }) => (
+    <div className="flex items-start gap-4">
+      <Icon className="h-6 w-6 text-muted-foreground mt-1" />
+      <div>
+        <p className="text-sm text-muted-foreground">{label}</p>
+        <p className="font-medium">{value || 'Not set'}</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div className="text-center">
         <h1 className="font-headline text-4xl font-bold tracking-tight">Your Profile</h1>
-        <p className="mt-2 text-muted-foreground">Manage your account settings and preferences.</p>
+        <p className="mt-2 text-muted-foreground">View your account details and manage preferences.</p>
       </div>
 
       <Card>
         <CardHeader className="flex flex-col items-center text-center">
           <div className="relative group">
             <Avatar className="h-24 w-24 mb-4 border-4 border-cyan-400">
-              <AvatarImage src={avatarUrl} alt="User" data-ai-hint="person portrait" />
+              <AvatarImage src={avatarUrl} alt={currentUser.name} data-ai-hint="person portrait" />
               <AvatarFallback>
                 <User className="w-10 h-10" />
               </AvatarFallback>
@@ -97,80 +85,25 @@ export default function ProfilePage() {
               onChange={handleAvatarChange}
             />
           </div>
-          <CardTitle className="text-2xl">{name}</CardTitle>
-          <CardDescription>{email}</CardDescription>
+          <CardTitle className="text-2xl">{currentUser.name}</CardTitle>
+          <CardDescription>{currentUser.email}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent className="pt-6">
-          <form onSubmit={handleProfileUpdate} className="space-y-6">
+          <div className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span>Full Name</span>
-                </Label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email" className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  <span>Email Address</span>
-                </Label>
-                <Input id="email" type="email" value={email} disabled />
-              </div>
-            </div>
-             <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                    <Label htmlFor="course" className="flex items-center gap-2">
-                        <BookCopy className="h-4 w-4" />
-                        <span>Course/Branch</span>
-                    </Label>
-                    <Input id="course" value={course} onChange={(e) => setCourse(e.target.value)} placeholder="e.g., Computer Science"/>
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="phone" className="flex items-center gap-2">
-                        <Phone className="h-4 w-4" />
-                        <span>Phone Number</span>
-                    </Label>
-                    <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="e.g., 123-456-7890"/>
-                </div>
+                <ProfileDetailItem icon={User} label="Full Name" value={currentUser.name} />
+                <ProfileDetailItem icon={Mail} label="Email Address" value={currentUser.email} />
             </div>
             <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                    <Label htmlFor="year" className="flex items-center gap-2">
-                        <CalendarDays className="h-4 w-4" />
-                        <span>Year</span>
-                    </Label>
-                    <Select value={year} onValueChange={setYear}>
-                        <SelectTrigger id="year">
-                            <SelectValue placeholder="Select your year" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="semester" className="flex items-center gap-2">
-                        <GraduationCap className="h-4 w-4" />
-                        <span>Semester</span>
-                    </Label>
-                    <Select value={semester} onValueChange={setSemester}>
-                        <SelectTrigger id="semester">
-                            <SelectValue placeholder="Select your semester" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {semesters.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                </div>
+                <ProfileDetailItem icon={BookCopy} label="Course/Branch" value={currentUser.course} />
+                <ProfileDetailItem icon={Phone} label="Phone Number" value={currentUser.phone} />
             </div>
-
-            <Button type="submit" className="w-full !mt-8">
-              <Edit className="mr-2 h-4 w-4" />
-              Update Profile
-            </Button>
-          </form>
+            <div className="grid md:grid-cols-2 gap-6">
+                <ProfileDetailItem icon={CalendarDays} label="Year" value={currentUser.year} />
+                <ProfileDetailItem icon={GraduationCap} label="Semester" value={currentUser.semester} />
+            </div>
+          </div>
         </CardContent>
       </Card>
       
