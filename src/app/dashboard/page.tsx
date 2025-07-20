@@ -36,7 +36,7 @@ export default function LibraryPage() {
   return (
     <div className="space-y-8 sm:space-y-12">
       <div className="text-center p-6 sm:p-8 border border-primary/20 rounded-lg bg-card/50 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-cyan opacity-10"></div>
+        <div className="absolute inset-0 bg-grid-cyan bg-cyan-950/10 [mask-image:linear-gradient(to_bottom,white_5%,transparent_80%)]"></div>
         <div className="relative">
           <h1 className="font-headline text-4xl sm:text-5xl font-bold tracking-tighter text-cyan-400 drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]">COMMAND CENTER</h1>
           <p className="text-muted-foreground mt-2 text-base sm:text-lg">Welcome back, Student. Access your digital arsenal.</p>

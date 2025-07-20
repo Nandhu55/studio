@@ -11,7 +11,7 @@ interface BookCardProps {
 export default function BookCard({ book }: BookCardProps) {
   return (
     <Link href={`/book/${book.id}`} className="group block h-full">
-      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 ease-in-out bg-card/60 backdrop-blur-sm border-primary/20 hover:border-primary/80 hover:shadow-[0_0_20px_theme(colors.primary.DEFAULT)] hover:-translate-y-1">
+      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 ease-in-out bg-card/60 backdrop-blur-sm border-primary/20 hover:border-primary/80 hover:shadow-[0_0_20px_theme(colors.cyan.DEFAULT)] hover:-translate-y-1">
         <div className="relative aspect-[2/3] w-full">
           <Image
             src={book.coverImage}
@@ -21,7 +21,7 @@ export default function BookCard({ book }: BookCardProps) {
             sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
             data-ai-hint={book.dataAiHint}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent group-hover:from-black/20 transition-all duration-300"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent group-hover:from-black/40 transition-all duration-300"></div>
         </div>
         <CardContent className="p-3 flex-grow flex flex-col justify-between">
           <div>
