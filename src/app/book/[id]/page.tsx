@@ -42,7 +42,10 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
           </div>
         </div>
         <div className="md:col-span-2">
-          <Badge variant="secondary" className="mb-2">{book.category}</Badge>
+          <div className="flex flex-wrap gap-2 mb-2">
+            <Badge variant="secondary">{book.category}</Badge>
+            <Badge variant="outline">{book.year}</Badge>
+          </div>
           <h1 className="font-headline text-4xl md:text-5xl font-bold">{book.title}</h1>
           <p className="mt-2 text-xl text-muted-foreground">by {book.author}</p>
           

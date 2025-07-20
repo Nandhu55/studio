@@ -23,12 +23,15 @@ export default function BookCard({ book }: BookCardProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent group-hover:from-black/20 transition-all duration-300"></div>
         </div>
-        <CardContent className="p-4 flex-grow flex flex-col justify-end">
+        <CardContent className="p-4 flex-grow flex flex-col justify-between">
           <div>
-            <Badge variant="secondary" className="mb-2 bg-cyan-400/10 text-cyan-400 border-cyan-400/20">{book.category}</Badge>
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              <Badge variant="secondary" className="bg-cyan-400/10 text-cyan-400 border-cyan-400/20">{book.category}</Badge>
+              <Badge variant="outline" className="text-xs">{book.year}</Badge>
+            </div>
             <h3 className="font-headline text-md font-bold leading-tight line-clamp-2 text-primary-foreground">{book.title}</h3>
-            <p className="text-sm text-muted-foreground mt-1 line-clamp-1">{book.author}</p>
           </div>
+           <p className="text-sm text-muted-foreground mt-2 line-clamp-1">{book.author}</p>
         </CardContent>
       </Card>
     </Link>

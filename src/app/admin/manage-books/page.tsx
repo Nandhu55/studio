@@ -29,7 +29,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { categories, type Book } from '@/lib/data';
+import { categories, type Book, years } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { useBooks } from '@/hooks/use-books';
 import {
@@ -58,6 +58,7 @@ export default function ManageBooksPage() {
       title: formData.get('title') as string,
       author: formData.get('author') as string,
       category: formData.get('category') as string,
+      year: formData.get('year') as string,
       description: formData.get('description') as string,
       coverImage: 'https://placehold.co/300x450.png',
       pdfUrl: '#',
@@ -109,6 +110,7 @@ export default function ManageBooksPage() {
               <TableHead>Title</TableHead>
               <TableHead>Author</TableHead>
               <TableHead>Category</TableHead>
+              <TableHead>Year</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -118,6 +120,7 @@ export default function ManageBooksPage() {
                 <TableCell className="font-medium">{book.title}</TableCell>
                 <TableCell>{book.author}</TableCell>
                 <TableCell>{book.category}</TableCell>
+                <TableCell>{book.year}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -164,6 +167,17 @@ export default function ManageBooksPage() {
                     </SelectTrigger>
                     <SelectContent>
                         {bookCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                    </SelectContent>
+                </Select>
+              </div>
+               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="year" className="text-right">Year</Label>
+                <Select name="year" required>
+                    <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select a year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
                     </SelectContent>
                 </Select>
               </div>

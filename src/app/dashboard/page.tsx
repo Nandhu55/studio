@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { categories } from '@/lib/data';
+import { categories, years } from '@/lib/data';
 import BookCard from '@/components/common/book-card';
 import { Button } from '@/components/ui/button';
 import { Terminal } from 'lucide-react';
@@ -13,17 +13,22 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { useBooks } from '@/hooks/use-books';
+import { Separator } from '@/components/ui/separator';
 
 
 export default function LibraryPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedYear, setSelectedYear] = useState('All');
   const { books } = useBooks();
 
-  const filteredBooks = selectedCategory === 'All'
-    ? books
-    : books.filter(book => book.category === selectedCategory);
+  const filteredBooks = books.filter(book => {
+    const categoryMatch = selectedCategory === 'All' || book.category === selectedCategory;
+    const yearMatch = selectedYear === 'All' || book.year === selectedYear;
+    return categoryMatch && yearMatch;
+  });
 
   const featuredBooks = books.slice(0, 5);
+  const displayYears = ['All', ...years];
 
   return (
     <div className="space-y-12">
@@ -62,29 +67,56 @@ export default function LibraryPage() {
       </div>
       
       <div>
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div className="mb-6">
             <h2 className="font-headline text-3xl font-bold tracking-tight text-primary">Full Library Access</h2>
-            <div className="flex items-center gap-2 flex-wrap">
-                {categories.map(category => (
-                <Button 
-                    key={category} 
-                    variant={selectedCategory === category ? 'default' : 'outline'}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`
-                        border-cyan-400/50 text-cyan-400 
-                        ${selectedCategory === category ? 'bg-cyan-400 text-background shadow-[0_0_15px_rgba(0,255,255,0.4)]' : 'hover:bg-cyan-900/50 hover:text-cyan-300'}
-                    `}
-                >
-                    {category}
-                </Button>
-                ))}
+            <div className="mt-4 flex flex-col gap-4">
+                 <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-medium text-muted-foreground w-20">Category:</span>
+                    {categories.map(category => (
+                    <Button 
+                        key={category} 
+                        variant={selectedCategory === category ? 'default' : 'outline'}
+                        onClick={() => setSelectedCategory(category)}
+                        className={`
+                            border-cyan-400/50 text-cyan-400 
+                            ${selectedCategory === category ? 'bg-cyan-400 text-background shadow-[0_0_15px_rgba(0,255,255,0.4)]' : 'hover:bg-cyan-900/50 hover:text-cyan-300'}
+                        `}
+                    >
+                        {category}
+                    </Button>
+                    ))}
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-medium text-muted-foreground w-20">Year:</span>
+                    {displayYears.map(year => (
+                    <Button 
+                        key={year} 
+                        variant={selectedYear === year ? 'default' : 'outline'}
+                        onClick={() => setSelectedYear(year)}
+                        className={`
+                            border-cyan-400/50 text-cyan-400 
+                            ${selectedYear === year ? 'bg-cyan-400 text-background shadow-[0_0_15px_rgba(0,255,255,0.4)]' : 'hover:bg-cyan-900/50 hover:text-cyan-300'}
+                        `}
+                    >
+                        {year}
+                    </Button>
+                    ))}
+                </div>
             </div>
         </div>
+        
+        <Separator className="my-6 bg-primary/20" />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {filteredBooks.map(book => (
-            <BookCard key={book.id} book={book} />
-          ))}
+          {filteredBooks.length > 0 ? (
+            filteredBooks.map(book => (
+                <BookCard key={book.id} book={book} />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+                <p className="text-muted-foreground">No books found for the selected filters.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
