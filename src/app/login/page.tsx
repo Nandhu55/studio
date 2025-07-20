@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -23,14 +24,18 @@ export default function LoginPage() {
 
   useEffect(() => {
     setMounted(true);
-    // On mount, clear any admin session state
+    // On mount, clear any session state
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem('isAdmin');
+      sessionStorage.removeItem('isLoggedIn');
     }
   }, []);
 
   const handleStudentLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('isLoggedIn', 'true');
+    }
     router.push('/dashboard');
   };
   

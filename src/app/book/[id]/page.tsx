@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Download, Share2, Loader2, BookOpen, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,6 +30,18 @@ export default function BookDetailPage() {
   const { books } = useBooks();
   const { toast } = useToast();
   const [isReading, setIsReading] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+      const isAdmin = sessionStorage.getItem('isAdmin');
+      if (isLoggedIn !== 'true' && isAdmin !== 'true') {
+        router.replace('/login');
+      }
+    }
+  }, [router]);
+
 
   const book = books.find(b => b.id === id);
 

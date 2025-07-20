@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2, FileText } from 'lucide-react';
+import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2, FileText, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,6 +14,13 @@ import {
   DropdownMenuTrigger,
   DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useUsers } from '@/hooks/use-users';
 import { useNotifications } from '@/hooks/use-notifications';
@@ -23,6 +30,7 @@ export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
   const { users } = useUsers();
   const { notifications, clearNotifications, markAsRead } = useNotifications();
+  const [isContactOpen, setIsContactOpen] = useState(false);
   
   // In a real app, you'd get the current user from session/auth context
   const currentUser = users[0]; 
@@ -65,6 +73,11 @@ export default function Header() {
                 </Link>
             </Button>
             
+            <Button variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10" onClick={() => setIsContactOpen(true)}>
+                <Phone className="h-5 w-5" />
+                <span className="sr-only">Contact Us</span>
+            </Button>
+
             <DropdownMenu onOpenChange={handleOpenChange}>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10 relative">
@@ -148,6 +161,19 @@ export default function Header() {
           </DropdownMenu>
         </div>
       </div>
+      <Dialog open={isContactOpen} onOpenChange={setIsContactOpen}>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Contact Us</DialogTitle>
+                <DialogDescription>
+                    For any support or inquiries, please reach out to us.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="py-4 space-y-2">
+                <p><span className="font-semibold">Email:</span> gnreddy3555@gmail.com</p>
+            </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
