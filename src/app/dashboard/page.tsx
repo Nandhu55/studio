@@ -34,17 +34,17 @@ export default function LibraryPage() {
   const displayYears = ['All', ...years];
 
   return (
-    <div className="space-y-12">
-      <div className="text-center p-8 border border-primary/20 rounded-lg bg-card/50 relative overflow-hidden">
+    <div className="space-y-8 sm:space-y-12">
+      <div className="text-center p-6 sm:p-8 border border-primary/20 rounded-lg bg-card/50 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-cyan opacity-10"></div>
         <div className="relative">
-          <h1 className="font-headline text-5xl font-bold tracking-tighter text-cyan-400 drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]">COMMAND CENTER</h1>
-          <p className="text-muted-foreground mt-2 text-lg">Welcome back, Student. Access your digital arsenal.</p>
+          <h1 className="font-headline text-4xl sm:text-5xl font-bold tracking-tighter text-cyan-400 drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]">COMMAND CENTER</h1>
+          <p className="text-muted-foreground mt-2 text-base sm:text-lg">Welcome back, Student. Access your digital arsenal.</p>
         </div>
       </div>
 
       <div>
-        <h2 className="font-headline text-3xl font-bold tracking-tight text-primary mb-6 flex items-center gap-3">
+        <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-primary mb-4 sm:mb-6 flex items-center gap-3">
           <Terminal />
           Featured Transmissions
         </h2>
@@ -55,29 +55,30 @@ export default function LibraryPage() {
           }}
           className="w-full"
         >
-          <CarouselContent>
+          <CarouselContent className="-ml-2 sm:-ml-4">
             {featuredBooks.map((book) => (
-              <CarouselItem key={book.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/5">
+              <CarouselItem key={book.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-2 sm:pl-4">
                 <div className="p-1 h-full">
                   <BookCard book={book} />
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="text-cyan-400 border-cyan-400 hover:bg-cyan-400/20" />
-          <CarouselNext className="text-cyan-400 border-cyan-400 hover:bg-cyan-400/20" />
+          <CarouselPrevious className="text-cyan-400 border-cyan-400 hover:bg-cyan-400/20 hidden sm:flex" />
+          <CarouselNext className="text-cyan-400 border-cyan-400 hover:bg-cyan-400/20 hidden sm:flex" />
         </Carousel>
       </div>
       
       <div>
         <div className="mb-6">
-            <h2 className="font-headline text-3xl font-bold tracking-tight text-primary">Full Library Access</h2>
+            <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-primary">Full Library Access</h2>
             <div className="mt-4 flex flex-col gap-4">
-                 <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-medium text-muted-foreground w-20">Category:</span>
+                 <div className="flex items-baseline gap-2 flex-wrap">
+                    <span className="text-sm font-medium text-muted-foreground w-full sm:w-20 shrink-0">Category:</span>
                     {categories.map(category => (
                     <Button 
-                        key={category} 
+                        key={category}
+                        size="sm"
                         variant={selectedCategory === category ? 'default' : 'outline'}
                         onClick={() => setSelectedCategory(category)}
                         className={`
@@ -89,11 +90,12 @@ export default function LibraryPage() {
                     </Button>
                     ))}
                 </div>
-                <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-medium text-muted-foreground w-20">Year:</span>
+                <div className="flex items-baseline gap-2 flex-wrap">
+                    <span className="text-sm font-medium text-muted-foreground w-full sm:w-20 shrink-0">Year:</span>
                     {displayYears.map(year => (
                     <Button 
-                        key={year} 
+                        key={year}
+                        size="sm"
                         variant={selectedYear === year ? 'default' : 'outline'}
                         onClick={() => setSelectedYear(year)}
                         className={`
@@ -110,7 +112,7 @@ export default function LibraryPage() {
         
         <Separator className="my-6 bg-primary/20" />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4">
           {filteredBooks.length > 0 ? (
             filteredBooks.map(book => (
                 <BookCard key={book.id} book={book} />

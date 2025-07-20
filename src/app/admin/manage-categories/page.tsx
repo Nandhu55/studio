@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -33,6 +34,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function ManageCategoriesPage() {
   const { categories, addCategory, deleteCategory } = useCategories();
@@ -43,12 +45,14 @@ export default function ManageCategoriesPage() {
 
   const handleAddCategory = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
     const formData = new FormData(e.currentTarget);
     const newCategory = formData.get('categoryName') as string;
     
     if (newCategory && !categories.includes(newCategory)) {
         addCategory(newCategory);
         setIsAddDialogOpen(false);
+        form.reset();
         toast({
           title: 'Category Added',
           description: `"${newCategory}" has been added.`,
@@ -80,7 +84,6 @@ export default function ManageCategoriesPage() {
     }
   };
 
-  // Exclude "All" from being managed
   const managedCategories = categories.filter(c => c !== 'All');
 
   return (
@@ -94,12 +97,14 @@ export default function ManageCategoriesPage() {
           <PlusCircle className="mr-2 h-4 w-4" /> Add Category
         </Button>
       </div>
-      <div className="border rounded-lg">
+
+      {/* Table for Desktop */}
+      <div className="border rounded-lg hidden md:block">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Category Name</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="text-right w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -117,6 +122,22 @@ export default function ManageCategoriesPage() {
           </TableBody>
         </Table>
       </div>
+
+      {/* Cards for Mobile */}
+      <div className="grid gap-4 md:hidden">
+        {managedCategories.map(category => (
+            <Card key={category}>
+                <CardContent className="p-4 flex items-center justify-between">
+                    <span className="font-medium">{category}</span>
+                    <Button variant="ghost" size="icon" onClick={() => openDeleteDialog(category)}>
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <span className="sr-only">Delete {category}</span>
+                    </Button>
+                </CardContent>
+            </Card>
+        ))}
+      </div>
+
 
       {/* Add Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>

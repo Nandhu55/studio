@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -31,6 +32,7 @@ import {
 import { useUsers } from '@/hooks/use-users';
 import { type User } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function ManageUsersPage() {
   const { users, deleteUser } = useUsers();
@@ -62,14 +64,16 @@ export default function ManageUsersPage() {
           <h2 className="text-2xl font-semibold tracking-tight">Manage Users</h2>
           <p className="text-muted-foreground">View and manage registered student accounts.</p>
         </div>
-      <div className="border rounded-lg">
+      
+      {/* Table for Desktop */}
+      <div className="border rounded-lg hidden md:block">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Signed Up</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="text-right w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -98,6 +102,32 @@ export default function ManageUsersPage() {
           </TableBody>
         </Table>
       </div>
+
+       {/* Cards for Mobile */}
+      <div className="grid gap-4 md:hidden">
+        {users.map(user => (
+          <Card key={user.id}>
+            <CardHeader>
+              <CardTitle className="text-lg">{user.name}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+                <p className="truncate"><span className="font-semibold">Email:</span> {user.email}</p>
+                <p><span className="font-semibold">Signed Up:</span> {format(new Date(user.signedUpAt), "PPP")}</p>
+                <div className="pt-2">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        onClick={() => openDeleteDialog(user)}
+                    >
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete User
+                    </Button>
+                </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
 
        {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>

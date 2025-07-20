@@ -44,6 +44,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export default function ManageBooksPage() {
   const { books, addBook, deleteBook } = useBooks();
@@ -147,7 +149,9 @@ export default function ManageBooksPage() {
           <PlusCircle className="mr-2 h-4 w-4" /> Upload Book
         </Button>
       </div>
-      <div className="border rounded-lg">
+      
+      {/* Table for Desktop */}
+      <div className="border rounded-lg hidden md:block">
         <Table>
           <TableHeader>
             <TableRow>
@@ -185,6 +189,35 @@ export default function ManageBooksPage() {
           </TableBody>
         </Table>
       </div>
+
+      {/* Cards for Mobile */}
+      <div className="grid gap-4 md:hidden">
+        {books.map(book => (
+          <Card key={book.id}>
+            <CardHeader>
+              <CardTitle className="text-lg">{book.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+                <p><span className="font-semibold">Author:</span> {book.author}</p>
+                <div className="flex gap-2">
+                    <Badge variant="outline">{book.category}</Badge>
+                    <Badge variant="secondary">{book.year}</Badge>
+                </div>
+                <div className="pt-2">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        onClick={() => openDeleteDialog(book)}
+                    >
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete Book
+                    </Button>
+                </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
 
       {/* Upload Dialog */}
       <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>

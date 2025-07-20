@@ -14,7 +14,7 @@ import dynamic from 'next/dynamic';
 const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
   ssr: false,
   loading: () => (
-    <div className="flex justify-center items-center h-96 border rounded-lg bg-muted/20">
+    <div className="flex justify-center items-center min-h-96 border rounded-lg bg-muted/20">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
     </div>
   ),
@@ -29,7 +29,12 @@ export default function BookDetailPage() {
   const book = books.find(b => b.id === id);
 
   if (!book) {
-    return <div>Loading book details...</div>;
+    return (
+      <div className="flex justify-center items-center h-96">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-2">Loading book details...</p>
+      </div>
+    );
   }
 
   const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
@@ -90,11 +95,11 @@ export default function BookDetailPage() {
   };
   
   return (
-    <div className="max-w-6xl mx-auto space-y-12">
+    <div className="max-w-6xl mx-auto space-y-8 md:space-y-12">
       <div className="grid md:grid-cols-3 gap-8 md:gap-12">
         <div className="md:col-span-1">
-          <div className="sticky top-24">
-            <div className="relative aspect-[2/3] w-full max-w-sm mx-auto shadow-lg rounded-lg overflow-hidden">
+          <div className="md:sticky md:top-24">
+            <div className="relative aspect-[2/3] w-full max-w-xs mx-auto shadow-lg rounded-lg overflow-hidden">
               <Image
                 src={book.coverImage}
                 alt={`Cover of ${book.title}`}
@@ -104,7 +109,7 @@ export default function BookDetailPage() {
                 data-ai-hint={book.dataAiHint}
               />
             </div>
-            <div className="mt-6 flex gap-2">
+            <div className="mt-6 flex flex-col sm:flex-row gap-2">
                 <Button className="w-full" variant="secondary" size="lg" onClick={handleDownload}>
                     <Download className="mr-2 h-5 w-5" />
                     Download
@@ -121,8 +126,8 @@ export default function BookDetailPage() {
             <Badge variant="secondary">{book.category}</Badge>
             <Badge variant="outline">{book.year}</Badge>
           </div>
-          <h1 className="font-headline text-4xl md:text-5xl font-bold">{book.title}</h1>
-          <p className="mt-2 text-xl text-muted-foreground">by {book.author}</p>
+          <h1 className="font-headline text-3xl md:text-5xl font-bold">{book.title}</h1>
+          <p className="mt-2 text-lg md:text-xl text-muted-foreground">by {book.author}</p>
           
           <div className="mt-8 prose dark:prose-invert max-w-none">
             <h2 className="font-headline text-2xl font-semibold">Description</h2>
@@ -136,7 +141,7 @@ export default function BookDetailPage() {
       </div>
 
       <div>
-        <h2 className="font-headline text-3xl font-bold mb-4">Read The Book</h2>
+        <h2 className="font-headline text-2xl md:text-3xl font-bold mb-4">Read The Book</h2>
         <PdfViewer file={book.pdfUrl} />
       </div>
     </div>
