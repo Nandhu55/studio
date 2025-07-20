@@ -15,20 +15,32 @@ export function useNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    try {
-      const storedNotifications = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
-      if (storedNotifications) {
-        setNotifications(JSON.parse(storedNotifications));
+    const fetchNotifications = () => {
+      try {
+        const storedNotifications = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
+        if (storedNotifications) {
+          setNotifications(JSON.parse(storedNotifications));
+        }
+      } catch (error) {
+        console.error("Failed to access local storage for notifications:", error);
+        setNotifications([]);
       }
-    } catch (error) {
-      console.error("Failed to access local storage for notifications:", error);
-      setNotifications([]);
-    }
+    };
+    
+    fetchNotifications();
+
+    // Listen for storage changes to update notifications across tabs/windows
+    window.addEventListener('storage', fetchNotifications);
+    return () => {
+      window.removeEventListener('storage', fetchNotifications);
+    };
+
   }, []);
 
   const updateStoredNotifications = useCallback((updatedNotifications: Notification[]) => {
     setNotifications(updatedNotifications);
     try {
+      // This will trigger the 'storage' event for other tabs
       localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(updatedNotifications));
     } catch (error) {
       console.error("Failed to save notifications to local storage:", error);
@@ -58,5 +70,5 @@ export function useNotifications() {
     updateStoredNotifications(updated);
   }, [notifications, updateStoredNotifications]);
 
-  return { notifications, addNotification, clearNotifications, markAsRead };
+  return { notifications, addNotification, clearNotifications, markAsRead, setStoredNotifications: updateStoredNotifications };
 }
