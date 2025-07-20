@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -55,23 +56,39 @@ export default function ManageBooksPage() {
   const handleAddBook = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const newBook: Book = {
-      id: String(Date.now()),
-      title: formData.get('title') as string,
-      author: formData.get('author') as string,
-      category: formData.get('category') as string,
-      year: formData.get('year') as string,
-      description: formData.get('description') as string,
-      coverImage: 'https://placehold.co/300x450.png',
-      pdfUrl: '#',
-      dataAiHint: 'book cover'
-    };
-    addBook(newBook);
-    setIsUploadDialogOpen(false);
-    toast({
-      title: "Book Uploaded",
-      description: `"${newBook.title}" has been added to the library.`,
-    });
+    const imageFile = formData.get('coverImage') as File;
+
+    const createBook = (coverImage: string) => {
+      const newBook: Book = {
+        id: String(Date.now()),
+        title: formData.get('title') as string,
+        author: formData.get('author') as string,
+        category: formData.get('category') as string,
+        year: formData.get('year') as string,
+        description: formData.get('description') as string,
+        coverImage: coverImage,
+        pdfUrl: '#',
+        dataAiHint: 'book cover'
+      };
+      addBook(newBook);
+      setIsUploadDialogOpen(false);
+      e.currentTarget.reset();
+      toast({
+        title: "Book Uploaded",
+        description: `"${newBook.title}" has been added to the library.`,
+      });
+    }
+
+    if (imageFile && imageFile.size > 0) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const dataUri = event.target?.result as string;
+            createBook(dataUri);
+        };
+        reader.readAsDataURL(imageFile);
+    } else {
+        createBook('https://placehold.co/300x450.png');
+    }
   };
   
   const openDeleteDialog = (book: Book) => {
@@ -186,6 +203,10 @@ export default function ManageBooksPage() {
               <div className="grid grid-cols-4 items-start gap-4">
                 <Label htmlFor="description" className="text-right pt-2">Description</Label>
                 <Textarea id="description" name="description" className="col-span-3" required/>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="coverImage" className="text-right">Cover Image</Label>
+                <Input id="coverImage" name="coverImage" type="file" accept="image/*" className="col-span-3" />
               </div>
             </div>
             <DialogFooter>
