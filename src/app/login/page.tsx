@@ -20,7 +20,7 @@ export default function LoginPage() {
 
   const handleLogin = (userType: 'student' | 'admin') => {
     if (userType === 'student') {
-      router.push('/');
+      router.push('/dashboard');
     } else {
       router.push('/admin/dashboard');
     }

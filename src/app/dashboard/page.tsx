@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 export default function LibraryPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const filteredBooks = selectedCategory === 'All'
+  const filteredBooks = selectedeCategory === 'All'
     ? books
     : books.filter(book => book.category === selectedCategory);
 

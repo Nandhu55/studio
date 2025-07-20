@@ -15,7 +15,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
       <div className="container flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-3">
+        <Link href="/dashboard" className="flex items-center gap-3">
           <BookMarked className="h-8 w-8 text-primary" />
           <span className="font-headline text-2xl font-bold text-primary tracking-tighter">
             B-Tech eBooks Hub
