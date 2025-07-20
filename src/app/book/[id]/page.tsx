@@ -2,22 +2,52 @@
 'use client';
 
 import Image from 'next/image';
-import { useParams, notFound } from 'next/navigation';
-import { BookOpen } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { BookOpen, Download, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SummarizationTool from '@/components/features/summarization-tool';
 import { useBooks } from '@/hooks/use-books';
+import { useToast } from '@/hooks/use-toast';
 
 export default function BookDetailPage() {
   const params = useParams();
   const { id } = params;
   const { books } = useBooks();
+  const { toast } = useToast();
   const book = books.find(b => b.id === id);
 
   if (!book) {
     return <div>Loading book details...</div>;
   }
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: book.title,
+          text: `Check out this book: ${book.title} by ${book.author}`,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.error('Error sharing book:', error);
+        toast({
+            title: "Sharing Failed",
+            description: "There was an error trying to share this book.",
+            variant: "destructive"
+        });
+      }
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link Copied",
+        description: "A link to this book has been copied to your clipboard.",
+      });
+    }
+  };
+
+  const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -34,12 +64,26 @@ export default function BookDetailPage() {
                 data-ai-hint={book.dataAiHint}
               />
             </div>
-            <Button className="w-full mt-6" size="lg" asChild>
-                <a href={book.pdfUrl} target="_blank" rel="noopener noreferrer">
-                    <BookOpen className="mr-2 h-5 w-5" />
-                    Read Now
-                </a>
-            </Button>
+            <div className="mt-6 space-y-2">
+                <Button className="w-full" size="lg" asChild>
+                    <a href={book.pdfUrl} target="_blank" rel="noopener noreferrer">
+                        <BookOpen className="mr-2 h-5 w-5" />
+                        Read Now
+                    </a>
+                </Button>
+                <div className="flex gap-2">
+                    <Button className="w-full" variant="secondary" size="lg" asChild>
+                         <a href={book.pdfUrl} download={downloadFileName}>
+                            <Download className="mr-2 h-5 w-5" />
+                            Download
+                        </a>
+                    </Button>
+                    <Button className="w-full" variant="secondary" size="lg" onClick={handleShare}>
+                        <Share2 className="mr-2 h-5 w-5" />
+                        Share
+                    </Button>
+                </div>
+            </div>
           </div>
         </div>
         <div className="md:col-span-2">
