@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -9,23 +9,55 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Edit, Sun, Moon, Palette } from 'lucide-react';
+import { User, Mail, Edit, Sun, Moon, Palette, Camera } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useUsers } from '@/hooks/use-users';
 
 export default function ProfilePage() {
   const { toast } = useToast();
   const { setTheme, theme } = useTheme();
-  const [name, setName] = useState('B.Tech Student');
-  const [email, setEmail] = useState('student@example.com');
+  const { users, updateUser } = useUsers();
+  
+  // For this demo, we'll assume the first user is the logged-in user.
+  const currentUser = users[0];
+
+  const [name, setName] = useState(currentUser?.name || 'B.Tech Student');
+  const [email, setEmail] = useState(currentUser?.email || 'student@example.com');
+  const [avatarUrl, setAvatarUrl] = useState(currentUser?.avatarUrl || 'https://placehold.co/100x100.png');
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleProfileUpdate = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically call an API to update the user's profile
-    toast({
-      title: 'Profile Updated',
-      description: 'Your profile information has been successfully updated.',
-    });
+    if (currentUser) {
+      updateUser(currentUser.id, { name });
+      toast({
+        title: 'Profile Updated',
+        description: 'Your profile information has been successfully updated.',
+      });
+    }
   };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && currentUser) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newAvatarUrl = reader.result as string;
+        setAvatarUrl(newAvatarUrl);
+        updateUser(currentUser.id, { avatarUrl: newAvatarUrl });
+        toast({
+            title: 'Avatar Updated',
+            description: 'Your new profile picture has been saved.',
+        })
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  if (!currentUser) {
+    return <div>Loading profile...</div>
+  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
@@ -36,12 +68,28 @@ export default function ProfilePage() {
 
       <Card>
         <CardHeader className="flex flex-col items-center text-center">
-          <Avatar className="h-24 w-24 mb-4 border-4 border-cyan-400">
-            <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person portrait" />
-            <AvatarFallback>
-              <User className="w-10 h-10" />
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative group">
+            <Avatar className="h-24 w-24 mb-4 border-4 border-cyan-400">
+              <AvatarImage src={avatarUrl} alt="User" data-ai-hint="person portrait" />
+              <AvatarFallback>
+                <User className="w-10 h-10" />
+              </AvatarFallback>
+            </Avatar>
+            <button 
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <Camera className="h-8 w-8" />
+              <span className="sr-only">Change profile picture</span>
+            </button>
+            <Input 
+              type="file" 
+              ref={fileInputRef} 
+              className="hidden" 
+              accept="image/*"
+              onChange={handleAvatarChange}
+            />
+          </div>
           <CardTitle className="text-2xl">{name}</CardTitle>
           <CardDescription>{email}</CardDescription>
         </CardHeader>

@@ -14,9 +14,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useUsers } from '@/hooks/use-users';
 
 export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
+  const { users } = useUsers();
+  
+  // In a real app, you'd get the current user from session/auth context
+  const currentUser = users[0]; 
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -38,7 +43,7 @@ export default function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                 <Avatar className="h-10 w-10 border-2 border-cyan-400/50 hover:border-primary transition-colors duration-300">
-                  <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person portrait" />
+                  <AvatarImage src={currentUser?.avatarUrl} alt={currentUser?.name} data-ai-hint="person portrait" />
                   <AvatarFallback>
                     <User />
                   </AvatarFallback>
@@ -48,9 +53,9 @@ export default function Header() {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">B.Tech Student</p>
+                  <p className="text-sm font-medium leading-none">{currentUser?.name || 'Student'}</p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    student@example.com
+                    {currentUser?.email || 'student@example.com'}
                   </p>
                 </div>
               </DropdownMenuLabel>

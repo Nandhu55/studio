@@ -1,3 +1,4 @@
+
 export type Book = {
   id: string;
   title: string;
@@ -15,15 +16,16 @@ export type User = {
     name: string;
     email: string;
     signedUpAt: string;
+    avatarUrl?: string;
 }
 
 export const initialCategories = ['All', 'Computer Science', 'Electronics', 'Mechanical', 'Civil Engineering'];
 export const years = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
 
 export const initialUsers: User[] = [
-    { id: '1', name: 'Nandhu', email: 'gnreddy3555@gmail.com', signedUpAt: '2024-01-15T10:30:00Z'},
-    { id: '2', name: 'Sunny', email: 'sunny@example.com', signedUpAt: '2024-02-20T14:00:00Z'},
-    { id: '3', name: 'User 3', email: 'user3@example.com', signedUpAt: '2024-03-10T18:45:00Z'},
+    { id: '1', name: 'Nandhu', email: 'gnreddy3555@gmail.com', signedUpAt: '2024-01-15T10:30:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
+    { id: '2', name: 'Sunny', email: 'sunny@example.com', signedUpAt: '2024-02-20T14:00:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
+    { id: '3', name: 'User 3', email: 'user3@example.com', signedUpAt: '2024-03-10T18:45:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
 ];
 
 

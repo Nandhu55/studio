@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { type User, initialUsers } from '@/lib/data';
 
@@ -42,5 +43,12 @@ export function useUsers() {
     updateStoredUsers(updatedUsers);
   };
 
-  return { users, addUser, deleteUser };
+  const updateUser = (userId: string, updates: Partial<User>) => {
+    const updatedUsers = users.map(user =>
+      user.id === userId ? { ...user, ...updates } : user
+    );
+    updateStoredUsers(updatedUsers);
+  };
+
+  return { users, addUser, deleteUser, updateUser };
 }
