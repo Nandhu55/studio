@@ -57,8 +57,18 @@ export default function ManageBooksPage() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const imageFile = formData.get('coverImage') as File;
+    const pdfFile = formData.get('bookPdf') as File;
 
-    const createBook = (coverImage: string) => {
+    if (!pdfFile || pdfFile.size === 0) {
+        toast({
+            title: "Upload Error",
+            description: "A PDF document is required to upload a book.",
+            variant: "destructive"
+        });
+        return;
+    }
+
+    const createBookWithData = (coverImageUri: string, pdfUri: string) => {
       const newBook: Book = {
         id: String(Date.now()),
         title: formData.get('title') as string,
@@ -66,8 +76,8 @@ export default function ManageBooksPage() {
         category: formData.get('category') as string,
         year: formData.get('year') as string,
         description: formData.get('description') as string,
-        coverImage: coverImage,
-        pdfUrl: '#',
+        coverImage: coverImageUri,
+        pdfUrl: pdfUri,
         dataAiHint: 'book cover'
       };
       addBook(newBook);
@@ -79,15 +89,40 @@ export default function ManageBooksPage() {
       });
     }
 
+    const readerForImage = new FileReader();
+    const readerForPdf = new FileReader();
+
+    let coverImageUri = 'https://placehold.co/300x450.png';
+    let pdfUri = '';
+
+    readerForImage.onload = (event) => {
+        coverImageUri = event.target?.result as string;
+        // When image is loaded, check if PDF is also loaded.
+        if (pdfUri) {
+            createBookWithData(coverImageUri, pdfUri);
+        }
+    };
+
+    readerForPdf.onload = (event) => {
+        pdfUri = event.target?.result as string;
+        // When PDF is loaded, check if image is also loaded (or was not provided).
+        if (coverImageUri) {
+             createBookWithData(coverImageUri, pdfUri);
+        }
+    };
+    
+    // Start reading PDF
+    readerForPdf.readAsDataURL(pdfFile);
+
+    // If there is an image file, start reading it. Otherwise, the default URI is used.
     if (imageFile && imageFile.size > 0) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const dataUri = event.target?.result as string;
-            createBook(dataUri);
-        };
-        reader.readAsDataURL(imageFile);
+        readerForImage.readAsDataURL(imageFile);
     } else {
-        createBook('https://placehold.co/300x450.png');
+        // If there's no image, we mark its part as "done" so the PDF can proceed
+        // without waiting for it.
+        if (pdfUri) { // If pdf already loaded (very fast read)
+            createBookWithData(coverImageUri, pdfUri);
+        }
     }
   };
   
@@ -207,6 +242,10 @@ export default function ManageBooksPage() {
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="coverImage" className="text-right">Cover Image</Label>
                 <Input id="coverImage" name="coverImage" type="file" accept="image/*" className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="bookPdf" className="text-right">Book PDF</Label>
+                <Input id="bookPdf" name="bookPdf" type="file" accept=".pdf" className="col-span-3" required />
               </div>
             </div>
             <DialogFooter>
