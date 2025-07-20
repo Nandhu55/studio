@@ -21,6 +21,8 @@ export default function BookDetailPage() {
     return <div>Loading book details...</div>;
   }
 
+  const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
+
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -38,7 +40,6 @@ export default function BookDetailPage() {
         });
       }
     } else {
-      // Fallback for browsers that don't support Web Share API
       navigator.clipboard.writeText(window.location.href);
       toast({
         title: "Link Copied",
@@ -47,8 +48,15 @@ export default function BookDetailPage() {
     }
   };
 
-  const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
-
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = book.pdfUrl;
+    link.download = downloadFileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
   return (
     <div className="max-w-6xl mx-auto">
       <div className="grid md:grid-cols-3 gap-8 md:gap-12">
@@ -72,11 +80,9 @@ export default function BookDetailPage() {
                     </a>
                 </Button>
                 <div className="flex gap-2">
-                    <Button className="w-full" variant="secondary" size="lg" asChild>
-                         <a href={book.pdfUrl} download={downloadFileName}>
-                            <Download className="mr-2 h-5 w-5" />
-                            Download
-                        </a>
+                    <Button className="w-full" variant="secondary" size="lg" onClick={handleDownload}>
+                        <Download className="mr-2 h-5 w-5" />
+                        Download
                     </Button>
                     <Button className="w-full" variant="secondary" size="lg" onClick={handleShare}>
                         <Share2 className="mr-2 h-5 w-5" />
