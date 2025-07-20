@@ -26,7 +26,18 @@ export function useBooks() {
   const updateStoredBooks = (updatedBooks: Book[]) => {
     setBooks(updatedBooks);
     try {
-      localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(updatedBooks));
+        // Create a version of the books without the large data URI fields
+        const booksForStorage = updatedBooks.map(book => {
+            const { coverImage, pdfUrl, ...rest } = book;
+            const isInitialBook = initialBooks.some(ib => ib.id === book.id);
+            if (isInitialBook) {
+                // Keep the original placeholder URL for initial books
+                 return book;
+            }
+            // For new books, use placeholders to avoid storage overflow
+            return { ...rest, coverImage: 'https://placehold.co/300x450.png', pdfUrl: '#' };
+        });
+      localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(booksForStorage));
     } catch (error) {
       console.error("Failed to save books to local storage:", error);
     }
@@ -34,7 +45,23 @@ export function useBooks() {
 
   const addBook = (book: Book) => {
     const updatedBooks = [book, ...books];
-    updateStoredBooks(updatedBooks);
+    setBooks(updatedBooks); // Update state immediately with full data for UI
+    
+    // Create a storage-safe version for localStorage
+    const booksForStorage = updatedBooks.map(b => {
+        if (initialBooks.some(ib => ib.id === b.id)) {
+            return b;
+        }
+        const { coverImage, pdfUrl, ...rest } = b;
+        return { ...rest, coverImage: 'https://placehold.co/300x450.png', pdfUrl: '#' };
+    });
+
+    try {
+        localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(booksForStorage));
+    } catch (error) {
+      console.error("Failed to save books to local storage:", error);
+       // Show a toast or some feedback to the user that storage failed
+    }
   };
 
   const deleteBook = (bookId: string) => {
