@@ -53,6 +53,12 @@ export default function Header() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+             <DropdownMenuItem asChild>
+                <Link href="/profile">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </Link>
+              </DropdownMenuItem>
             {isAdmin && (
               <DropdownMenuItem asChild>
                 <Link href="/admin/dashboard">
@@ -61,7 +67,7 @@ export default function Header() {
                 </Link>
               </DropdownMenuItem>
             )}
-            {isAdmin && <DropdownMenuSeparator />}
+            <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href="/login">
                 <LogOut className="mr-2 h-4 w-4" />

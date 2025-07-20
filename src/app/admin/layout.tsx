@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { BookMarked, LayoutDashboard, LogOut, Users, Book, Shapes, Home } from 'lucide-react';
+import { BookMarked, LayoutDashboard, LogOut, Users, Book, Shapes, Home, User } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -56,6 +56,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Link href="/dashboard">
                     <Home />
                     <span>Home</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Profile" isActive={pathname === '/profile'}>
+                  <Link href="/profile">
+                    <User />
+                    <span>Profile</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
