@@ -1,9 +1,10 @@
 
 'use client';
 
+import { useRef } from 'react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import { Download, Share2, Loader2 } from 'lucide-react';
+import { Download, Share2, Loader2, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SummarizationTool from '@/components/features/summarization-tool';
@@ -27,6 +28,7 @@ export default function BookDetailPage() {
   const { books } = useBooks();
   const { toast } = useToast();
   const book = books.find(b => b.id === id);
+  const pdfViewerRef = useRef<HTMLDivElement>(null);
 
   if (!book) {
     return (
@@ -37,6 +39,10 @@ export default function BookDetailPage() {
     );
   }
 
+  const handleReadNow = () => {
+    pdfViewerRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  
   const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
 
   const handleShare = async () => {
@@ -109,15 +115,21 @@ export default function BookDetailPage() {
                 data-ai-hint={book.dataAiHint}
               />
             </div>
-            <div className="mt-6 flex flex-col sm:flex-row gap-2">
-                <Button className="w-full" variant="secondary" size="lg" onClick={handleDownload}>
-                    <Download className="mr-2 h-5 w-5" />
-                    Download
+            <div className="mt-6 space-y-2">
+                <Button className="w-full" size="lg" onClick={handleReadNow}>
+                    <BookOpen className="mr-2 h-5 w-5" />
+                    Read Now
                 </Button>
-                <Button className="w-full" variant="secondary" size="lg" onClick={handleShare}>
-                    <Share2 className="mr-2 h-5 w-5" />
-                    Share
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-2">
+                    <Button className="w-full" variant="secondary" onClick={handleDownload}>
+                        <Download className="mr-2 h-5 w-5" />
+                        Download
+                    </Button>
+                    <Button className="w-full" variant="secondary" onClick={handleShare}>
+                        <Share2 className="mr-2 h-5 w-5" />
+                        Share
+                    </Button>
+                </div>
             </div>
           </div>
         </div>
@@ -140,7 +152,7 @@ export default function BookDetailPage() {
         </div>
       </div>
 
-      <div>
+      <div ref={pdfViewerRef}>
         <h2 className="font-headline text-2xl md:text-3xl font-bold mb-4">Read The Book</h2>
         <PdfViewer file={book.pdfUrl} />
       </div>
