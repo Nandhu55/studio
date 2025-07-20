@@ -73,7 +73,7 @@ export default function Header() {
                     <div className="space-y-2">
                         <p><strong>Support Email:</strong> support@btech-hub.com</p>
                         <p><strong>Admin Email:</strong> gnreddy3555@gmail.com</p>
-                        <p><strong>Contact Email:</strong> gnreddy355@gmail.com</p>
+                        <p><strong>Contact Email:</strong> gnreddy3555@gmail.com</p>
                     </div>
                 </DialogContent>
             </Dialog>
