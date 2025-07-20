@@ -30,16 +30,18 @@ export default function LoginPage() {
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem('isAdmin');
       sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('currentUser');
     }
   }, []);
 
   const handleStudentLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const user = users.find(user => user.email === studentEmail);
+    const user = users.find(u => u.email === studentEmail && u.password === studentPassword);
     
-    if (user && user.password === studentPassword) {
+    if (user) {
         if (typeof window !== 'undefined') {
             sessionStorage.setItem('isLoggedIn', 'true');
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
         }
         router.push('/dashboard');
     } else {

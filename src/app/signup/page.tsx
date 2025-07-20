@@ -45,7 +45,6 @@ export default function SignupPage() {
     }
 
     addUser({
-      id: String(Date.now()),
       name,
       email,
       password,
@@ -53,7 +52,6 @@ export default function SignupPage() {
       year,
       semester,
       phone,
-      signedUpAt: new Date().toISOString(),
     });
 
     toast({

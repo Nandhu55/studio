@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -11,17 +11,31 @@ import { useToast } from '@/hooks/use-toast';
 import { User, Mail, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, GraduationCap, Phone } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useUsers } from '@/hooks/use-users';
+import type { User as UserType } from '@/lib/data';
 
 export default function ProfilePage() {
   const { toast } = useToast();
   const { setTheme, theme } = useTheme();
-  const { users, updateUser } = useUsers();
+  const { updateUser } = useUsers();
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   
-  // For this demo, we'll assume the first user is the logged-in user.
-  const currentUser = users[0];
-
-  const [avatarUrl, setAvatarUrl] = useState(currentUser?.avatarUrl || 'https://placehold.co/100x100.png');
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userJson = sessionStorage.getItem('currentUser');
+      if (userJson) {
+        setCurrentUser(JSON.parse(userJson));
+      }
+    }
+  }, []);
+  
+  const [avatarUrl, setAvatarUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (currentUser) {
+      setAvatarUrl(currentUser.avatarUrl || 'https://placehold.co/100x100.png');
+    }
+  }, [currentUser]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -31,6 +45,11 @@ export default function ProfilePage() {
         const newAvatarUrl = reader.result as string;
         setAvatarUrl(newAvatarUrl);
         updateUser(currentUser.id, { avatarUrl: newAvatarUrl });
+        
+        // Update session storage as well
+        const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
+        sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
         toast({
             title: 'Avatar Updated',
             description: 'Your new profile picture has been saved.',

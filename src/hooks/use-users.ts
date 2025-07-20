@@ -33,9 +33,11 @@ export function useUsers() {
     }
   };
 
-  const addUser = (user: Omit<User, 'avatarUrl'>) => {
+  const addUser = (user: Omit<User, 'id' | 'avatarUrl' | 'signedUpAt'>) => {
     const newUser: User = {
       ...user,
+      id: String(Date.now()),
+      signedUpAt: new Date().toISOString(),
       avatarUrl: 'https://placehold.co/100x100.png',
     }
     const updatedUsers = [...users, newUser];

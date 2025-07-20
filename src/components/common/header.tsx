@@ -22,22 +22,37 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useUsers } from '@/hooks/use-users';
 import { useNotifications } from '@/hooks/use-notifications';
 import { Badge } from '@/components/ui/badge';
+import type { User as UserType } from '@/lib/data';
 
 export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
-  const { users } = useUsers();
   const { notifications, clearNotifications, markAsRead } = useNotifications();
   const [isContactOpen, setIsContactOpen] = useState(false);
-  
-  // In a real app, you'd get the current user from session/auth context
-  const currentUser = users[0]; 
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setIsAdmin(sessionStorage.getItem('isAdmin') === 'true');
+      const userJson = sessionStorage.getItem('currentUser');
+      if (userJson) {
+        setCurrentUser(JSON.parse(userJson));
+      }
+    }
+
+    const handleStorageChange = () => {
+       const userJson = sessionStorage.getItem('currentUser');
+       if (userJson) {
+        setCurrentUser(JSON.parse(userJson));
+      } else {
+        setCurrentUser(null);
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
     }
   }, []);
 
