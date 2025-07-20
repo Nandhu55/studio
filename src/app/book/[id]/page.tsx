@@ -3,12 +3,13 @@
 
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import { BookOpen, Download, Share2 } from 'lucide-react';
+import { Download, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SummarizationTool from '@/components/features/summarization-tool';
 import { useBooks } from '@/hooks/use-books';
 import { useToast } from '@/hooks/use-toast';
+import PdfViewer from '@/components/features/pdf-viewer';
 
 export default function BookDetailPage() {
   const params = useParams();
@@ -49,6 +50,14 @@ export default function BookDetailPage() {
   };
 
   const handleDownload = async () => {
+    if (!book.pdfUrl || book.pdfUrl === '#') {
+      toast({
+          title: "Download Unavailable",
+          description: "No PDF document is available for this book.",
+          variant: "destructive"
+      });
+      return;
+    }
     try {
         const response = await fetch(book.pdfUrl);
         const blob = await response.blob();
@@ -71,7 +80,7 @@ export default function BookDetailPage() {
   };
   
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto space-y-12">
       <div className="grid md:grid-cols-3 gap-8 md:gap-12">
         <div className="md:col-span-1">
           <div className="sticky top-24">
@@ -85,23 +94,15 @@ export default function BookDetailPage() {
                 data-ai-hint={book.dataAiHint}
               />
             </div>
-            <div className="mt-6 space-y-2">
-                <Button className="w-full" size="lg" asChild>
-                    <a href={book.pdfUrl} target="_blank" rel="noopener noreferrer">
-                        <BookOpen className="mr-2 h-5 w-5" />
-                        Read Now
-                    </a>
+            <div className="mt-6 flex gap-2">
+                <Button className="w-full" variant="secondary" size="lg" onClick={handleDownload}>
+                    <Download className="mr-2 h-5 w-5" />
+                    Download
                 </Button>
-                <div className="flex gap-2">
-                    <Button className="w-full" variant="secondary" size="lg" onClick={handleDownload}>
-                        <Download className="mr-2 h-5 w-5" />
-                        Download
-                    </Button>
-                    <Button className="w-full" variant="secondary" size="lg" onClick={handleShare}>
-                        <Share2 className="mr-2 h-5 w-5" />
-                        Share
-                    </Button>
-                </div>
+                <Button className="w-full" variant="secondary" size="lg" onClick={handleShare}>
+                    <Share2 className="mr-2 h-5 w-5" />
+                    Share
+                </Button>
             </div>
           </div>
         </div>
@@ -122,6 +123,11 @@ export default function BookDetailPage() {
             <SummarizationTool book={book} />
           </div>
         </div>
+      </div>
+
+      <div>
+        <h2 className="font-headline text-3xl font-bold mb-4">Read The Book</h2>
+        <PdfViewer file={book.pdfUrl} />
       </div>
     </div>
   );
