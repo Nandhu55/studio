@@ -17,8 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['"Space Grotesk"', 'sans-serif'],
+        body: ['"Exo 2"', 'sans-serif'],
+        headline: ['Orbitron', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
@@ -100,6 +100,12 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
+      backgroundImage: {
+        'grid-cyan': 'linear-gradient(theme(colors.cyan.950) 1px, transparent 1px), linear-gradient(to right, theme(colors.cyan.950) 1px, transparent 1px)',
+      },
+      backgroundSize: {
+        'grid-cyan': '2rem 2rem',
+      }
     },
   },
   plugins: [require('tailwindcss-animate')],

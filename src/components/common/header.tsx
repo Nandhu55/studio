@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BookMarked, LogOut, User, LayoutDashboard } from 'lucide-react';
+import { BookMarked, LogOut, User, LayoutDashboard, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,18 +13,18 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-sm">
       <div className="container flex h-16 items-center justify-between px-4">
-        <Link href="/dashboard" className="flex items-center gap-3">
-          <BookMarked className="h-8 w-8 text-primary" />
-          <span className="font-headline text-2xl font-bold text-primary tracking-tighter">
+        <Link href="/dashboard" className="flex items-center gap-3 group">
+          <Terminal className="h-8 w-8 text-cyan-400 group-hover:text-primary transition-colors duration-300" />
+          <span className="font-headline text-2xl font-bold text-primary-foreground tracking-tighter group-hover:text-primary transition-colors duration-300">
             B-Tech eBooks Hub
           </span>
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-              <Avatar className="h-10 w-10 border-2 border-primary/50">
+              <Avatar className="h-10 w-10 border-2 border-cyan-400/50 hover:border-primary transition-colors duration-300">
                 <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person portrait" />
                 <AvatarFallback>
                   <User />
