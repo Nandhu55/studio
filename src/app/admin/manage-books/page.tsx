@@ -53,9 +53,10 @@ export default function ManageBooksPage() {
   const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
   const { toast } = useToast();
 
-  const handleAddBook = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddBook = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const imageFile = formData.get('coverImage') as File;
     const pdfFile = formData.get('bookPdf') as File;
 
@@ -68,61 +69,50 @@ export default function ManageBooksPage() {
         return;
     }
 
-    const createBookWithData = (coverImageUri: string, pdfUri: string) => {
-      const newBook: Book = {
-        id: String(Date.now()),
-        title: formData.get('title') as string,
-        author: formData.get('author') as string,
-        category: formData.get('category') as string,
-        year: formData.get('year') as string,
-        description: formData.get('description') as string,
-        coverImage: coverImageUri,
-        pdfUrl: pdfUri,
-        dataAiHint: 'book cover'
-      };
-      addBook(newBook);
-      setIsUploadDialogOpen(false);
-      e.currentTarget.reset();
-      toast({
-        title: "Book Uploaded",
-        description: `"${newBook.title}" has been added to the library.`,
-      });
+    const readFileAsDataURL = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+        });
     }
 
-    const readerForImage = new FileReader();
-    const readerForPdf = new FileReader();
+    try {
+        const pdfUri = await readFileAsDataURL(pdfFile);
+        let coverImageUri = 'https://placehold.co/300x450.png';
 
-    let coverImageUri = 'https://placehold.co/300x450.png';
-    let pdfUri = '';
-
-    readerForImage.onload = (event) => {
-        coverImageUri = event.target?.result as string;
-        // When image is loaded, check if PDF is also loaded.
-        if (pdfUri) {
-            createBookWithData(coverImageUri, pdfUri);
+        if (imageFile && imageFile.size > 0) {
+            coverImageUri = await readFileAsDataURL(imageFile);
         }
-    };
 
-    readerForPdf.onload = (event) => {
-        pdfUri = event.target?.result as string;
-        // When PDF is loaded, check if image is also loaded (or was not provided).
-        if (coverImageUri) {
-             createBookWithData(coverImageUri, pdfUri);
-        }
-    };
-    
-    // Start reading PDF
-    readerForPdf.readAsDataURL(pdfFile);
+        const newBook: Book = {
+            id: String(Date.now()),
+            title: formData.get('title') as string,
+            author: formData.get('author') as string,
+            category: formData.get('category') as string,
+            year: formData.get('year') as string,
+            description: formData.get('description') as string,
+            coverImage: coverImageUri,
+            pdfUrl: pdfUri,
+            dataAiHint: 'book cover'
+        };
+        
+        addBook(newBook);
+        setIsUploadDialogOpen(false);
+        form.reset();
+        toast({
+            title: "Book Uploaded",
+            description: `"${newBook.title}" has been added to the library.`,
+        });
 
-    // If there is an image file, start reading it. Otherwise, the default URI is used.
-    if (imageFile && imageFile.size > 0) {
-        readerForImage.readAsDataURL(imageFile);
-    } else {
-        // If there's no image, we mark its part as "done" so the PDF can proceed
-        // without waiting for it.
-        if (pdfUri) { // If pdf already loaded (very fast read)
-            createBookWithData(coverImageUri, pdfUri);
-        }
+    } catch (error) {
+        console.error("File reading error:", error);
+        toast({
+            title: "Upload Error",
+            description: "There was an error processing the files. Please try again.",
+            variant: "destructive"
+        });
     }
   };
   
