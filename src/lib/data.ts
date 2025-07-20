@@ -37,6 +37,7 @@ export type QuestionPaper = {
 
 
 export const initialCategories = ['All', 'Computer Science', 'Electronics', 'Mechanical', 'Civil Engineering'];
+export const courses = ['Computer Science', 'Electronics', 'Mechanical', 'Civil Engineering'];
 export const years = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
 export const semesters = ['1st Sem', '2nd Sem', '3rd Sem', '4th Sem', '5th Sem', '6th Sem', '7th Sem', '8th Sem'];
 

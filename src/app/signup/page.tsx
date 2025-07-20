@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { useUsers } from '@/hooks/use-users';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { years, semesters } from '@/lib/data';
+import { years, semesters, courses } from '@/lib/data';
 
 export default function SignupPage() {
   const [mounted, setMounted] = useState(false);
@@ -106,10 +106,14 @@ export default function SignupPage() {
                <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="course">Course/Branch</Label>
-                   <div className="relative">
-                    <BookCopy className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input id="course" name="course" placeholder="e.g., CSE" required className="pl-10" />
-                  </div>
+                   <Select name="course" required>
+                      <SelectTrigger id="course">
+                          <SelectValue placeholder="Select course" />
+                      </SelectTrigger>
+                      <SelectContent>
+                          {courses.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                      </SelectContent>
+                  </Select>
                 </div>
                  <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
