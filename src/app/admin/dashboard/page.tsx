@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Book, Shapes } from 'lucide-react';
 import { useBooks } from '@/hooks/use-books';
 import { useUsers } from '@/hooks/use-users';
-import { categories } from '@/lib/data';
+import { useCategories } from '@/hooks/use-categories';
 
 export default function AdminDashboard() {
   const { books } = useBooks();
   const { users } = useUsers();
+  const { categories } = useCategories();
 
   const totalBooks = books.length;
   const totalUsers = users.length;
@@ -58,7 +59,7 @@ export default function AdminDashboard() {
         <div>
           <h3 className="text-xl font-semibold">Quick Links</h3>
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Link href="/admin/manage-books" className="block">
                 <Card className="hover:bg-muted/50 transition-colors">
                     <CardHeader>
@@ -76,6 +77,16 @@ export default function AdminDashboard() {
                     </CardHeader>
                     <CardContent>
                         <p className="text-muted-foreground">View and manage registered student accounts.</p>
+                    </CardContent>
+                </Card>
+            </Link>
+             <Link href="/admin/manage-categories" className="block">
+                <Card className="hover:bg-muted/50 transition-colors">
+                    <CardHeader>
+                        <CardTitle>Manage Categories</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground">Add or remove book categories from the library.</p>
                     </CardContent>
                 </Card>
             </Link>

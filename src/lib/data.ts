@@ -17,7 +17,7 @@ export type User = {
     signedUpAt: string;
 }
 
-export const categories = ['All', 'Computer Science', 'Electronics', 'Mechanical', 'Civil Engineering'];
+export const initialCategories = ['All', 'Computer Science', 'Electronics', 'Mechanical', 'Civil Engineering'];
 export const years = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
 
 export const initialUsers: User[] = [

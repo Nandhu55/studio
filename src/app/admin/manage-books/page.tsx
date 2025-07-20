@@ -29,9 +29,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { categories, type Book, years } from '@/lib/data';
+import { type Book, years } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { useBooks } from '@/hooks/use-books';
+import { useCategories } from '@/hooks/use-categories';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,6 +46,7 @@ import {
 
 export default function ManageBooksPage() {
   const { books, addBook, deleteBook } = useBooks();
+  const { categories } = useCategories();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [bookToDelete, setBookToDelete] = useState<Book | null>(null);

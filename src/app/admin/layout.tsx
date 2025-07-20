@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { BookMarked, LayoutDashboard, LogOut, Users, Book } from 'lucide-react';
+import { BookMarked, LayoutDashboard, LogOut, Users, Book, Shapes } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -34,6 +34,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (pathname === '/admin/dashboard') return 'Dashboard';
     if (pathname === '/admin/manage-books') return 'Manage Books';
     if (pathname === '/admin/manage-users') return 'Manage Users';
+    if (pathname === '/admin/manage-categories') return 'Manage Categories';
     return 'Admin Panel';
   }
 
@@ -71,6 +72,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Link href="/admin/manage-users">
                     <Users />
                     <span>Manage Users</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Manage Categories" isActive={pathname === '/admin/manage-categories'}>
+                  <Link href="/admin/manage-categories">
+                    <Shapes />
+                    <span>Manage Categories</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
