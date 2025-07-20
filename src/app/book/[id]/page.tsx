@@ -1,10 +1,10 @@
 
 'use client';
 
-import { useRef } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import { Download, Share2, Loader2, BookOpen } from 'lucide-react';
+import { Download, Share2, Loader2, BookOpen, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SummarizationTool from '@/components/features/summarization-tool';
@@ -29,8 +29,9 @@ export default function BookDetailPage() {
   const { id } = params;
   const { books } = useBooks();
   const { toast } = useToast();
+  const [isReading, setIsReading] = useState(false);
+
   const book = books.find(b => b.id === id);
-  const pdfViewerRef = useRef<HTMLDivElement>(null);
 
   if (!book) {
     return (
@@ -41,10 +42,6 @@ export default function BookDetailPage() {
     );
   }
 
-  const handleReadNow = () => {
-    pdfViewerRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-  
   const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
 
   const handleShare = async () => {
@@ -101,6 +98,21 @@ export default function BookDetailPage() {
         });
     }
   };
+
+  if (isReading) {
+    return (
+      <div className="max-w-6xl mx-auto space-y-4">
+        <div className="flex justify-between items-center">
+            <h1 className="font-headline text-2xl font-bold truncate">{book.title}</h1>
+            <Button onClick={() => setIsReading(false)}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Details
+            </Button>
+        </div>
+        <PdfViewer file={book.pdfUrl} />
+      </div>
+    );
+  }
   
   return (
     <div className="max-w-6xl mx-auto space-y-8 md:space-y-12">
@@ -118,7 +130,7 @@ export default function BookDetailPage() {
               />
             </div>
             <div className="mt-6 space-y-2">
-                <Button className="w-full" size="lg" onClick={handleReadNow}>
+                <Button className="w-full" size="lg" onClick={() => setIsReading(true)}>
                     <BookOpen className="mr-2 h-5 w-5" />
                     Read Now
                 </Button>
@@ -154,11 +166,7 @@ export default function BookDetailPage() {
         </div>
       </div>
 
-      <div ref={pdfViewerRef} className="space-y-8">
-        <div>
-            <h2 className="font-headline text-2xl md:text-3xl font-bold mb-4">Read The Book</h2>
-            <PdfViewer file={book.pdfUrl} />
-        </div>
+      <div className="space-y-8">
         <Separator className="my-8 bg-primary/20" />
         <div>
             <ChatExplainer bookContext={book.description} />
