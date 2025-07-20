@@ -48,13 +48,26 @@ export default function BookDetailPage() {
     }
   };
 
-  const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = book.pdfUrl;
-    link.download = downloadFileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async () => {
+    try {
+        const response = await fetch(book.pdfUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = downloadFileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Download failed:', error);
+        toast({
+            title: "Download Failed",
+            description: "There was an error preparing the file for download.",
+            variant: "destructive"
+        });
+    }
   };
   
   return (
