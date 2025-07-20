@@ -1,4 +1,5 @@
 
+
 export type Book = {
   id: string;
   title: string;
@@ -19,6 +20,16 @@ export type User = {
     avatarUrl?: string;
 }
 
+export type QuestionPaper = {
+  id: string;
+  subject: string;
+  year: string;
+  university: string;
+  type: 'Midterm' | 'Final' | 'Quiz';
+  downloadUrl: string;
+};
+
+
 export const initialCategories = ['All', 'Computer Science', 'Electronics', 'Mechanical', 'Civil Engineering'];
 export const years = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
 
@@ -28,6 +39,13 @@ export const initialUsers: User[] = [
     { id: '3', name: 'User 3', email: 'user3@example.com', signedUpAt: '2024-03-10T18:45:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
 ];
 
+export const initialQuestionPapers: QuestionPaper[] = [
+  { id: 'qp1', subject: 'Data Structures', year: '2nd Year', university: 'JNTU', type: 'Midterm', downloadUrl: '#' },
+  { id: 'qp2', subject: 'Thermodynamics', year: '1st Year', university: 'JNTU', type: 'Final', downloadUrl: '#' },
+  { id: 'qp3', subject: 'Digital Logic Design', year: '2nd Year', university: 'JNTU', type: 'Midterm', downloadUrl: '#' },
+  { id: 'qp4', subject: 'Structural Analysis', year: '3rd Year', university: 'JNTU', type: 'Final', downloadUrl: '#' },
+  { id: 'qp5', subject: 'Algorithms', year: '2nd Year', university: 'JNTU', type: 'Quiz', downloadUrl: '#' },
+];
 
 export const books: Book[] = [
   {

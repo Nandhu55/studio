@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2 } from 'lucide-react';
+import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -55,6 +55,13 @@ export default function Header() {
                 <Link href="/dashboard">
                     <Home className="h-5 w-5" />
                     <span className="sr-only">Home</span>
+                </Link>
+            </Button>
+
+            <Button asChild variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10">
+                <Link href="/exam-papers">
+                    <FileText className="h-5 w-5" />
+                    <span className="sr-only">Exam Papers</span>
                 </Link>
             </Button>
             
