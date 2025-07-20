@@ -100,13 +100,22 @@ export default function ManageBooksPage() {
             dataAiHint: 'book cover'
         };
         
-        addBook(newBook);
-        setIsUploadDialogOpen(false);
-        form.reset();
-        toast({
-            title: "Book Uploaded",
-            description: `"${newBook.title}" has been added to the library.`,
-        });
+        const result = addBook(newBook);
+        
+        if (result.success) {
+            setIsUploadDialogOpen(false);
+            form.reset();
+            toast({
+                title: "Book Uploaded",
+                description: `"${newBook.title}" has been added to the library.`,
+            });
+        } else {
+            toast({
+                title: "Upload Failed",
+                description: result.message,
+                variant: "destructive",
+            });
+        }
 
     } catch (error) {
         console.error("File reading error:", error);

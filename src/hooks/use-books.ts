@@ -1,7 +1,9 @@
+
 import { useState, useEffect } from 'react';
 import { books as initialBooks, type Book } from '@/lib/data';
 
 const BOOKS_STORAGE_KEY = 'b-tech-hub-books';
+const MAX_USER_BOOKS = 5; // Limit the number of user-added books to prevent storage overflow
 
 export function useBooks() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -26,46 +28,24 @@ export function useBooks() {
   const updateStoredBooks = (updatedBooks: Book[]) => {
     setBooks(updatedBooks);
     try {
-      // Create a version of the books for storage, stripping large data URIs from non-initial books
-      const booksForStorage = updatedBooks.map(book => {
-        const isInitialBook = initialBooks.some(ib => ib.id === book.id);
-        if (isInitialBook) {
-            // Keep the original data for initial books
-            return book;
-        }
-        // For new books, strip large data to avoid storage overflow, but keep other details.
-        // We no longer store the file content itself, just metadata.
-        const { coverImage, pdfUrl, ...rest } = book;
-        return { ...rest, coverImage: 'https://placehold.co/300x450.png', pdfUrl: '#', dataAiHint: 'book cover' };
-      });
-      localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(booksForStorage));
+      localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(updatedBooks));
     } catch (error) {
       console.error("Failed to save books to local storage:", error);
     }
   };
   
-  const addBook = (book: Book) => {
-    // 1. Update the component state immediately with the full book data (including data URIs)
-    // This makes the newly uploaded book viewable in the current session.
-    const updatedBooks = [book, ...books];
-    setBooks(updatedBooks);
-    
-    // 2. Create a storage-safe version for localStorage to prevent quota errors.
-    const booksForStorage = updatedBooks.map(b => {
-        const isInitialBook = initialBooks.some(ib => ib.id === b.id);
-        if (isInitialBook) {
-            return b; // Keep original initial books as they are
-        }
-        // For any new book (including the one just added), replace file data with placeholders for storage.
-        const { coverImage, pdfUrl, ...rest } = b;
-        return { ...rest, coverImage: 'https://placehold.co/300x450.png', pdfUrl: '#', dataAiHint: 'book cover' };
-    });
-
-    try {
-        localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(booksForStorage));
-    } catch (error) {
-      console.error("Failed to save books to local storage:", error);
+  const addBook = (book: Book): { success: boolean; message?: string } => {
+    const userBooks = books.filter(b => !initialBooks.some(ib => ib.id === b.id));
+    if (userBooks.length >= MAX_USER_BOOKS) {
+      return {
+        success: false,
+        message: `Storage limit reached. You can only store up to ${MAX_USER_BOOKS} uploaded books.`
+      };
     }
+    
+    const updatedBooks = [book, ...books];
+    updateStoredBooks(updatedBooks);
+    return { success: true };
   };
 
   const deleteBook = (bookId: string) => {
