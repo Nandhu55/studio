@@ -30,14 +30,15 @@ export default function ChatExplainer({ bookContext }: ChatExplainerProps) {
     if (!input.trim() || isLoading) return;
 
     const userMessage: Message = { sender: 'user', text: input };
-    setMessages(prev => [...prev, userMessage]);
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInput('');
     setIsLoading(true);
     setError(null);
 
     try {
       const result = await explainText({
-        question: input,
+        messages: newMessages,
         context: bookContext,
       });
       const aiMessage: Message = { sender: 'ai', text: result.explanation };
@@ -45,6 +46,8 @@ export default function ChatExplainer({ bookContext }: ChatExplainerProps) {
     } catch (e) {
       console.error('Error getting explanation:', e);
       setError('Sorry, I had trouble getting an explanation. Please try again.');
+       // remove the user's message if the API call fails
+      setMessages(messages);
     } finally {
       setIsLoading(false);
     }

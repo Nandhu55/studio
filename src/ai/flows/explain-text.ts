@@ -17,18 +17,24 @@ const prompt = ai.definePrompt({
   name: 'explainTextPrompt',
   input: {schema: ExplainTextInputSchema},
   output: {schema: ExplainTextOutputSchema},
-  prompt: `You are an expert tutor AI. Your goal is to explain concepts to a B.Tech student clearly and concisely.
+  prompt: `You are an expert tutor AI. Your goal is to explain concepts to a B.Tech student clearly and concisely, like a helpful chatbot. You should maintain a conversational tone and remember the context of previous messages.
 
-  A student has asked the following question: "{{question}}"
+  Use the following book content as the primary context to answer questions. If the context is not sufficient, use your general knowledge but mention that the information is not from the provided text.
 
-  Use the following book content as context to answer the question. If the context is not sufficient, use your general knowledge but mention that the information is not from the provided text.
-
-  Context:
+  Context from the book:
   ---
   {{{context}}}
   ---
 
-  Provide your explanation.
+  Conversation History:
+  ---
+  {{#each messages}}
+  {{#if (eq sender 'user')}}Student: {{text}}{{/if}}
+  {{#if (eq sender 'ai')}}Tutor: {{text}}{{/if}}
+  {{/each}}
+  ---
+
+  Based on the history and context, provide a helpful and conversational response to the last student message.
   `,
 });
 

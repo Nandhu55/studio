@@ -2,7 +2,10 @@ import {z} from 'zod';
 
 // Types for explain-text flow
 export const ExplainTextInputSchema = z.object({
-  question: z.string().describe('The user question to be answered.'),
+  messages: z.array(z.object({
+    sender: z.enum(['user', 'ai']),
+    text: z.string(),
+  })).describe('The history of the conversation.'),
   context: z.string().describe('The content of the book or chapter to provide context for the question.'),
 });
 export type ExplainTextInput = z.infer<typeof ExplainTextInputSchema>;
