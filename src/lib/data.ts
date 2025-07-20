@@ -15,6 +15,7 @@ export type User = {
     id: string;
     name: string;
     email: string;
+    password?: string;
     signedUpAt: string;
     avatarUrl?: string;
 }
@@ -36,9 +37,9 @@ export const years = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
 export const semesters = ['1st Sem', '2nd Sem', '3rd Sem', '4th Sem', '5th Sem', '6th Sem'];
 
 export const initialUsers: User[] = [
-    { id: '1', name: 'Nandhu', email: 'gnreddy3555@gmail.com', signedUpAt: '2024-01-15T10:30:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
-    { id: '2', name: 'Sunny', email: 'sunny@example.com', signedUpAt: '2024-02-20T14:00:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
-    { id: '3', name: 'User 3', email: 'user3@example.com', signedUpAt: '2024-03-10T18:45:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
+    { id: '1', name: 'Nandhu', email: 'gnreddy3555@gmail.com', password: 'password123', signedUpAt: '2024-01-15T10:30:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
+    { id: '2', name: 'Sunny', email: 'sunny@example.com', password: 'password123', signedUpAt: '2024-02-20T14:00:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
+    { id: '3', name: 'User 3', email: 'user3@example.com', password: 'password123', signedUpAt: '2024-03-10T18:45:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
 ];
 
 export const initialQuestionPapers: QuestionPaper[] = [

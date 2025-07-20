@@ -35,9 +35,9 @@ export default function LoginPage() {
 
   const handleStudentLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const userExists = users.some(user => user.email === studentEmail);
-    // In a real app, you'd check a hashed password. For demo, we use a simple check.
-    if (userExists && studentPassword === 'password123') {
+    const user = users.find(user => user.email === studentEmail);
+    
+    if (user && user.password === studentPassword) {
         if (typeof window !== 'undefined') {
             sessionStorage.setItem('isLoggedIn', 'true');
         }
@@ -102,7 +102,6 @@ export default function LoginPage() {
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                       <Input id="student-password" type="password" placeholder="••••••••" required className="pl-10" value={studentPassword} onChange={(e) => setStudentPassword(e.target.value)} />
                     </div>
-                    <p className="text-xs text-muted-foreground pt-1">Demo password: password123</p>
                   </div>
                   <Button type="submit" className="w-full !mt-6">Login as Student</Button>
                 </form>

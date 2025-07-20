@@ -33,8 +33,12 @@ export function useUsers() {
     }
   };
 
-  const addUser = (user: User) => {
-    const updatedUsers = [...users, user];
+  const addUser = (user: Omit<User, 'avatarUrl'>) => {
+    const newUser: User = {
+      ...user,
+      avatarUrl: 'https://placehold.co/100x100.png'
+    }
+    const updatedUsers = [...users, newUser];
     updateStoredUsers(updatedUsers);
   };
 

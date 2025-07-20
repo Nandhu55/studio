@@ -26,11 +26,13 @@ export default function SignupPage() {
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
     addUser({
       id: String(Date.now()),
       name,
       email,
+      password,
       signedUpAt: new Date().toISOString(),
     });
 
