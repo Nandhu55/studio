@@ -41,14 +41,6 @@ export default function PdfViewer({ file }: PdfViewerProps) {
   const goToPrevPage = () => setPageNumber(prev => Math.max(prev - 1, 1));
   const goToNextPage = () => setPageNumber(prev => Math.min(prev + 1, numPages!));
 
-  if (!file || file === '#') {
-    return (
-        <div className="border rounded-lg flex items-center justify-center h-96 bg-muted/20">
-            <p className="text-muted-foreground">No PDF document available for this book.</p>
-        </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
         <div className="flex items-center justify-center gap-4">
