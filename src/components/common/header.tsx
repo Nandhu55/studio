@@ -3,16 +3,8 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Phone } from 'lucide-react';
+import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,15 +12,17 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useUsers } from '@/hooks/use-users';
-import { useToast } from '@/hooks/use-toast';
+import { useNotifications } from '@/hooks/use-notifications';
+import { Badge } from '@/components/ui/badge';
 
 export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
   const { users } = useUsers();
-  const { toast } = useToast();
+  const { notifications, clearNotifications, markAsRead } = useNotifications();
   
   // In a real app, you'd get the current user from session/auth context
   const currentUser = users[0]; 
@@ -38,6 +32,14 @@ export default function Header() {
       setIsAdmin(sessionStorage.getItem('isAdmin') === 'true');
     }
   }, []);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const handleOpenChange = (open: boolean) => {
+    if (open && unreadCount > 0) {
+      markAsRead();
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-sm">
@@ -55,29 +57,43 @@ export default function Header() {
                     <span className="sr-only">Home</span>
                 </Link>
             </Button>
-
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10">
-                        <Phone className="h-5 w-5" />
-                        <span className="sr-only">Contact Us</span>
+            
+            <DropdownMenu onOpenChange={handleOpenChange}>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10 relative">
+                        <Bell className="h-5 w-5" />
+                        {unreadCount > 0 && (
+                            <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">{unreadCount}</Badge>
+                        )}
+                        <span className="sr-only">Notifications</span>
                     </Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                    <DialogTitle>Contact Us</DialogTitle>
-                    <DialogDescription>
-                        For any support or inquiries, please reach out to us.
-                    </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-2">
-                        <p><strong>Support Email:</strong> support@btech-hub.com</p>
-                        <p><strong>Admin Email:</strong> gnreddy3555@gmail.com</p>
-                        <p><strong>Contact Email:</strong> gnreddy3555@gmail.com</p>
-                    </div>
-                </DialogContent>
-            </Dialog>
-
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-80" align="end">
+                    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                    {notifications.length === 0 ? (
+                        <DropdownMenuItem disabled>No new notifications</DropdownMenuItem>
+                    ) : (
+                        notifications.map((n) => (
+                            <DropdownMenuItem key={n.id} className="flex flex-col items-start gap-1 whitespace-normal">
+                                <p className="font-semibold">{n.title}</p>
+                                <p className="text-xs text-muted-foreground">{n.description}</p>
+                            </DropdownMenuItem>
+                        ))
+                    )}
+                    </DropdownMenuGroup>
+                    {notifications.length > 0 && (
+                        <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onSelect={clearNotifications} className="text-destructive">
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                <span>Clear all notifications</span>
+                            </DropdownMenuItem>
+                        </>
+                    )}
+                </DropdownMenuContent>
+            </DropdownMenu>
 
            <DropdownMenu>
             <DropdownMenuTrigger asChild>
