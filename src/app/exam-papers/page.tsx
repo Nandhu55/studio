@@ -2,7 +2,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Download } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { Download, BookOpen, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -20,6 +21,21 @@ import { useCategories } from '@/hooks/use-categories';
 import { years } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
 import type { QuestionPaper } from '@/lib/data';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+
+const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex justify-center items-center min-h-96">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    </div>
+  ),
+});
 
 export default function ExamPapersPage() {
   const { questionPapers } = useQuestionPapers();
@@ -27,6 +43,8 @@ export default function ExamPapersPage() {
   const { categories } = useCategories();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedYear, setSelectedYear] = useState('All');
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [selectedPaper, setSelectedPaper] = useState<QuestionPaper | null>(null);
 
   const handleDownload = (paper: QuestionPaper) => {
     if (paper.downloadUrl === '#') {
@@ -60,6 +78,19 @@ export default function ExamPapersPage() {
         });
     }
   }
+
+  const handleRead = (paper: QuestionPaper) => {
+    if (paper.downloadUrl && paper.downloadUrl.startsWith('data:application/pdf;base64,')) {
+      setSelectedPaper(paper);
+      setIsViewerOpen(true);
+    } else {
+       toast({
+            title: "Read Unavailable",
+            description: "A readable document for this paper is not available.",
+            variant: "destructive"
+        });
+    }
+  };
 
   const filteredPapers = questionPapers.filter(paper => {
     const categoryMatch = selectedCategory === 'All' || paper.category === selectedCategory;
@@ -130,7 +161,10 @@ export default function ExamPapersPage() {
                     <TableCell>{paper.semester}</TableCell>
                     <TableCell>{paper.university}</TableCell>
                     <TableCell><Badge variant="outline">{paper.type}</Badge></TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right space-x-2">
+                       <Button size="sm" variant="outline" onClick={() => handleRead(paper)}>
+                        <BookOpen className="mr-2 h-4 w-4" /> Read
+                      </Button>
                       <Button size="sm" onClick={() => handleDownload(paper)}>
                         <Download className="mr-2 h-4 w-4" /> Download
                       </Button>
@@ -156,10 +190,14 @@ export default function ExamPapersPage() {
                         <Badge variant="secondary">{paper.university}</Badge>
                         <Badge variant="outline">{paper.type}</Badge>
                     </div>
-                    <Button className="w-full" onClick={() => handleDownload(paper)}>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download Paper
-                    </Button>
+                    <div className="grid grid-cols-2 gap-2">
+                         <Button variant="outline" onClick={() => handleRead(paper)}>
+                            <BookOpen className="mr-2 h-4 w-4" /> Read
+                        </Button>
+                        <Button onClick={() => handleDownload(paper)}>
+                            <Download className="mr-2 h-4 w-4" /> Download
+                        </Button>
+                    </div>
                 </CardContent>
               </Card>
             ))}
@@ -170,6 +208,17 @@ export default function ExamPapersPage() {
             <p className="text-muted-foreground">No question papers found for the selected filters.</p>
         </div>
       )}
+
+      <Dialog open={isViewerOpen} onOpenChange={setIsViewerOpen}>
+        <DialogContent className="max-w-5xl h-[90vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>{selectedPaper?.subject}</DialogTitle>
+          </DialogHeader>
+          <div className="flex-grow overflow-hidden">
+            {selectedPaper && <PdfViewer file={selectedPaper.downloadUrl} />}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
