@@ -11,6 +11,8 @@ import SummarizationTool from '@/components/features/summarization-tool';
 import { useBooks } from '@/hooks/use-books';
 import { useToast } from '@/hooks/use-toast';
 import dynamic from 'next/dynamic';
+import { Separator } from '@/components/ui/separator';
+import ChatExplainer from '@/components/features/chat-explainer';
 
 const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
   ssr: false,
@@ -152,9 +154,15 @@ export default function BookDetailPage() {
         </div>
       </div>
 
-      <div ref={pdfViewerRef}>
-        <h2 className="font-headline text-2xl md:text-3xl font-bold mb-4">Read The Book</h2>
-        <PdfViewer file={book.pdfUrl} />
+      <div ref={pdfViewerRef} className="space-y-8">
+        <div>
+            <h2 className="font-headline text-2xl md:text-3xl font-bold mb-4">Read The Book</h2>
+            <PdfViewer file={book.pdfUrl} />
+        </div>
+        <Separator className="my-8 bg-primary/20" />
+        <div>
+            <ChatExplainer bookContext={book.description} />
+        </div>
       </div>
     </div>
   );
