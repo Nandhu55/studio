@@ -11,11 +11,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { useUsers } from '@/hooks/use-users';
 
 export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const { users } = useUsers();
 
   const [studentEmail, setStudentEmail] = useState('');
   const [studentPassword, setStudentPassword] = useState('');
@@ -33,10 +35,20 @@ export default function LoginPage() {
 
   const handleStudentLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('isLoggedIn', 'true');
+    const userExists = users.some(user => user.email === studentEmail);
+    // In a real app, you'd check a hashed password. For demo, we use a simple check.
+    if (userExists && studentPassword === 'password123') {
+        if (typeof window !== 'undefined') {
+            sessionStorage.setItem('isLoggedIn', 'true');
+        }
+        router.push('/dashboard');
+    } else {
+        toast({
+            title: 'Login Failed',
+            description: 'Invalid student credentials. Please try again.',
+            variant: 'destructive',
+        });
     }
-    router.push('/dashboard');
   };
   
   const handleAdminLogin = (e: React.FormEvent) => {
@@ -90,6 +102,7 @@ export default function LoginPage() {
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                       <Input id="student-password" type="password" placeholder="••••••••" required className="pl-10" value={studentPassword} onChange={(e) => setStudentPassword(e.target.value)} />
                     </div>
+                    <p className="text-xs text-muted-foreground pt-1">Demo password: password123</p>
                   </div>
                   <Button type="submit" className="w-full !mt-6">Login as Student</Button>
                 </form>
