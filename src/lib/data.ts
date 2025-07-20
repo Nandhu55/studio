@@ -23,6 +23,7 @@ export type User = {
 export type QuestionPaper = {
   id: string;
   subject: string;
+  category: string;
   year: string;
   university: string;
   type: 'Midterm' | 'Final' | 'Quiz';
@@ -40,11 +41,11 @@ export const initialUsers: User[] = [
 ];
 
 export const initialQuestionPapers: QuestionPaper[] = [
-  { id: 'qp1', subject: 'Data Structures', year: '2nd Year', university: 'JNTU', type: 'Midterm', downloadUrl: '#' },
-  { id: 'qp2', subject: 'Thermodynamics', year: '1st Year', university: 'JNTU', type: 'Final', downloadUrl: '#' },
-  { id: 'qp3', subject: 'Digital Logic Design', year: '2nd Year', university: 'JNTU', type: 'Midterm', downloadUrl: '#' },
-  { id: 'qp4', subject: 'Structural Analysis', year: '3rd Year', university: 'JNTU', type: 'Final', downloadUrl: '#' },
-  { id: 'qp5', subject: 'Algorithms', year: '2nd Year', university: 'JNTU', type: 'Quiz', downloadUrl: '#' },
+  { id: 'qp1', subject: 'Data Structures', category: 'Computer Science', year: '2nd Year', university: 'JNTU', type: 'Midterm', downloadUrl: '#' },
+  { id: 'qp2', subject: 'Thermodynamics', category: 'Mechanical', year: '1st Year', university: 'JNTU', type: 'Final', downloadUrl: '#' },
+  { id: 'qp3', subject: 'Digital Logic Design', category: 'Electronics', year: '2nd Year', university: 'JNTU', type: 'Midterm', downloadUrl: '#' },
+  { id: 'qp4', subject: 'Structural Analysis', category: 'Civil Engineering', year: '3rd Year', university: 'JNTU', type: 'Final', downloadUrl: '#' },
+  { id: 'qp5', subject: 'Algorithms', category: 'Computer Science', year: '2nd Year', university: 'JNTU', type: 'Quiz', downloadUrl: '#' },
 ];
 
 export const books: Book[] = [
