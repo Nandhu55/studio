@@ -1,5 +1,4 @@
 
-
 export type Book = {
   id: string;
   title: string;
@@ -25,6 +24,7 @@ export type QuestionPaper = {
   subject: string;
   category: string;
   year: string;
+  semester?: string;
   university: string;
   type: 'Midterm' | 'Final' | 'Quiz';
   downloadUrl: string;
@@ -33,6 +33,7 @@ export type QuestionPaper = {
 
 export const initialCategories = ['All', 'Computer Science', 'Electronics', 'Mechanical', 'Civil Engineering'];
 export const years = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
+export const semesters = ['1st Sem', '2nd Sem', '3rd Sem', '4th Sem', '5th Sem', '6th Sem'];
 
 export const initialUsers: User[] = [
     { id: '1', name: 'Nandhu', email: 'gnreddy3555@gmail.com', signedUpAt: '2024-01-15T10:30:00Z', avatarUrl: 'https://placehold.co/100x100.png'},
@@ -41,11 +42,11 @@ export const initialUsers: User[] = [
 ];
 
 export const initialQuestionPapers: QuestionPaper[] = [
-  { id: 'qp1', subject: 'Data Structures', category: 'Computer Science', year: '2nd Year', university: 'JNTU', type: 'Midterm', downloadUrl: '#' },
-  { id: 'qp2', subject: 'Thermodynamics', category: 'Mechanical', year: '1st Year', university: 'JNTU', type: 'Final', downloadUrl: '#' },
-  { id: 'qp3', subject: 'Digital Logic Design', category: 'Electronics', year: '2nd Year', university: 'JNTU', type: 'Midterm', downloadUrl: '#' },
-  { id: 'qp4', subject: 'Structural Analysis', category: 'Civil Engineering', year: '3rd Year', university: 'JNTU', type: 'Final', downloadUrl: '#' },
-  { id: 'qp5', subject: 'Algorithms', category: 'Computer Science', year: '2nd Year', university: 'JNTU', type: 'Quiz', downloadUrl: '#' },
+  { id: 'qp1', subject: 'Data Structures', category: 'Computer Science', year: '2nd Year', semester: '3rd Sem', university: 'JNTU', type: 'Midterm', downloadUrl: '#' },
+  { id: 'qp2', subject: 'Thermodynamics', category: 'Mechanical', year: '1st Year', semester: '2nd Sem', university: 'JNTU', type: 'Final', downloadUrl: '#' },
+  { id: 'qp3', subject: 'Digital Logic Design', category: 'Electronics', year: '2nd Year', semester: '4th Sem', university: 'JNTU', type: 'Midterm', downloadUrl: '#' },
+  { id: 'qp4', subject: 'Structural Analysis', category: 'Civil Engineering', year: '3rd Year', semester: '5th Sem', university: 'JNTU', type: 'Final', downloadUrl: '#' },
+  { id: 'qp5', subject: 'Algorithms', category: 'Computer Science', year: '2nd Year', semester: '4th Sem', university: 'JNTU', type: 'Quiz', downloadUrl: '#' },
 ];
 
 export const books: Book[] = [

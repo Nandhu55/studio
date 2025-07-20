@@ -19,6 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useCategories } from '@/hooks/use-categories';
 import { years } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
+import type { QuestionPaper } from '@/lib/data';
 
 export default function ExamPapersPage() {
   const { questionPapers } = useQuestionPapers();
@@ -27,7 +28,7 @@ export default function ExamPapersPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedYear, setSelectedYear] = useState('All');
 
-  const handleDownload = (paper: { downloadUrl: string, subject: string, type: string }) => {
+  const handleDownload = (paper: QuestionPaper) => {
     if (paper.downloadUrl === '#') {
         toast({
             title: "Download Unavailable",
@@ -36,12 +37,28 @@ export default function ExamPapersPage() {
         });
         return;
     }
-    // In a real app, this would trigger a file download.
-    // For this demo, we'll just show a toast.
-    toast({
-        title: "Download Started",
-        description: `Downloading ${paper.subject} ${paper.type} paper.`
-    })
+
+    try {
+        const link = document.createElement('a');
+        link.href = paper.downloadUrl;
+        const fileName = `${paper.subject.replace(/\s+/g, '_')}_${paper.year}_${paper.type}`;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        toast({
+            title: "Download Started",
+            description: `Downloading ${paper.subject} ${paper.type} paper.`
+        });
+    } catch(e) {
+        console.error("Download error:", e);
+        toast({
+            title: "Download Failed",
+            description: "Could not initiate the download.",
+            variant: "destructive"
+        });
+    }
   }
 
   const filteredPapers = questionPapers.filter(paper => {
@@ -99,6 +116,7 @@ export default function ExamPapersPage() {
                 <TableRow>
                   <TableHead>Subject</TableHead>
                   <TableHead>Year</TableHead>
+                  <TableHead>Semester</TableHead>
                   <TableHead>University</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -109,6 +127,7 @@ export default function ExamPapersPage() {
                   <TableRow key={paper.id}>
                     <TableCell className="font-medium">{paper.subject}</TableCell>
                     <TableCell>{paper.year}</TableCell>
+                    <TableCell>{paper.semester}</TableCell>
                     <TableCell>{paper.university}</TableCell>
                     <TableCell><Badge variant="outline">{paper.type}</Badge></TableCell>
                     <TableCell className="text-right">
@@ -133,6 +152,7 @@ export default function ExamPapersPage() {
                     <div className="flex flex-wrap gap-2 text-sm">
                         <Badge variant="secondary">{paper.category}</Badge>
                         <Badge variant="secondary">{paper.year}</Badge>
+                        <Badge variant="secondary">{paper.semester}</Badge>
                         <Badge variant="secondary">{paper.university}</Badge>
                         <Badge variant="outline">{paper.type}</Badge>
                     </div>

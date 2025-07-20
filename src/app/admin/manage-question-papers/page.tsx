@@ -29,7 +29,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { type QuestionPaper, years } from '@/lib/data';
+import { type QuestionPaper, years, semesters } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { useQuestionPapers } from '@/hooks/use-question-papers';
 import { useCategories } from '@/hooks/use-categories';
@@ -86,6 +86,7 @@ export default function ManageQuestionPapersPage() {
             subject: formData.get('subject') as string,
             category: formData.get('category') as string,
             year: formData.get('year') as string,
+            semester: formData.get('semester') as string,
             university: formData.get('university') as string,
             type: formData.get('type') as 'Midterm' | 'Final' | 'Quiz',
             downloadUrl: fileUri,
@@ -150,6 +151,7 @@ export default function ManageQuestionPapersPage() {
               <TableHead>Subject</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Year</TableHead>
+              <TableHead>Semester</TableHead>
               <TableHead>Type</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -160,6 +162,7 @@ export default function ManageQuestionPapersPage() {
                 <TableCell className="font-medium">{paper.subject}</TableCell>
                 <TableCell>{paper.category}</TableCell>
                 <TableCell>{paper.year}</TableCell>
+                <TableCell>{paper.semester}</TableCell>
                 <TableCell><Badge variant="outline">{paper.type}</Badge></TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
@@ -193,6 +196,7 @@ export default function ManageQuestionPapersPage() {
                 <div className="flex flex-wrap gap-2">
                     <Badge variant="outline">{paper.category}</Badge>
                     <Badge variant="secondary">{paper.year}</Badge>
+                    <Badge variant="secondary">{paper.semester}</Badge>
                     <Badge variant="secondary">{paper.type}</Badge>
                 </div>
                 <div className="pt-2">
@@ -247,6 +251,17 @@ export default function ManageQuestionPapersPage() {
                     </SelectTrigger>
                     <SelectContent>
                         {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                    </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="semester" className="text-right">Semester</Label>
+                <Select name="semester" required>
+                    <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select a semester" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {semesters.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                     </SelectContent>
                 </Select>
               </div>
