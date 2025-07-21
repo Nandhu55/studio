@@ -3,13 +3,14 @@
 
 import { useState } from 'react';
 import BookCard from '@/components/common/book-card';
-import { books } from '@/lib/data';
+import { useBooks } from '@/hooks/use-books';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 export default function OtherBooksPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const { books } = useBooks();
 
   const otherBooks = books.filter(book => {
     const isOtherBook = book.category === 'Finance' || book.category === 'Motivation';
