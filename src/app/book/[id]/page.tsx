@@ -74,10 +74,11 @@ export default function BookDetailPage() {
           url: window.location.href,
         });
       } catch (error) {
-        console.error('Share API failed, falling back to copy:', error);
+        // If navigator.share fails (e.g., permission denied), fall back to copying the link.
         fallbackCopyLink();
       }
     } else {
+      // If navigator.share is not supported, fall back to copying the link.
       fallbackCopyLink();
     }
   };
