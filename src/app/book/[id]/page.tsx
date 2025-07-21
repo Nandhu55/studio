@@ -58,6 +58,14 @@ export default function BookDetailPage() {
   const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
 
   const handleShare = async () => {
+    const fallbackCopyLink = () => {
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link Copied",
+        description: "A link to this book has been copied to your clipboard.",
+      });
+    };
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -66,19 +74,11 @@ export default function BookDetailPage() {
           url: window.location.href,
         });
       } catch (error) {
-        console.error('Error sharing book:', error);
-        toast({
-            title: "Sharing Failed",
-            description: "There was an error trying to share this book.",
-            variant: "destructive"
-        });
+        console.error('Share API failed, falling back to copy:', error);
+        fallbackCopyLink();
       }
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: "Link Copied",
-        description: "A link to this book has been copied to your clipboard.",
-      });
+      fallbackCopyLink();
     }
   };
 
