@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
-import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2, FileText, Phone } from 'lucide-react';
+import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2, FileText, Shapes, Briefcase, BookHeart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,13 +14,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useNotifications } from '@/hooks/use-notifications';
 import { Badge } from '@/components/ui/badge';
@@ -29,7 +22,6 @@ import type { User as UserType } from '@/lib/data';
 export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
   const { notifications, clearNotifications, markAsRead } = useNotifications();
-  const [isContactOpen, setIsContactOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
   const updateUserFromSession = useCallback(() => {
@@ -96,10 +88,30 @@ export default function Header() {
                 </Link>
             </Button>
             
-            <Button variant="ghost" size="icon" className="text-foreground hover:text-primary hover:bg-primary/10" onClick={() => setIsContactOpen(true)}>
-                <Phone className="h-5 w-5" />
-                <span className="sr-only">Contact Us</span>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-foreground hover:text-primary hover:bg-primary/10">
+                    <Shapes className="h-5 w-5" />
+                    <span className="sr-only">Resources</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Extra Resources</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/career-guidance">
+                    <Briefcase className="mr-2 h-4 w-4" />
+                    <span>Career Guidance</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/other-books">
+                    <BookHeart className="mr-2 h-4 w-4" />
+                    <span>Other Books</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <DropdownMenu onOpenChange={handleOpenChange}>
                 <DropdownMenuTrigger asChild>
@@ -184,19 +196,6 @@ export default function Header() {
           </DropdownMenu>
         </div>
       </div>
-      <Dialog open={isContactOpen} onOpenChange={setIsContactOpen}>
-        <DialogContent>
-            <DialogHeader>
-                <DialogTitle>Contact Us</DialogTitle>
-                <DialogDescription>
-                    For any support or inquiries, please reach out to us.
-                </DialogDescription>
-            </DialogHeader>
-            <div className="py-4 space-y-2">
-                <p><span className="font-semibold">Email:</span> gnreddy3555@gmail.com</p>
-            </div>
-        </DialogContent>
-      </Dialog>
     </header>
   );
 }

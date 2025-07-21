@@ -36,7 +36,7 @@ export type QuestionPaper = {
 };
 
 
-export const initialCategories = ['All', 'Computer Science', 'Electronics', 'Mechanical', 'Civil Engineering'];
+export const initialCategories = ['All', 'Computer Science', 'Electronics', 'Mechanical', 'Civil Engineering', 'Finance', 'Motivation'];
 export const courses = ['Computer Science', 'Electronics', 'Mechanical', 'Civil Engineering'];
 export const years = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
 export const semesters = ['1st Sem', '2nd Sem', '3rd Sem', '4th Sem', '5th Sem', '6th Sem', '7th Sem', '8th Sem'];
@@ -143,5 +143,49 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'heat engine',
+  },
+  {
+    id: '9',
+    title: 'The Intelligent Investor',
+    author: 'Benjamin Graham',
+    category: 'Finance',
+    year: 'All',
+    description: 'The classic guide to value investing, offering timeless wisdom on how to reach your financial goals. A must-read for anyone interested in the stock market.',
+    coverImage: 'https://placehold.co/300x450.png',
+    pdfUrl: '#',
+    dataAiHint: 'finance money',
+  },
+  {
+    id: '10',
+    title: 'The Psychology of Money',
+    author: 'Morgan Housel',
+    category: 'Finance',
+    year: 'All',
+    description: 'Timeless lessons on wealth, greed, and happiness. Morgan Housel shares 19 short stories exploring the strange ways people think about money.',
+    coverImage: 'https://placehold.co/300x450.png',
+    pdfUrl: '#',
+    dataAiHint: 'money psychology',
+  },
+  {
+    id: '11',
+    title: 'The 7 Habits of Highly Effective People',
+    author: 'Stephen R. Covey',
+    category: 'Motivation',
+    year: 'All',
+    description: 'A holistic, integrated, principle-centered approach for solving personal and professional problems. A classic of the self-help genre.',
+    coverImage: 'https://placehold.co/300x450.png',
+    pdfUrl: '#',
+    dataAiHint: 'success habits',
+  },
+  {
+    id: '12',
+    title: 'Atomic Habits',
+    author: 'James Clear',
+    category: 'Motivation',
+    year: 'All',
+    description: 'An easy & proven way to build good habits & break bad ones. This book offers a framework for improving every day.',
+    coverImage: 'https://placehold.co/300x450.png',
+    pdfUrl: '#',
+    dataAiHint: 'habits improvement',
   },
 ];
