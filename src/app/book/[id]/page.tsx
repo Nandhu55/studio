@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import { Download, Share2, Loader2, BookOpen, ArrowLeft } from 'lucide-react';
+import { Download, Share2, Loader2, BookOpen, ArrowLeft, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import QuizGenerator from '@/components/features/quiz-generator';
@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import dynamic from 'next/dynamic';
 import { Separator } from '@/components/ui/separator';
 import ChatExplainer from '@/components/features/chat-explainer';
+import { cn } from '@/lib/utils';
 
 const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
   ssr: false,
@@ -163,12 +164,27 @@ export default function BookDetailPage() {
           </div>
         </div>
         <div className="md:col-span-2">
-          <div className="flex flex-wrap gap-2 mb-2">
-            <Badge variant="secondary">{book.category}</Badge>
-          </div>
-          <h1 className="font-headline text-3xl md:text-5xl font-bold">{book.title}</h1>
+          <Badge variant="secondary">{book.category}</Badge>
+          <h1 className="font-headline text-3xl md:text-5xl font-bold mt-2">{book.title}</h1>
           <p className="mt-2 text-lg md:text-xl text-muted-foreground">by {book.author}</p>
           
+          <div className="mt-4 flex items-center gap-2">
+              <div className="flex items-center">
+                {[...Array(5)].map((_, i) => (
+                    <Star
+                    key={i}
+                    className={cn(
+                        'h-6 w-6',
+                        book.rating && i < Math.floor(book.rating)
+                        ? 'text-yellow-400 fill-yellow-400'
+                        : 'text-gray-300'
+                    )}
+                    />
+                ))}
+              </div>
+              <span className="text-muted-foreground font-medium">{book.rating?.toFixed(1)}</span>
+          </div>
+
           <div className="mt-8 prose dark:prose-invert max-w-none">
             <h2 className="font-headline text-2xl font-semibold">Description</h2>
             <p>{book.description}</p>

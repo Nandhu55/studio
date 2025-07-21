@@ -9,6 +9,7 @@ export type Book = {
   coverImage: string;
   pdfUrl: string;
   dataAiHint: string;
+  rating?: number;
 };
 
 export type User = {
@@ -66,6 +67,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'technology programming',
+    rating: 4.8,
   },
   {
     id: '2',
@@ -77,6 +79,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'circuits technology',
+    rating: 4.7,
   },
   {
     id: '3',
@@ -88,6 +91,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'gears machinery',
+    rating: 4.6,
   },
   {
     id: '4',
@@ -99,6 +103,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'bridge construction',
+    rating: 4.5,
   },
   {
     id: '5',
@@ -110,6 +115,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'software development',
+    rating: 4.9,
   },
   {
     id: '6',
@@ -121,6 +127,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'algorithms data',
+    rating: 4.8,
   },
     {
     id: '7',
@@ -132,6 +139,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'semiconductor electronics',
+    rating: 4.7,
   },
   {
     id: '8',
@@ -143,6 +151,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'heat engine',
+    rating: 4.6,
   },
   {
     id: '9',
@@ -154,6 +163,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'finance money',
+    rating: 4.9,
   },
   {
     id: '10',
@@ -165,6 +175,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'money psychology',
+    rating: 4.8,
   },
   {
     id: '11',
@@ -176,6 +187,7 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'success habits',
+    rating: 4.7,
   },
   {
     id: '12',
@@ -187,5 +199,6 @@ export const books: Book[] = [
     coverImage: 'https://placehold.co/300x450.png',
     pdfUrl: '#',
     dataAiHint: 'habits improvement',
+    rating: 4.9,
   },
 ];
