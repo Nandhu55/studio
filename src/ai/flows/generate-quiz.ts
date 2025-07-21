@@ -38,7 +38,12 @@ const generateQuizFlow = ai.defineFlow(
     outputSchema: GenerateQuizOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    try {
+        const {output} = await prompt(input);
+        return output!;
+    } catch (error) {
+        console.error("Error in generateQuizFlow:", error);
+        throw new Error("The quiz generator is currently unavailable. Please try again later.");
+    }
   }
 );

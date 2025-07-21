@@ -54,13 +54,18 @@ const explainTextFlow = ai.defineFlow(
     outputSchema: ExplainTextOutputSchema,
   },
   async input => {
-    const processedMessages = input.messages.map(message => ({
-        ...message,
-        isUser: message.sender === 'user',
-        isAi: message.sender === 'ai'
-    }));
-    
-    const {output} = await prompt({...input, messages: processedMessages});
-    return output!;
+    try {
+        const processedMessages = input.messages.map(message => ({
+            ...message,
+            isUser: message.sender === 'user',
+            isAi: message.sender === 'ai'
+        }));
+        
+        const {output} = await prompt({...input, messages: processedMessages});
+        return output!;
+    } catch (error) {
+        console.error("Error in explainTextFlow:", error);
+        throw new Error("The AI tutor is currently unavailable. Please try again later.");
+    }
   }
 );
