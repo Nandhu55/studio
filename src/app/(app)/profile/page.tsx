@@ -23,22 +23,18 @@ export default function ProfilePage() {
   useEffect(() => {
     // This effect runs once on component mount to load the user from session storage.
      if (typeof window !== 'undefined') {
-      const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-      if (isLoggedIn !== 'true') {
-        router.replace('/login');
-        return;
-      }
-
       const userJson = sessionStorage.getItem('currentUser');
       if (userJson) {
         try {
           setCurrentUser(JSON.parse(userJson));
         } catch (e) {
           console.error("Failed to parse user data from session storage", e);
+          // If parsing fails, the user might not be properly logged in.
+          // The layout's auth check will handle redirection.
         }
       }
     }
-  }, [router]);
+  }, []);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
