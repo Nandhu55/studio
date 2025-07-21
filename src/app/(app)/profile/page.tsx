@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, GraduationCap, Phone } from 'lucide-react';
+import { User, Mail, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, GraduationCap, Phone, LogOut } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import type { User as UserType } from '@/lib/data';
 import { useRouter } from 'next/navigation';
@@ -68,6 +68,15 @@ export default function ProfilePage() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('isAdmin');
+      sessionStorage.removeItem('currentUser');
+    }
+    router.push('/login');
   };
 
   if (!currentUser) {
@@ -168,6 +177,27 @@ export default function ProfilePage() {
           </div>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+                <Mail className="h-5 w-5" />
+                <span>Contact Us</span>
+            </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+            <p className="text-muted-foreground">Need help? Reach out to support.</p>
+            <a href="mailto:gnreddy3555@gmail.com" className="font-medium text-primary hover:underline">
+              gnreddy3555@gmail.com
+            </a>
+        </CardContent>
+      </Card>
+
+      <Button variant="destructive" className="w-full" onClick={handleLogout}>
+        <LogOut className="mr-2 h-4 w-4" />
+        Logout
+      </Button>
+
     </div>
   );
 }
