@@ -69,7 +69,8 @@ export default function SignupPage() {
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-background p-4 relative overflow-hidden">
-       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 animate-gradient-xy"></div>
+       <div className="absolute inset-0 bg-grid-cyan bg-cyan-950/10 [mask-image:linear-gradient(to_bottom,white_10%,transparent_90%)]"></div>
+       <div className="absolute inset-[-100%] animate-shimmer bg-[length:200%_200%] shimmer-bg"></div>
       <div 
         className={`transition-all duration-700 ease-out ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
       >
