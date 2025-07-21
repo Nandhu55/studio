@@ -3,8 +3,7 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Code, Server, Cloud, BrainCircuit, Shield, Database } from 'lucide-react';
-import { ArrowLeft } from 'lucide-react';
+import { Code, Server, Cloud, BrainCircuit, Shield, Database, ArrowLeft, Layers, AppWindow, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const careerPaths = [
@@ -21,6 +20,12 @@ const careerPaths = [
     href: 'https://roadmap.sh/backend',
   },
   {
+    icon: Layers,
+    title: 'MERN Stack Developer',
+    description: 'Become a full-stack developer specializing in MongoDB, Express.js, React, and Node.js to build end-to-end applications.',
+    href: 'https://roadmap.sh/full-stack',
+  },
+  {
     icon: Cloud,
     title: 'DevOps Engineer',
     description: 'Bridge the gap between development and operations. Focus on CI/CD pipelines, cloud infrastructure, and automation tools.',
@@ -33,6 +38,12 @@ const careerPaths = [
     href: 'https://roadmap.sh/ai-data-scientist',
   },
   {
+    icon: Cpu,
+    title: 'AI Engineer',
+    description: 'Focus on developing AI models and integrating them into applications. Work with large language models, NLP, and computer vision.',
+    href: 'https://roadmap.sh/ai-and-data-scientist',
+  },
+  {
     icon: Shield,
     title: 'Cybersecurity Specialist',
     description: 'Protect computer systems and networks from security threats. Understand cryptography, security protocols, and ethical hacking.',
@@ -43,6 +54,12 @@ const careerPaths = [
     title: 'Data Scientist',
     description: 'Analyze and interpret complex data to help organizations make better decisions. Master statistics, machine learning, and data visualization.',
     href: 'https://roadmap.sh/data-scientist',
+  },
+  {
+    icon: AppWindow,
+    title: 'Salesforce Developer',
+    description: 'Customize and build applications on the Salesforce platform. Work with Apex, Lightning Web Components, and declarative tools.',
+    href: 'https://trailhead.salesforce.com/en/career-path/developer',
   },
 ];
 
