@@ -2,7 +2,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, VisuallyHidden } from '@/components/ui/sheet';
 import { MessageSquare } from 'lucide-react';
 import ChatRoom from './chat-room';
 
@@ -19,6 +19,11 @@ export default function ChatLauncher() {
         </Button>
       </SheetTrigger>
       <SheetContent className="w-full sm:max-w-md p-0 flex flex-col">
+        <SheetHeader>
+          <SheetTitle>
+            <VisuallyHidden>Student Chat</VisuallyHidden>
+          </SheetTitle>
+        </SheetHeader>
         <ChatRoom />
       </SheetContent>
     </Sheet>
