@@ -4,6 +4,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/common/header';
+import ChatLauncher from '@/components/features/chat-launcher';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container py-6 sm:py-8">{children}</main>
+      <ChatLauncher />
     </div>
   );
 }
