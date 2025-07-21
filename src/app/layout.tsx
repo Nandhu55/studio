@@ -2,7 +2,6 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from '@/components/common/theme-provider';
-import ChatLauncher from '@/components/features/chat-launcher';
 
 export const metadata: Metadata = {
   title: 'B-Tech Hub',
@@ -30,7 +29,6 @@ export default function RootLayout({
         >
           {children}
           <Toaster />
-          <ChatLauncher />
         </ThemeProvider>
       </body>
     </html>
