@@ -87,14 +87,16 @@ export default function LibraryPage() {
         <div className="mb-6">
             <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-primary">Full Library Access</h2>
             <div className="mt-4 flex flex-col gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input
-                    placeholder="Search by title, author, or category..."
-                    className="pl-10"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
+                <div className="relative rounded-lg bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-0.5">
+                  <div className="relative flex items-center bg-background rounded-[calc(0.5rem-2px)]">
+                    <Search className="absolute left-3 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      placeholder="Search by title, author, or category..."
+                      className="pl-10 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
                 </div>
                  <div className="flex items-baseline gap-2 flex-wrap">
                     <span className="text-sm font-medium text-muted-foreground w-full sm:w-20 shrink-0">Category:</span>
