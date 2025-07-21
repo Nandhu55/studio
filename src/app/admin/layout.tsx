@@ -87,7 +87,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </SidebarMenuButton>
               </SidebarMenuItem>
                <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Manage Other Books" isActive={pathname.startsWith('/admin/manage-books')}>
+                <SidebarMenuButton asChild tooltip="Manage Other Books" isActive={pathname === '/admin/manage-books'}>
                    <Link href="/admin/manage-books">
                     <BookHeart />
                     <span>Manage Other Books</span>
