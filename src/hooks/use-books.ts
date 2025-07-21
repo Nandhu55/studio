@@ -42,9 +42,9 @@ export function useBooks() {
   }, [fetchBooksFromStorage]);
 
   const updateStoredBooks = (updatedBooks: Book[]) => {
-    setBooks(updatedBooks);
     // This might throw a QuotaExceededError, which will be caught in `addBook`
     localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(updatedBooks));
+    setBooks(updatedBooks);
     // Manually dispatch a storage event to notify other tabs/windows
     window.dispatchEvent(
       new StorageEvent('storage', {
@@ -79,8 +79,8 @@ export function useBooks() {
         // Check if the error is a QuotaExceededError
         if (error.name === 'QuotaExceededError' || (error.code && (error.code === 22 || error.code === 1014))) {
             console.error("Quota Exceeded Error:", error);
-            // Revert state to before the failed addition
-            setBooks(currentBooks);
+            // Revert state to before the failed addition by re-fetching from storage
+            fetchBooksFromStorage();
             return {
               success: false,
               message: "Upload failed. The file is too large for browser storage. Please try a smaller file."
@@ -88,7 +88,7 @@ export function useBooks() {
         } else {
             // Re-throw other errors
             console.error("Failed to save book:", error);
-            setBooks(currentBooks);
+            fetchBooksFromStorage();
             return {
               success: false,
               message: "An unexpected error occurred while saving the book."
