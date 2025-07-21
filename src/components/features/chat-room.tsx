@@ -1,27 +1,42 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Send, MessageSquare, User } from 'lucide-react';
+import { Send, MessageSquare, User, Trash2 } from 'lucide-react';
 import { useChat } from '@/hooks/use-chat';
 import type { User as UserType } from '@/lib/data';
 
 export default function ChatRoom() {
-  const { messages, sendMessage } = useChat();
+  const { messages, sendMessage, deleteMessage } = useChat();
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const updateUserFromSession = useCallback(() => {
     const userJson = sessionStorage.getItem('currentUser');
     if (userJson) {
-      setCurrentUser(JSON.parse(userJson));
+        try {
+            setCurrentUser(JSON.parse(userJson));
+        } catch (e) {
+            console.error("Could not parse user JSON from session storage", e);
+            setCurrentUser(null);
+        }
+    } else {
+        setCurrentUser(null);
     }
   }, []);
+
+  useEffect(() => {
+    updateUserFromSession();
+    window.addEventListener('storage', updateUserFromSession);
+    return () => {
+      window.removeEventListener('storage', updateUserFromSession);
+    };
+  }, [updateUserFromSession]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -32,6 +47,11 @@ export default function ChatRoom() {
     if (!input.trim() || !currentUser) return;
     sendMessage(input, currentUser);
     setInput('');
+  };
+
+  const handleDeleteMessage = (messageId: string) => {
+    if (!currentUser) return;
+    deleteMessage(messageId, currentUser.id);
   };
 
   return (
@@ -53,7 +73,7 @@ export default function ChatRoom() {
             messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex items-start gap-3 ${
+                className={`flex items-start gap-3 group/message ${
                   message.userId === currentUser?.id ? 'justify-end' : ''
                 }`}
               >
@@ -65,6 +85,19 @@ export default function ChatRoom() {
                     </AvatarFallback>
                   </Avatar>
                 )}
+                
+                {message.userId === currentUser?.id && (
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-6 w-6 text-muted-foreground opacity-0 group-hover/message:opacity-100 transition-opacity"
+                        onClick={() => handleDeleteMessage(message.id)}
+                    >
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Delete message</span>
+                    </Button>
+                )}
+
                 <div
                   className={`rounded-lg px-3 py-2 max-w-sm ${
                     message.userId === currentUser?.id

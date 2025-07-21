@@ -48,6 +48,22 @@ export function useChat() {
     };
   }, [getStoredMessages]);
 
+  const updateStoredMessages = (updatedMessages: ChatMessage[]) => {
+    setMessages(updatedMessages);
+    try {
+        localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(updatedMessages));
+        // Manually dispatch a storage event to notify other tabs/windows
+        window.dispatchEvent(
+            new StorageEvent('storage', {
+                key: CHAT_STORAGE_KEY,
+                newValue: JSON.stringify(updatedMessages),
+            })
+        );
+    } catch (error) {
+        console.error('Failed to save chat messages to localStorage:', error);
+    }
+  };
+
   const sendMessage = useCallback((text: string, user: User) => {
     const newMessage: ChatMessage = {
       id: String(Date.now()),
@@ -58,16 +74,22 @@ export function useChat() {
       timestamp: new Date().toISOString(),
     };
 
-    const updatedMessages = [...getStoredMessages(), newMessage].slice(-MAX_MESSAGES);
+    const currentMessages = getStoredMessages();
+    const updatedMessages = [...currentMessages, newMessage].slice(-MAX_MESSAGES);
     
-    try {
-      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(updatedMessages));
-      // Manually update state for the current tab, as 'storage' event doesn't fire on the same tab
-      setMessages(updatedMessages);
-    } catch (error) {
-      console.error('Failed to save message to localStorage:', error);
+    updateStoredMessages(updatedMessages);
+
+  }, [getStoredMessages]);
+
+  const deleteMessage = useCallback((messageId: string, currentUserId: string) => {
+    const currentMessages = getStoredMessages();
+    const messageToDelete = currentMessages.find((m: ChatMessage) => m.id === messageId);
+    
+    if (messageToDelete && messageToDelete.userId === currentUserId) {
+        const updatedMessages = currentMessages.filter((m: ChatMessage) => m.id !== messageId);
+        updateStoredMessages(updatedMessages);
     }
   }, [getStoredMessages]);
 
-  return { messages, sendMessage };
+  return { messages, sendMessage, deleteMessage };
 }
