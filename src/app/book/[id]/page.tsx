@@ -144,10 +144,15 @@ export default function BookDetailPage() {
               />
             </div>
             <div className="mt-6 space-y-2">
-                {hasPdf && (
+                {hasPdf ? (
                     <Button className="w-full" size="lg" onClick={() => setIsReading(true)}>
                         <BookOpen className="mr-2 h-5 w-5" />
                         Read Now
+                    </Button>
+                ) : (
+                   <Button className="w-full" size="lg" disabled>
+                        <BookOpen className="mr-2 h-5 w-5" />
+                        Reading not available
                     </Button>
                 )}
                 <div className="flex flex-col sm:flex-row gap-2">
