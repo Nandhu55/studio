@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2, FileText, Shapes, Briefcase, BookHeart, UserPlus, BookCheck, Shield } from 'lucide-react';
+import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2, FileText, Shapes, Briefcase, BookHeart, UserPlus, BookCheck, Shield, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,6 +14,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuGroup,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useNotifications } from '@/hooks/use-notifications';
@@ -105,6 +109,7 @@ export default function Header() {
         </Link>
         
         <div className="ml-auto flex items-center gap-2">
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-1">
                 <Button asChild variant="ghost">
                     <Link href="/dashboard">
@@ -125,7 +130,7 @@ export default function Header() {
                             <span>Resources</span>
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center">
+                    <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
                         <Link href="/career-guidance">
                             <Briefcase className="mr-2 h-4 w-4" />
@@ -142,8 +147,48 @@ export default function Header() {
                 </DropdownMenu>
             </nav>
 
-
+            {/* Icons */}
             <div className="flex items-center gap-2">
+                {/* Mobile Navigation */}
+                <div className="md:hidden">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                                <Menu className="h-5 w-5" />
+                                <span className="sr-only">Open menu</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem asChild>
+                                <Link href="/dashboard">
+                                    <Home className="mr-2 h-4 w-4" />
+                                    <span>Home</span>
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <Link href="/exam-papers">
+                                    <FileText className="mr-2 h-4 w-4" />
+                                    <span>Exam Papers</span>
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                             <DropdownMenuLabel>Resources</DropdownMenuLabel>
+                            <DropdownMenuItem asChild>
+                            <Link href="/career-guidance">
+                                <Briefcase className="mr-2 h-4 w-4" />
+                                <span>Career Guidance</span>
+                            </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                            <Link href="/other-books">
+                                <BookHeart className="mr-2 h-4 w-4" />
+                                <span>Other Books</span>
+                            </Link>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+
                 <DropdownMenu onOpenChange={handleOpenChange}>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="text-foreground hover:text-primary hover:bg-primary/10 relative">
