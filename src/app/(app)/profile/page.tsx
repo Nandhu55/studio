@@ -10,15 +10,12 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { User, Mail, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, GraduationCap, Phone } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { useUsers } from '@/hooks/use-users';
 import type { User as UserType } from '@/lib/data';
 
 export default function ProfilePage() {
   const { toast } = useToast();
   const { setTheme, theme } = useTheme();
-  const { updateUser } = useUsers(); // Only used for non-avatar updates if needed
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
-  
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -41,21 +38,17 @@ export default function ProfilePage() {
       reader.onloadend = () => {
         const newAvatarUrl = reader.result as string;
         
-        // Update the user object in the component's state
+        // 1. Update the user object in the component's state for immediate UI feedback
         const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
         setCurrentUser(updatedUser);
         
-        // Update the session storage to persist the change for the current session
+        // 2. Update the session storage to persist the change for the current session
         sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
         
-        // This is a crucial change: we also update the master user list in local storage
-        // BUT we must sanitize the avatarUrl to prevent quota errors.
-        // We'll store a placeholder and let the session handle the live data URI.
-        updateUser(currentUser.id, { ...currentUser, avatarUrl: 'user-uploaded' });
-
+        // 3. Inform the user
         toast({
             title: 'Avatar Updated',
-            description: 'Your new profile picture has been saved.',
+            description: 'Your new profile picture has been saved for this session.',
         });
       };
       reader.readAsDataURL(file);
@@ -63,7 +56,11 @@ export default function ProfilePage() {
   };
 
   if (!currentUser) {
-    return <div>Loading profile...</div>
+    return (
+      <div className="flex justify-center items-center h-96">
+        <p>Loading profile...</p>
+      </div>
+    )
   }
   
   const ProfileDetailItem = ({ icon: Icon, label, value }: { icon: React.ElementType, label: string, value?: string }) => (
