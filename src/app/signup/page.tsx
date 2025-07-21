@@ -68,11 +68,12 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-background to-blue-100 dark:from-background dark:to-blue-900/20 p-4">
+    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4 relative overflow-hidden">
+       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 animate-gradient-xy"></div>
       <div 
         className={`transition-all duration-700 ease-out ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
       >
-        <Card className="w-full max-w-md mx-auto shadow-2xl">
+        <Card className="w-full max-w-lg mx-auto shadow-2xl bg-card/80 backdrop-blur-sm">
           <CardHeader className="text-center">
             <div className="flex justify-center items-center gap-2 mb-2">
               <BookMarked className="h-10 w-10 text-primary" />

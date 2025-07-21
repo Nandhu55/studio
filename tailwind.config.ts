@@ -95,10 +95,21 @@ export default {
             height: '0',
           },
         },
+        'gradient-xy': {
+          '0%, 100%': {
+            'background-size': '400% 400%',
+            'background-position': 'center top',
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'center center',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'gradient-xy': 'gradient-xy 15s ease infinite',
       },
       backgroundImage: {
         'grid-cyan': 'linear-gradient(to right, theme(colors.cyan.950) 1px, transparent 1px), linear-gradient(to bottom, theme(colors.cyan.950) 1px, transparent 1px)',
