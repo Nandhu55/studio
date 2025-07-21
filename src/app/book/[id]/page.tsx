@@ -7,7 +7,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Download, Share2, Loader2, BookOpen, ArrowLeft, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import QuizGenerator from '@/components/features/quiz-generator';
+import BookSummarizer from '@/components/features/book-summarizer';
 import { useBooks } from '@/hooks/use-books';
 import { useToast } from '@/hooks/use-toast';
 import dynamic from 'next/dynamic';
@@ -196,7 +196,7 @@ export default function BookDetailPage() {
           </div>
 
           <div className="mt-12">
-            <QuizGenerator book={book} />
+            <BookSummarizer book={book} />
           </div>
         </div>
       </div>
