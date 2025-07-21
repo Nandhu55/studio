@@ -10,10 +10,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // This effect ensures that only logged-in users can access this part of the app.
     if (typeof window !== 'undefined') {
       const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-      if (isLoggedIn !== 'true') {
+      const isAdmin = sessionStorage.getItem('isAdmin');
+      // Allow access if the user is a regular logged-in user OR an admin.
+      if (isLoggedIn !== 'true' && isAdmin !== 'true') {
         router.replace('/login');
       }
     }
