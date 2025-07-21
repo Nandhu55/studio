@@ -44,11 +44,16 @@ export default function ProfilePage() {
       reader.onloadend = () => {
         const newAvatarUrl = reader.result as string;
         setAvatarUrl(newAvatarUrl);
-        updateUser(currentUser.id, { avatarUrl: newAvatarUrl });
         
-        // Update session storage as well
+        // This is the key change: Only update the current user in SESSION storage,
+        // not the entire user list in LOCAL storage.
         const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
+        setCurrentUser(updatedUser);
         sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
+        
+        // Also update the master user list, but WITHOUT the avatar data URI to prevent quota errors.
+        // This is if we wanted to sync other profile changes, but for now, we only update the session.
+        updateUser(currentUser.id, { ...currentUser, avatarUrl: 'user-uploaded' }); // Store a placeholder, not the full data URI
 
         toast({
             title: 'Avatar Updated',
