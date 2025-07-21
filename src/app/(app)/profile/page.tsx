@@ -19,14 +19,13 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const userJson = sessionStorage.getItem('currentUser');
-      if (userJson) {
-        try {
-          setCurrentUser(JSON.parse(userJson));
-        } catch (e) {
-          console.error("Failed to parse user data from session storage", e);
-        }
+    // This effect runs once on component mount to load the user from session storage.
+    const userJson = sessionStorage.getItem('currentUser');
+    if (userJson) {
+      try {
+        setCurrentUser(JSON.parse(userJson));
+      } catch (e) {
+        console.error("Failed to parse user data from session storage", e);
       }
     }
   }, []);
@@ -38,14 +37,24 @@ export default function ProfilePage() {
       reader.onloadend = () => {
         const newAvatarUrl = reader.result as string;
         
-        // 1. Update the user object in the component's state for immediate UI feedback
+        // 1. Create the updated user object
         const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
+        
+        // 2. Update the component's state for immediate UI feedback
         setCurrentUser(updatedUser);
         
-        // 2. Update the session storage to persist the change for the current session
+        // 3. Update the session storage to persist the change for the current session
         sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
         
-        // 3. Inform the user
+        // 4. Manually trigger a storage event so other tabs (like the header) can update
+        window.dispatchEvent(
+            new StorageEvent('storage', {
+                key: 'currentUser',
+                newValue: JSON.stringify(updatedUser),
+            })
+        );
+        
+        // 5. Inform the user
         toast({
             title: 'Avatar Updated',
             description: 'Your new profile picture has been saved for this session.',

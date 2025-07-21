@@ -27,19 +27,9 @@ export function useUsers() {
   const updateStoredUsers = (updatedUsers: User[]) => {
     setUsers(updatedUsers);
     try {
-      // Create a version of the users array for storage that doesn't include large data URIs
-      const sanitizedUsers = updatedUsers.map(u => {
-        if (u.avatarUrl && u.avatarUrl.startsWith('data:image')) {
-          // If a large data URI is found, replace it with a placeholder for storage.
-          // The actual image is managed by the profile page in sessionStorage.
-          return { ...u, avatarUrl: 'user-uploaded' };
-        }
-        return u;
-      });
-      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(sanitizedUsers));
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
     } catch (error) {
       console.error("Failed to save users to local storage:", error);
-      // This catch block is important to prevent the app from crashing on quota errors.
     }
   };
 

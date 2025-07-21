@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2, FileText, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,33 +32,37 @@ export default function Header() {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
+  const updateUserFromSession = useCallback(() => {
+    setIsAdmin(sessionStorage.getItem('isAdmin') === 'true');
+    const userJson = sessionStorage.getItem('currentUser');
+    if (userJson) {
+      try {
+        setCurrentUser(JSON.parse(userJson));
+      } catch (e) {
+        console.error("Could not parse user JSON from session storage", e);
+        setCurrentUser(null);
+      }
+    } else {
+      setCurrentUser(null);
+    }
+  }, []);
+
   useEffect(() => {
-    const updateUserFromSession = () => {
-      if (typeof window !== 'undefined') {
-        setIsAdmin(sessionStorage.getItem('isAdmin') === 'true');
-        const userJson = sessionStorage.getItem('currentUser');
-        if (userJson) {
-          try {
-            setCurrentUser(JSON.parse(userJson));
-          } catch (e) {
-            console.error("Could not parse user JSON from session storage", e);
-            setCurrentUser(null);
-          }
-        } else {
-          setCurrentUser(null);
-        }
+    updateUserFromSession();
+
+    // Listen for storage changes to update UI across tabs (e.g., when avatar changes)
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'currentUser' || event.key === 'isLoggedIn' || event.key === 'isAdmin') {
+        updateUserFromSession();
       }
     };
 
-    updateUserFromSession();
-
-    // Listen for storage changes to update UI across tabs
-    window.addEventListener('storage', updateUserFromSession);
+    window.addEventListener('storage', handleStorageChange);
     
     return () => {
-      window.removeEventListener('storage', updateUserFromSession);
+      window.removeEventListener('storage', handleStorageChange);
     };
-  }, []);
+  }, [updateUserFromSession]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
