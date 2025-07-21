@@ -1,6 +1,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Briefcase, Lightbulb, Compass } from 'lucide-react';
 
@@ -10,6 +11,7 @@ export default function CareerGuidancePage() {
       icon: Briefcase,
       title: 'Resume Building',
       description: 'Learn how to craft a professional resume that stands out to recruiters. Tips on formatting, content, and keywords.',
+      href: 'https://www.resume-now.com/build-resume/choose-template',
     },
     {
       icon: Compass,
@@ -31,17 +33,33 @@ export default function CareerGuidancePage() {
       </div>
       
       <div className="grid md:grid-cols-3 gap-6">
-        {guidanceTopics.map((topic, index) => (
-          <Card key={index} className="hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center gap-4">
-              <topic.icon className="h-8 w-8 text-primary" />
-              <CardTitle>{topic.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{topic.description}</p>
-            </CardContent>
-          </Card>
-        ))}
+        {guidanceTopics.map((topic, index) => {
+          const cardContent = (
+            <Card className="hover:shadow-lg transition-shadow h-full">
+              <CardHeader className="flex flex-row items-center gap-4">
+                <topic.icon className="h-8 w-8 text-primary" />
+                <CardTitle>{topic.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{topic.description}</p>
+              </CardContent>
+            </Card>
+          );
+
+          if (topic.href) {
+            return (
+              <a href={topic.href} target="_blank" rel="noopener noreferrer" key={index} className="block h-full">
+                {cardContent}
+              </a>
+            );
+          }
+
+          return (
+            <div key={index}>
+              {cardContent}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
