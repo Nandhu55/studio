@@ -1,22 +1,9 @@
 
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Header from '@/components/common/header';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-      if (isLoggedIn !== 'true') {
-        router.replace('/login');
-      }
-    }
-  }, [router]);
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
