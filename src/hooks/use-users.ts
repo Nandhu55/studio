@@ -1,11 +1,13 @@
 
 import { useState, useEffect } from 'react';
 import { type User, initialUsers } from '@/lib/data';
+import { useNotifications } from './use-notifications';
 
 const USERS_STORAGE_KEY = 'b-tech-hub-users';
 
 export function useUsers() {
   const [users, setUsers] = useState<User[]>([]);
+  const { addNotification } = useNotifications();
 
   useEffect(() => {
     try {
@@ -42,6 +44,13 @@ export function useUsers() {
     }
     const updatedUsers = [...users, newUser];
     updateStoredUsers(updatedUsers);
+
+    addNotification({
+        title: `Welcome, ${newUser.name}!`,
+        description: "Your account has been created successfully.",
+        type: 'welcome'
+    });
+    
     return newUser;
   };
 

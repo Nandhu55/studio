@@ -3,7 +3,8 @@
 
 import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
-import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2, FileText, Shapes, Briefcase, BookHeart } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import { BookMarked, LogOut, User, LayoutDashboard, Terminal, Home, Bell, Trash2, FileText, Shapes, Briefcase, BookHeart, UserPlus, BookCheck, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -18,6 +19,22 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useNotifications } from '@/hooks/use-notifications';
 import { Badge } from '@/components/ui/badge';
 import type { User as UserType } from '@/lib/data';
+import type { Notification } from '@/hooks/use-notifications';
+import { ScrollArea } from '@/components/ui/scroll-area';
+
+function NotificationIcon({ type }: { type: Notification['type'] }) {
+    const iconProps = { className: "h-5 w-5" };
+    switch (type) {
+        case 'welcome':
+            return <UserPlus {...iconProps} />;
+        case 'new_book':
+            return <BookCheck {...iconProps} />;
+        case 'security':
+             return <Shield {...iconProps} />;
+        default:
+            return <Bell {...iconProps} />;
+    }
+}
 
 export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -123,30 +140,39 @@ export default function Header() {
                         <span className="sr-only">Notifications</span>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-80" align="end">
-                    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                <DropdownMenuContent className="w-80 md:w-96" align="end">
+                    <DropdownMenuLabel className="flex justify-between items-center">
+                        <span className="font-semibold">Notifications</span>
+                         {notifications.length > 0 && (
+                            <Button variant="ghost" size="sm" onClick={clearNotifications} className="text-xs text-muted-foreground h-auto p-1">
+                                <Trash2 className="mr-1 h-3 w-3" />
+                                Clear all
+                            </Button>
+                        )}
+                    </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                    {notifications.length === 0 ? (
-                        <DropdownMenuItem disabled>No new notifications</DropdownMenuItem>
-                    ) : (
-                        notifications.map((n) => (
-                            <DropdownMenuItem key={n.id} className="flex flex-col items-start gap-1 whitespace-normal">
-                                <p className="font-semibold">{n.title}</p>
-                                <p className="text-xs text-muted-foreground">{n.description}</p>
-                            </DropdownMenuItem>
-                        ))
-                    )}
-                    </DropdownMenuGroup>
-                    {notifications.length > 0 && (
-                        <>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onSelect={clearNotifications} className="text-destructive">
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                <span>Clear all notifications</span>
-                            </DropdownMenuItem>
-                        </>
-                    )}
+                    <ScrollArea className="h-[300px]">
+                        <DropdownMenuGroup>
+                        {notifications.length === 0 ? (
+                            <p className="text-center text-sm text-muted-foreground py-10">No new notifications</p>
+                        ) : (
+                            notifications.map((n) => (
+                                <DropdownMenuItem key={n.id} className="flex items-start gap-3 p-3 whitespace-normal cursor-default" onSelect={(e) => e.preventDefault()}>
+                                    <div className="rounded-full bg-primary/10 text-primary p-2">
+                                        <NotificationIcon type={n.type} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="font-semibold">{n.title}</p>
+                                        <p className="text-sm text-muted-foreground">{n.description}</p>
+                                        <p className="text-xs text-muted-foreground mt-1">
+                                            {formatDistanceToNow(new Date(n.timestamp), { addSuffix: true })}
+                                        </p>
+                                    </div>
+                                </DropdownMenuItem>
+                            ))
+                        )}
+                        </DropdownMenuGroup>
+                    </ScrollArea>
                 </DropdownMenuContent>
             </DropdownMenu>
 

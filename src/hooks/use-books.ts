@@ -1,14 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { books as initialBooks, type Book } from '@/lib/data';
-import type { Notification } from '@/hooks/use-notifications';
+import { useNotifications } from '@/hooks/use-notifications';
 
 const BOOKS_STORAGE_KEY = 'b-tech-hub-books';
-const NOTIFICATIONS_STORAGE_KEY = 'b-tech-hub-notifications';
 const MAX_USER_BOOKS = 10; // Limit the number of user-added books to prevent storage overflow
 
 export function useBooks() {
   const [books, setBooks] = useState<Book[]>([]);
+  const { addNotification } = useNotifications();
 
   useEffect(() => {
     try {
@@ -49,20 +49,11 @@ export function useBooks() {
     updateStoredBooks(updatedBooks);
     
     // Create a global notification for all users
-    try {
-        const storedNotifications = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
-        const currentNotifications: Notification[] = storedNotifications ? JSON.parse(storedNotifications) : [];
-        const newNotification: Notification = {
-            id: String(Date.now() + 1), // ensure unique id
-            title: 'New Book Added! 📚',
-            description: `"${book.title}" is now available in the library.`,
-            read: false,
-        };
-        const updatedNotifications = [newNotification, ...currentNotifications].slice(0, 10);
-        localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(updatedNotifications));
-    } catch (error) {
-        console.error("Failed to create global notification:", error);
-    }
+    addNotification({
+        title: 'New Book Added! 📚',
+        description: `"${book.title}" is now available in the library.`,
+        type: 'new_book'
+    });
 
     return { success: true };
   };

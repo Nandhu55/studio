@@ -1,8 +1,8 @@
+
 "use client"
 
 // Inspired by react-hot-toast library
 import * as React from "react"
-import { type Notification, useNotifications } from "@/hooks/use-notifications"
 import type {
   ToastActionElement,
   ToastProps,
@@ -142,10 +142,6 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">
 
-// This is a reference to the addNotification function from the useNotifications hook.
-// It gets set by the useToast hook.
-let addNotification: ((notification: Omit<Notification, "id" | "read">) => void) | null = null;
-
 function toast({ ...props }: Toast) {
   const id = genId()
 
@@ -168,14 +164,6 @@ function toast({ ...props }: Toast) {
     },
   })
 
-  if (addNotification && typeof props.title === 'string' && typeof props.description === 'string') {
-    addNotification({
-        title: props.title,
-        description: props.description,
-    });
-  }
-
-
   return {
     id: id,
     dismiss,
@@ -185,13 +173,6 @@ function toast({ ...props }: Toast) {
 
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState)
-  const notificationsHook = useNotifications();
-
-  React.useEffect(() => {
-    // Set the module-level addNotification function
-    addNotification = notificationsHook.addNotification;
-  }, [notificationsHook.addNotification]);
-
 
   React.useEffect(() => {
     listeners.push(setState)

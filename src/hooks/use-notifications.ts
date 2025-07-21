@@ -6,10 +6,40 @@ export interface Notification {
   title: string;
   description: string;
   read: boolean;
+  timestamp: string;
+  type: 'welcome' | 'new_book' | 'security' | 'general';
 }
 
 const NOTIFICATIONS_STORAGE_KEY = 'b-tech-hub-notifications';
 const MAX_NOTIFICATIONS = 10;
+
+const initialNotifications: Notification[] = [
+    {
+        id: '1',
+        title: 'Welcome to B-Tech Hub!',
+        description: 'Your account has been created successfully.',
+        read: true,
+        timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
+        type: 'welcome',
+    },
+     {
+        id: '2',
+        title: 'Security Alert',
+        description: 'Your password was changed successfully.',
+        read: true,
+        timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
+        type: 'security',
+    },
+    {
+        id: '3',
+        title: 'New Book Added!',
+        description: '"Java Fundamentals" is now available in the library.',
+        read: true,
+        timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(), // 6 days ago
+        type: 'new_book',
+    }
+];
+
 
 export function useNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -20,6 +50,9 @@ export function useNotifications() {
         const storedNotifications = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
         if (storedNotifications) {
           setNotifications(JSON.parse(storedNotifications));
+        } else {
+            setNotifications(initialNotifications);
+            localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(initialNotifications));
         }
       } catch (error) {
         console.error("Failed to access local storage for notifications:", error);
@@ -42,16 +75,24 @@ export function useNotifications() {
     try {
       // This will trigger the 'storage' event for other tabs
       localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(updatedNotifications));
+      // Manually trigger a storage event so the current tab also updates, e.g., the header.
+       window.dispatchEvent(
+            new StorageEvent('storage', {
+                key: NOTIFICATIONS_STORAGE_KEY,
+                newValue: JSON.stringify(updatedNotifications),
+            })
+        );
     } catch (error) {
       console.error("Failed to save notifications to local storage:", error);
     }
   }, []);
 
-  const addNotification = useCallback((notification: Omit<Notification, 'id' | 'read'>) => {
+  const addNotification = useCallback((notification: Omit<Notification, 'id' | 'read' | 'timestamp'>) => {
     const newNotification: Notification = {
       ...notification,
       id: String(Date.now()),
       read: false,
+      timestamp: new Date().toISOString(),
     };
     
     setNotifications(prev => {
@@ -70,5 +111,5 @@ export function useNotifications() {
     updateStoredNotifications(updated);
   }, [notifications, updateStoredNotifications]);
 
-  return { notifications, addNotification, clearNotifications, markAsRead, setStoredNotifications: updateStoredNotifications };
+  return { notifications, addNotification, clearNotifications, markAsRead };
 }
