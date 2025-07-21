@@ -38,15 +38,15 @@ export default function LibraryPage() {
       <div className="text-center p-6 sm:p-8 border border-primary/20 rounded-lg bg-card/50 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-cyan bg-cyan-950/10 [mask-image:linear-gradient(to_bottom,white_5%,transparent_80%)]"></div>
         <div className="relative">
-          <h1 className="font-headline text-4xl sm:text-5xl font-bold tracking-tighter text-cyan-400 drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]">COMMAND CENTER</h1>
-          <p className="text-muted-foreground mt-2 text-base sm:text-lg">Welcome back, Student. Access your digital arsenal.</p>
+          <h1 className="font-headline text-4xl sm:text-5xl font-bold tracking-tighter text-primary drop-shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]">B-TECH HUB</h1>
+          <p className="text-muted-foreground mt-2 text-base sm:text-lg">Welcome back, Student. Access your digital library.</p>
         </div>
       </div>
 
       <div>
         <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-primary mb-4 sm:mb-6 flex items-center gap-3">
           <Terminal />
-          Featured Transmissions
+          Featured Books
         </h2>
         <Carousel
           opts={{
@@ -64,8 +64,8 @@ export default function LibraryPage() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="text-cyan-400 border-cyan-400 hover:bg-cyan-400/20 hidden sm:flex" />
-          <CarouselNext className="text-cyan-400 border-cyan-400 hover:bg-cyan-400/20 hidden sm:flex" />
+          <CarouselPrevious className="hover:bg-primary/20 hidden sm:flex" />
+          <CarouselNext className="hover:bg-primary/20 hidden sm:flex" />
         </Carousel>
       </div>
       
@@ -81,10 +81,6 @@ export default function LibraryPage() {
                         size="sm"
                         variant={selectedCategory === category ? 'default' : 'outline'}
                         onClick={() => setSelectedCategory(category)}
-                        className={`
-                            border-cyan-400/50 text-cyan-400 
-                            ${selectedCategory === category ? 'bg-cyan-400 text-background shadow-[0_0_15px_rgba(0,255,255,0.4)]' : 'hover:bg-cyan-900/50 hover:text-cyan-300'}
-                        `}
                     >
                         {category}
                     </Button>
@@ -98,10 +94,6 @@ export default function LibraryPage() {
                         size="sm"
                         variant={selectedYear === year ? 'default' : 'outline'}
                         onClick={() => setSelectedYear(year)}
-                        className={`
-                            border-cyan-400/50 text-cyan-400 
-                            ${selectedYear === year ? 'bg-cyan-400 text-background shadow-[0_0_15px_rgba(0,255,255,0.4)]' : 'hover:bg-cyan-900/50 hover:text-cyan-300'}
-                        `}
                     >
                         {year}
                     </Button>

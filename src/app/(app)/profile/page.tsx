@@ -88,7 +88,7 @@ export default function ProfilePage() {
       <Card>
         <CardHeader className="flex flex-col items-center text-center">
           <div className="relative group">
-            <Avatar className="h-24 w-24 mb-4 border-4 border-cyan-400">
+            <Avatar className="h-24 w-24 mb-4 border-4 border-primary">
               <AvatarImage src={avatarUrl} alt={currentUser.name} data-ai-hint="person portrait" />
               <AvatarFallback>
                 <User className="w-10 h-10" />

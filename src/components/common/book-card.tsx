@@ -11,7 +11,7 @@ interface BookCardProps {
 export default function BookCard({ book }: BookCardProps) {
   return (
     <Link href={`/book/${book.id}`} className="group block h-full">
-      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 ease-in-out bg-card/60 backdrop-blur-sm border-primary/20 hover:border-primary/80 hover:shadow-[0_0_20px_theme(colors.cyan.DEFAULT)] hover:-translate-y-1">
+      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 ease-in-out bg-card/60 backdrop-blur-sm border-primary/20 hover:border-primary/80 hover:shadow-[0_0_20px_theme(colors.primary.DEFAULT)] hover:-translate-y-1">
         <div className="relative aspect-[2/3] w-full">
           <Image
             src={book.coverImage}
@@ -26,7 +26,7 @@ export default function BookCard({ book }: BookCardProps) {
         <CardContent className="p-3 flex-grow flex flex-col justify-between">
           <div>
             <div className="flex flex-wrap gap-1 mb-1.5">
-              <Badge variant="secondary" className="text-xs bg-cyan-400/10 text-cyan-400 border-cyan-400/20">{book.category}</Badge>
+              <Badge variant="secondary" className="text-xs bg-accent/10 text-accent border-accent/20">{book.category}</Badge>
               <Badge variant="outline" className="text-xs">{book.year}</Badge>
             </div>
             <h3 className="font-headline text-sm font-bold leading-tight line-clamp-2 text-primary-foreground">{book.title}</h3>

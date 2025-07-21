@@ -68,34 +68,34 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-sm">
       <div className="container flex h-16 items-center justify-between px-4">
         <Link href="/dashboard" className="flex items-center gap-3 group">
-          <Terminal className="h-8 w-8 text-cyan-400 group-hover:text-primary transition-colors duration-300" />
-          <span className="font-headline text-2xl font-bold text-primary-foreground tracking-tighter group-hover:text-primary transition-colors duration-300">
+          <Terminal className="h-8 w-8 text-primary group-hover:text-primary/80 transition-colors duration-300" />
+          <span className="font-headline text-2xl font-bold text-foreground tracking-tighter group-hover:text-primary transition-colors duration-300">
             B-Tech Hub
           </span>
         </Link>
         <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10">
+            <Button asChild variant="ghost" size="icon" className="text-foreground hover:text-primary hover:bg-primary/10">
                 <Link href="/dashboard">
                     <Home className="h-5 w-5" />
                     <span className="sr-only">Home</span>
                 </Link>
             </Button>
 
-            <Button asChild variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10">
+            <Button asChild variant="ghost" size="icon" className="text-foreground hover:text-primary hover:bg-primary/10">
                 <Link href="/exam-papers">
                     <FileText className="h-5 w-5" />
                     <span className="sr-only">Exam Papers</span>
                 </Link>
             </Button>
             
-            <Button variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10" onClick={() => setIsContactOpen(true)}>
+            <Button variant="ghost" size="icon" className="text-foreground hover:text-primary hover:bg-primary/10" onClick={() => setIsContactOpen(true)}>
                 <Phone className="h-5 w-5" />
                 <span className="sr-only">Contact Us</span>
             </Button>
 
             <DropdownMenu onOpenChange={handleOpenChange}>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-cyan-400 hover:text-primary hover:bg-primary/10 relative">
+                    <Button variant="ghost" size="icon" className="text-foreground hover:text-primary hover:bg-primary/10 relative">
                         <Bell className="h-5 w-5" />
                         {unreadCount > 0 && (
                             <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">{unreadCount}</Badge>
@@ -133,7 +133,7 @@ export default function Header() {
            <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                <Avatar className="h-10 w-10 border-2 border-cyan-400/50 hover:border-primary transition-colors duration-300">
+                <Avatar className="h-10 w-10 border-2 border-primary/50 hover:border-primary transition-colors duration-300">
                   <AvatarImage src={currentUser?.avatarUrl} alt={currentUser?.name} data-ai-hint="person portrait" />
                   <AvatarFallback>
                     <User />
