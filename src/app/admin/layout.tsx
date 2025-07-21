@@ -37,6 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (pathname === '/admin/manage-question-papers') return 'Manage Exam Papers';
     if (pathname === '/admin/manage-users') return 'Manage Users';
     if (pathname === '/admin/manage-categories') return 'Manage Categories';
+    if (pathname === '/admin/profile') return 'Admin Profile';
     return 'Admin Panel';
   }
 
@@ -62,8 +63,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </SidebarMenuButton>
               </SidebarMenuItem>
                <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Profile" isActive={pathname === '/profile'}>
-                  <Link href="/profile">
+                <SidebarMenuButton asChild tooltip="Profile" isActive={pathname === '/admin/profile'}>
+                  <Link href="/admin/profile">
                     <User />
                     <span>Profile</span>
                   </Link>
