@@ -12,6 +12,7 @@ import { User, Mail, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, Graduat
 import { Separator } from '@/components/ui/separator';
 import type { User as UserType } from '@/lib/data';
 import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
 
 export default function ProfilePage() {
   const { toast } = useToast();
@@ -143,8 +144,8 @@ export default function ProfilePage() {
                 <ProfileDetailItem icon={Phone} label="Phone Number" value={currentUser.phone} />
             </div>
             <div className="grid md:grid-cols-2 gap-6">
-                <ProfileDetailItem icon={CalendarDays} label="Year" value={currentUser.year} />
-                <ProfileDetailItem icon={GraduationCap} label="Semester" value={currentUser.semester} />
+                <ProfileDetailItem icon={GraduationCap} label="Year / Semester" value={`${currentUser.year} / ${currentUser.semester}`} />
+                <ProfileDetailItem icon={CalendarDays} label="Member Since" value={format(new Date(currentUser.signedUpAt), "PPP")} />
             </div>
           </div>
         </CardContent>
