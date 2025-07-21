@@ -102,7 +102,7 @@ export default {
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
       backgroundImage: {
-        'grid-cyan': 'linear-gradient(to right, theme(colors.cyan.950) 1px, transparent 1px), linear-gradient(to bottom, theme(colors.cyan.950) 1px, transparent 1px)',
+        'grid-cyan': 'linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)',
         'shimmer-bg': 'radial-gradient(ellipse 50% 50% at 50% 50%, hsl(var(--primary) / 0.1), transparent)',
       },
       backgroundSize: {
