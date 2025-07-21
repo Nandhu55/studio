@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { years } from '@/lib/data';
 import BookCard from '@/components/common/book-card';
 import { Button } from '@/components/ui/button';
-import { Terminal } from 'lucide-react';
+import { Terminal, MessageSquare } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -16,6 +16,7 @@ import {
 import { useBooks } from '@/hooks/use-books';
 import { useCategories } from '@/hooks/use-categories';
 import { Separator } from '@/components/ui/separator';
+import ChatRoom from '@/components/features/chat-room';
 
 
 export default function LibraryPage() {
@@ -35,38 +36,45 @@ export default function LibraryPage() {
 
   return (
     <div className="space-y-8 sm:space-y-12">
-      <div className="text-center p-6 sm:p-8 border border-primary/20 rounded-lg bg-card/50 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-cyan bg-cyan-950/10 [mask-image:linear-gradient(to_bottom,white_5%,transparent_80%)]"></div>
-        <div className="relative">
-          <h1 className="font-headline text-4xl sm:text-5xl font-bold tracking-tighter text-primary drop-shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]">B-TECH HUB</h1>
-          <p className="text-muted-foreground mt-2 text-base sm:text-lg">Welcome back, Student. Access your digital library.</p>
-        </div>
-      </div>
-
-      <div>
-        <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-primary mb-4 sm:mb-6 flex items-center gap-3">
-          <Terminal />
-          Featured Books
-        </h2>
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-2 sm:-ml-4">
-            {featuredBooks.map((book) => (
-              <CarouselItem key={book.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-2 sm:pl-4">
-                <div className="p-1 h-full">
-                  <BookCard book={book} />
+      <div className="grid lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
+            <div className="text-center p-6 sm:p-8 border border-primary/20 rounded-lg bg-card/50 relative overflow-hidden">
+                <div className="absolute inset-0 bg-grid-cyan bg-cyan-950/10 [mask-image:linear-gradient(to_bottom,white_5%,transparent_80%)]"></div>
+                <div className="relative">
+                <h1 className="font-headline text-4xl sm:text-5xl font-bold tracking-tighter text-primary drop-shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]">B-TECH HUB</h1>
+                <p className="text-muted-foreground mt-2 text-base sm:text-lg">Welcome back, Student. Access your digital library.</p>
                 </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="hover:bg-primary/20 hidden sm:flex" />
-          <CarouselNext className="hover:bg-primary/20 hidden sm:flex" />
-        </Carousel>
+            </div>
+
+            <div>
+                <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-primary mb-4 sm:mb-6 flex items-center gap-3">
+                <Terminal />
+                Featured Books
+                </h2>
+                <Carousel
+                opts={{
+                    align: "start",
+                    loop: true,
+                }}
+                className="w-full"
+                >
+                <CarouselContent className="-ml-2 sm:-ml-4">
+                    {featuredBooks.map((book) => (
+                    <CarouselItem key={book.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/3 pl-2 sm:pl-4">
+                        <div className="p-1 h-full">
+                        <BookCard book={book} />
+                        </div>
+                    </CarouselItem>
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="hover:bg-primary/20 hidden sm:flex" />
+                <CarouselNext className="hover:bg-primary/20 hidden sm:flex" />
+                </Carousel>
+            </div>
+        </div>
+        <div className="lg:col-span-1">
+          <ChatRoom />
+        </div>
       </div>
       
       <div>
