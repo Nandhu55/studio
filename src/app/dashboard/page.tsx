@@ -37,7 +37,7 @@ export default function LibraryPage() {
     return categoryMatch && yearMatch && searchMatch;
   });
 
-  const featuredBooks = books.slice(0, 5);
+  const featuredBooks = books.slice(0, 10);
   const displayYears = ['All', ...years];
 
   return (
@@ -66,7 +66,7 @@ export default function LibraryPage() {
                 >
                 <CarouselContent className="-ml-2 sm:-ml-4">
                     {featuredBooks.map((book) => (
-                    <CarouselItem key={book.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/3 pl-2 sm:pl-4">
+                    <CarouselItem key={book.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/3 xl:basis-1/4 pl-2 sm:pl-4">
                         <div className="p-1 h-full">
                         <BookCard book={book} />
                         </div>
