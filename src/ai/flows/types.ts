@@ -14,7 +14,7 @@ export const ExplainTextInputSchema = z.object({
 export type ExplainTextInput = z.infer<typeof ExplainTextInputSchema>;
 
 export const ExplainTextOutputSchema = z.object({
-  explanation: z.string().describe('The explanation of the text.'),
+  response: z.string().describe('The AI tutor\'s response to the user.'),
 });
 export type ExplainTextOutput = z.infer<typeof ExplainTextOutputSchema>;
 

@@ -41,7 +41,7 @@ export default function ChatExplainer({ bookContext }: ChatExplainerProps) {
         messages: newMessages,
         context: bookContext,
       });
-      const aiMessage: Message = { sender: 'ai', text: result.explanation };
+      const aiMessage: Message = { sender: 'ai', text: result.response };
       setMessages(prev => [...prev, aiMessage]);
     } catch (e) {
       console.error('Error getting explanation:', e);
