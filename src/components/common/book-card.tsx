@@ -29,7 +29,7 @@ export default function BookCard({ book }: BookCardProps) {
               <Badge variant="secondary" className="text-xs bg-accent/10 text-accent border-accent/20">{book.category}</Badge>
               <Badge variant="outline" className="text-xs">{book.year}</Badge>
             </div>
-            <h3 className="font-headline text-sm font-bold leading-tight line-clamp-2 text-primary-foreground">{book.title}</h3>
+            <h3 className="font-headline text-sm font-bold leading-tight line-clamp-2 text-foreground">{book.title}</h3>
           </div>
            <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{book.author}</p>
         </CardContent>
