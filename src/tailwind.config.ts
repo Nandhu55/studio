@@ -96,15 +96,10 @@ export default {
             height: '0',
           },
         },
-        'shimmer': {
-          '0%, 100%': { transform: 'translateX(-50%)' },
-          '50%': { transform: 'translateX(50%)' },
-        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'shimmer': 'shimmer 10s ease-in-out infinite',
       },
       backgroundImage: {
         'grid-cyan': 'linear-gradient(to right, theme(colors.cyan.950) 1px, transparent 1px), linear-gradient(to bottom, theme(colors.cyan.950) 1px, transparent 1px)',
