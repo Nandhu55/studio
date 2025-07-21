@@ -43,18 +43,15 @@ export function useBooks() {
 
   const updateStoredBooks = (updatedBooks: Book[]) => {
     setBooks(updatedBooks);
-    try {
-      localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(updatedBooks));
-       // Manually dispatch a storage event to notify other tabs/windows
-      window.dispatchEvent(
-        new StorageEvent('storage', {
-          key: BOOKS_STORAGE_KEY,
-          newValue: JSON.stringify(updatedBooks),
-        })
-      );
-    } catch (error) {
-      console.error("Failed to save books to local storage:", error);
-    }
+    // This might throw a QuotaExceededError, which will be caught in `addBook`
+    localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(updatedBooks));
+    // Manually dispatch a storage event to notify other tabs/windows
+    window.dispatchEvent(
+      new StorageEvent('storage', {
+        key: BOOKS_STORAGE_KEY,
+        newValue: JSON.stringify(updatedBooks),
+      })
+    );
   };
   
   const addBook = (book: Book): { success: boolean; message?: string } => {
@@ -69,15 +66,35 @@ export function useBooks() {
     }
     
     const updatedBooks = [book, ...currentBooks];
-    updateStoredBooks(updatedBooks);
     
-    addNotification({
-        title: 'New Book Added! 📚',
-        description: `"${book.title}" is now available in the library.`,
-        type: 'new_book'
-    });
-
-    return { success: true };
+    try {
+        updateStoredBooks(updatedBooks);
+        addNotification({
+            title: 'New Book Added! 📚',
+            description: `"${book.title}" is now available in the library.`,
+            type: 'new_book'
+        });
+        return { success: true };
+    } catch (error: any) {
+        // Check if the error is a QuotaExceededError
+        if (error.name === 'QuotaExceededError' || (error.code && (error.code === 22 || error.code === 1014))) {
+            console.error("Quota Exceeded Error:", error);
+            // Revert state to before the failed addition
+            setBooks(currentBooks);
+            return {
+              success: false,
+              message: "Upload failed. The file is too large for browser storage. Please try a smaller file."
+            };
+        } else {
+            // Re-throw other errors
+            console.error("Failed to save book:", error);
+            setBooks(currentBooks);
+            return {
+              success: false,
+              message: "An unexpected error occurred while saving the book."
+            };
+        }
+    }
   };
 
   const deleteBook = (bookId: string) => {
