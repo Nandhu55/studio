@@ -24,6 +24,17 @@ const prompt = ai.definePrompt({
 
   For each question, provide 4 options and clearly indicate the correct answer. The questions should test the key concepts from the provided content.
 
+  The output MUST be a valid JSON object matching the following schema:
+  {
+    "quiz": [
+      {
+        "question": "The quiz question.",
+        "options": ["Answer 1", "Answer 2", "Answer 3", "Answer 4"],
+        "correctAnswer": "The correct answer from the options."
+      }
+    ]
+  }
+
   Content:
   ---
   {{{content}}}
@@ -40,7 +51,10 @@ const generateQuizFlow = ai.defineFlow(
   async input => {
     try {
         const {output} = await prompt(input);
-        return output!;
+        if (!output) {
+            throw new Error("The AI model returned an empty response.");
+        }
+        return output;
     } catch (error) {
         console.error("Error in generateQuizFlow:", error);
         throw new Error("The quiz generator is currently unavailable. Please try again later.");
