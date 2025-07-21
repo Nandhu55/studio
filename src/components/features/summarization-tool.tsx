@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -44,7 +45,7 @@ export default function SummarizationTool({ book }: SummarizationToolProps) {
       });
       setSummary(result);
     } catch (e) {
-      setError('Failed to generate summary. Please try again.');
+      setError('Sorry, the AI summarizer seems to be overloaded at the moment. Please try again in a little bit.');
       console.error(e);
     } finally {
       setIsLoading(false);
