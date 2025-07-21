@@ -84,6 +84,7 @@ export default function Header() {
   const formatTimestamp = (timestamp: string) => {
     try {
       const date = new Date(timestamp);
+      // Check if the date is valid
       if (isNaN(date.getTime())) {
         return "a moment ago";
       }
@@ -96,44 +97,50 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-sm">
       <div className="container flex h-16 items-center justify-between px-4">
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-3 group focus:outline-none">
-                    <Terminal className="h-8 w-8 text-primary group-hover:text-primary/80 transition-colors duration-300" />
-                    <span className="font-headline text-2xl font-bold text-foreground tracking-tighter group-hover:text-primary transition-colors duration-300">
-                        B-Tech Hub
-                    </span>
-                </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-                <DropdownMenuLabel>Navigation</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                    <Link href="/dashboard">
-                        <Home className="mr-2 h-4 w-4" />
-                        <span>Home</span>
-                    </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <Link href="/exam-papers">
-                        <FileText className="mr-2 h-4 w-4" />
-                        <span>Exam Papers</span>
-                    </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/career-guidance">
-                    <Briefcase className="mr-2 h-4 w-4" />
-                    <span>Career Guidance</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/other-books">
-                    <BookHeart className="mr-2 h-4 w-4" />
-                    <span>Other Books</span>
-                  </Link>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <Link href="/dashboard" className="flex items-center gap-3 group">
+            <Terminal className="h-8 w-8 text-primary group-hover:text-primary/80 transition-colors duration-300" />
+            <span className="font-headline text-2xl font-bold text-foreground tracking-tighter group-hover:text-primary transition-colors duration-300">
+                B-Tech Hub
+            </span>
+        </Link>
+        
+        <nav className="hidden md:flex items-center gap-1">
+             <Button asChild variant="ghost">
+                <Link href="/dashboard">
+                    <Home className="mr-2 h-4 w-4" />
+                    <span>Home</span>
+                </Link>
+            </Button>
+            <Button asChild variant="ghost">
+                <Link href="/exam-papers">
+                    <FileText className="mr-2 h-4 w-4" />
+                    <span>Exam Papers</span>
+                </Link>
+            </Button>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost">
+                        <Shapes className="mr-2 h-4 w-4" />
+                        <span>Resources</span>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center">
+                    <DropdownMenuItem asChild>
+                      <Link href="/career-guidance">
+                        <Briefcase className="mr-2 h-4 w-4" />
+                        <span>Career Guidance</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/other-books">
+                        <BookHeart className="mr-2 h-4 w-4" />
+                        <span>Other Books</span>
+                      </Link>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </nav>
+
 
         <div className="flex items-center gap-2">
             <DropdownMenu onOpenChange={handleOpenChange}>
