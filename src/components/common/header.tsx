@@ -147,7 +147,7 @@ export default function Header() {
                 </DropdownMenu>
             </nav>
 
-            {/* Icons */}
+            {/* Icons and Mobile Menu */}
             <div className="flex items-center gap-2">
                 {/* Mobile Navigation */}
                 <div className="md:hidden">
