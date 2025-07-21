@@ -28,7 +28,11 @@ export default function QuizGenerator({ book }: QuizGeneratorProps) {
   const [answerStates, setAnswerStates] = useState<Record<number, AnswerState>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const canGenerateQuiz = book.description && book.description.trim().length > 10;
+
   const handleGenerateQuiz = async () => {
+    if (!canGenerateQuiz) return;
+    
     setIsLoading(true);
     setError(null);
     setQuiz(null);
@@ -89,14 +93,14 @@ export default function QuizGenerator({ book }: QuizGeneratorProps) {
       </CardHeader>
       <CardContent>
         {!quiz && (
-          <Button onClick={handleGenerateQuiz} disabled={isLoading} className="w-full">
+          <Button onClick={handleGenerateQuiz} disabled={isLoading || !canGenerateQuiz} className="w-full">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Generating Quiz...
               </>
             ) : (
-              'Generate a 5-Question Quiz'
+                !canGenerateQuiz ? 'Not enough content to generate quiz' : 'Generate a 5-Question Quiz'
             )}
           </Button>
         )}
