@@ -33,27 +33,31 @@ export default function Header() {
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsAdmin(sessionStorage.getItem('isAdmin') === 'true');
-      const userJson = sessionStorage.getItem('currentUser');
-      if (userJson) {
-        setCurrentUser(JSON.parse(userJson));
-      }
-    }
-
-    const handleStorageChange = () => {
-       const userJson = sessionStorage.getItem('currentUser');
-       if (userJson) {
-        setCurrentUser(JSON.parse(userJson));
-      } else {
-        setCurrentUser(null);
+    const updateUserFromSession = () => {
+      if (typeof window !== 'undefined') {
+        setIsAdmin(sessionStorage.getItem('isAdmin') === 'true');
+        const userJson = sessionStorage.getItem('currentUser');
+        if (userJson) {
+          try {
+            setCurrentUser(JSON.parse(userJson));
+          } catch (e) {
+            console.error("Could not parse user JSON from session storage", e);
+            setCurrentUser(null);
+          }
+        } else {
+          setCurrentUser(null);
+        }
       }
     };
+
+    updateUserFromSession();
+
+    // Listen for storage changes to update UI across tabs
+    window.addEventListener('storage', updateUserFromSession);
     
-    window.addEventListener('storage', handleStorageChange);
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    }
+      window.removeEventListener('storage', updateUserFromSession);
+    };
   }, []);
 
   const unreadCount = notifications.filter(n => !n.read).length;

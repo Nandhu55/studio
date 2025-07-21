@@ -16,26 +16,23 @@ import type { User as UserType } from '@/lib/data';
 export default function ProfilePage() {
   const { toast } = useToast();
   const { setTheme, theme } = useTheme();
-  const { updateUser } = useUsers();
+  const { updateUser } = useUsers(); // Only used for non-avatar updates if needed
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const userJson = sessionStorage.getItem('currentUser');
       if (userJson) {
-        setCurrentUser(JSON.parse(userJson));
+        try {
+          setCurrentUser(JSON.parse(userJson));
+        } catch (e) {
+          console.error("Failed to parse user data from session storage", e);
+        }
       }
     }
   }, []);
-  
-  const [avatarUrl, setAvatarUrl] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (currentUser) {
-      setAvatarUrl(currentUser.avatarUrl || 'https://placehold.co/100x100.png');
-    }
-  }, [currentUser]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -43,22 +40,23 @@ export default function ProfilePage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         const newAvatarUrl = reader.result as string;
-        setAvatarUrl(newAvatarUrl);
         
-        // This is the key change: Only update the current user in SESSION storage,
-        // not the entire user list in LOCAL storage.
+        // Update the user object in the component's state
         const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
         setCurrentUser(updatedUser);
+        
+        // Update the session storage to persist the change for the current session
         sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
         
-        // Also update the master user list, but WITHOUT the avatar data URI to prevent quota errors.
-        // This is if we wanted to sync other profile changes, but for now, we only update the session.
-        updateUser(currentUser.id, { ...currentUser, avatarUrl: 'user-uploaded' }); // Store a placeholder, not the full data URI
+        // This is a crucial change: we also update the master user list in local storage
+        // BUT we must sanitize the avatarUrl to prevent quota errors.
+        // We'll store a placeholder and let the session handle the live data URI.
+        updateUser(currentUser.id, { ...currentUser, avatarUrl: 'user-uploaded' });
 
         toast({
             title: 'Avatar Updated',
             description: 'Your new profile picture has been saved.',
-        })
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -89,7 +87,7 @@ export default function ProfilePage() {
         <CardHeader className="flex flex-col items-center text-center">
           <div className="relative group">
             <Avatar className="h-24 w-24 mb-4 border-4 border-primary">
-              <AvatarImage src={avatarUrl} alt={currentUser.name} data-ai-hint="person portrait" />
+              <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} data-ai-hint="person portrait" />
               <AvatarFallback>
                 <User className="w-10 h-10" />
               </AvatarFallback>

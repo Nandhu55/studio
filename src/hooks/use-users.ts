@@ -25,6 +25,7 @@ export function useUsers() {
   }, []);
 
   const updateStoredUsers = (updatedUsers: User[]) => {
+    setUsers(updatedUsers);
     try {
       // Create a version of the users array for storage that doesn't include large data URIs
       const sanitizedUsers = updatedUsers.map(u => {
@@ -35,7 +36,6 @@ export function useUsers() {
         }
         return u;
       });
-      setUsers(updatedUsers); // Keep the full data in component state
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(sanitizedUsers));
     } catch (error) {
       console.error("Failed to save users to local storage:", error);
