@@ -18,8 +18,8 @@ export default function CareerGuidancePage() {
       icon: Compass,
       title: 'Interview Preparation',
       description: 'Master common interview questions, learn the STAR method, and get tips on how to present yourself confidently.',
-      href: '#', // Placeholder, can be a future page
-      external: false,
+      href: 'https://www.geeksforgeeks.org/tag/interview-preparation/',
+      external: true,
     },
     {
       icon: Lightbulb,
