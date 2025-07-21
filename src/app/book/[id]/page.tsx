@@ -115,7 +115,7 @@ export default function BookDetailPage() {
 
   if (isReading) {
     return (
-      <div className="max-w-6xl mx-auto space-y-4">
+      <div className="max-w-5xl mx-auto space-y-4">
         <div className="flex justify-between items-center">
             <h1 className="font-headline text-2xl font-bold truncate">{book.title}</h1>
             <Button onClick={() => setIsReading(false)}>
@@ -129,7 +129,7 @@ export default function BookDetailPage() {
   }
   
   return (
-    <div className="max-w-6xl mx-auto space-y-8 md:space-y-12">
+    <div className="max-w-5xl mx-auto space-y-8 md:space-y-12">
       <div className="grid md:grid-cols-3 gap-8 md:gap-12">
         <div className="md:col-span-1">
           <div className="md:sticky md:top-24">
