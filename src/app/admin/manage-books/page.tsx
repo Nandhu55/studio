@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PlusCircle, Trash2, MoreHorizontal } from 'lucide-react';
+import { PlusCircle, Trash2, MoreHorizontal, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -46,6 +46,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function ManageBooksPage() {
   const { books, addBook, deleteBook } = useBooks();
@@ -151,13 +152,21 @@ export default function ManageBooksPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-start">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Manage Library</h2>
-          <p className="text-muted-foreground">Upload, edit, and delete books.</p>
+          <h2 className="text-2xl font-semibold tracking-tight">Manage Library Books</h2>
+          <p className="text-muted-foreground">Upload, edit, and delete all books.</p>
         </div>
         <Button onClick={() => setIsUploadDialogOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" /> Upload Book
         </Button>
       </div>
+
+       <Alert>
+        <Info className="h-4 w-4" />
+        <AlertTitle>Uploading "Other Books"</AlertTitle>
+        <AlertDescription>
+          To add a book to the "Other Books" page (e.g., Finance, Motivation), simply select the appropriate category during upload.
+        </AlertDescription>
+      </Alert>
       
       {/* Table for Desktop */}
       <div className="border rounded-lg hidden md:block">

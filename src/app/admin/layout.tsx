@@ -4,7 +4,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { BookMarked, LayoutDashboard, LogOut, Users, Book, Shapes, Home, User, FileText } from 'lucide-react';
+import { BookMarked, LayoutDashboard, LogOut, Users, Book, Shapes, Home, User, FileText, BookHeart } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -83,6 +83,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Link href="/admin/manage-books">
                     <Book />
                     <span>Manage Books</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Manage Other Books" isActive={pathname.startsWith('/admin/manage-books')}>
+                   <Link href="/admin/manage-books">
+                    <BookHeart />
+                    <span>Manage Other Books</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
