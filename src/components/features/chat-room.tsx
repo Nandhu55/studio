@@ -65,12 +65,17 @@ export default function ChatRoom() {
       </CardHeader>
       <CardContent className="flex-grow flex flex-col gap-4 overflow-hidden p-4">
         <div className="flex-grow overflow-y-auto space-y-4 pr-2">
-          {messages.length === 0 ? (
+          {messages.length === 0 && !currentUser && (
+            <div className="flex h-full items-center justify-center text-center text-muted-foreground p-4">
+              <p>Please log in to view and participate in the chat.</p>
+            </div>
+          )}
+          {messages.length === 0 && currentUser && (
             <div className="flex h-full items-center justify-center text-muted-foreground">
               <p>No messages yet. Start the conversation!</p>
             </div>
-          ) : (
-            messages.map((message) => (
+          )}
+          {messages.map((message) => (
               <div
                 key={message.id}
                 className={`flex items-start gap-3 group/message ${
@@ -110,7 +115,7 @@ export default function ChatRoom() {
                   )}
                   <p className="text-sm whitespace-pre-wrap">{message.text}</p>
                 </div>
-                {message.userId === currentUser?.id && (
+                {message.userId === currentUser?.id && currentUser.avatarUrl && (
                   <Avatar className="h-8 w-8">
                      <AvatarImage src={currentUser.avatarUrl} data-ai-hint="person portrait" />
                     <AvatarFallback>
@@ -119,15 +124,14 @@ export default function ChatRoom() {
                   </Avatar>
                 )}
               </div>
-            ))
-          )}
+            ))}
           <div ref={messagesEndRef} />
         </div>
         <form onSubmit={handleSendMessage} className="flex items-center gap-2 pt-2 border-t">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
+            placeholder={currentUser ? "Type your message..." : "You must be logged in to chat"}
             disabled={!currentUser}
             className="flex-grow"
           />
