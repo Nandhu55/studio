@@ -7,7 +7,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Download, Share2, Loader2, BookOpen, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import SummarizationTool from '@/components/features/summarization-tool';
+import QuizGenerator from '@/components/features/quiz-generator';
 import { useBooks } from '@/hooks/use-books';
 import { useToast } from '@/hooks/use-toast';
 import dynamic from 'next/dynamic';
@@ -104,7 +104,6 @@ export default function BookDetailPage() {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
     } catch (error) {
-        console.error('Download failed:', error);
         toast({
             title: "Download Failed",
             description: "There was an error preparing the file for download.",
@@ -177,7 +176,7 @@ export default function BookDetailPage() {
           </div>
 
           <div className="mt-12">
-            <SummarizationTool book={book} />
+            <QuizGenerator book={book} />
           </div>
         </div>
       </div>
