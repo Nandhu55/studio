@@ -81,6 +81,18 @@ export default function Header() {
     }
   };
 
+  const formatTimestamp = (timestamp: string) => {
+    try {
+      const date = new Date(timestamp);
+      if (isNaN(date.getTime())) {
+        return "a moment ago";
+      }
+      return formatDistanceToNow(date, { addSuffix: true });
+    } catch (e) {
+      return "a moment ago";
+    }
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-sm">
       <div className="container flex h-16 items-center justify-between px-4">
@@ -163,9 +175,10 @@ export default function Header() {
                                     </div>
                                     <div className="flex-1">
                                         <p className="font-semibold">{n.title}</p>
+
                                         <p className="text-sm text-muted-foreground">{n.description}</p>
                                         <p className="text-xs text-muted-foreground mt-1">
-                                            {formatDistanceToNow(new Date(n.timestamp), { addSuffix: true })}
+                                            {formatTimestamp(n.timestamp)}
                                         </p>
                                     </div>
                                 </DropdownMenuItem>
