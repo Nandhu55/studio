@@ -33,7 +33,7 @@ export function useUsers() {
     }
   };
 
-  const addUser = (user: Omit<User, 'id' | 'avatarUrl' | 'signedUpAt'>) => {
+  const addUser = (user: Omit<User, 'id' | 'avatarUrl' | 'signedUpAt'>): User => {
     const newUser: User = {
       ...user,
       id: String(Date.now()),
@@ -42,6 +42,7 @@ export function useUsers() {
     }
     const updatedUsers = [...users, newUser];
     updateStoredUsers(updatedUsers);
+    return newUser;
   };
 
   const deleteUser = (userId: string) => {

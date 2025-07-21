@@ -44,7 +44,7 @@ export default function SignupPage() {
       return;
     }
 
-    addUser({
+    const newUser = addUser({
       name,
       email,
       password,
@@ -54,12 +54,17 @@ export default function SignupPage() {
       phone,
     });
 
+    if (typeof window !== 'undefined') {
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('currentUser', JSON.stringify(newUser));
+    }
+
     toast({
-        title: "Account Created",
-        description: "You can now log in with your credentials.",
+        title: `Welcome, ${name}!`,
+        description: "Your account has been created successfully.",
     });
 
-    router.push('/login');
+    router.push('/dashboard');
   };
 
   return (
