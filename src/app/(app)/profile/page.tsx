@@ -11,24 +11,34 @@ import { useToast } from '@/hooks/use-toast';
 import { User, Mail, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, GraduationCap, Phone } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import type { User as UserType } from '@/lib/data';
+import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
   const { toast } = useToast();
   const { setTheme, theme } = useTheme();
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     // This effect runs once on component mount to load the user from session storage.
-    const userJson = sessionStorage.getItem('currentUser');
-    if (userJson) {
-      try {
-        setCurrentUser(JSON.parse(userJson));
-      } catch (e) {
-        console.error("Failed to parse user data from session storage", e);
+     if (typeof window !== 'undefined') {
+      const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+      if (isLoggedIn !== 'true') {
+        router.replace('/login');
+        return;
+      }
+
+      const userJson = sessionStorage.getItem('currentUser');
+      if (userJson) {
+        try {
+          setCurrentUser(JSON.parse(userJson));
+        } catch (e) {
+          console.error("Failed to parse user data from session storage", e);
+        }
       }
     }
-  }, []);
+  }, [router]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
