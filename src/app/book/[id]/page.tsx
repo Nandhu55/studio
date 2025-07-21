@@ -165,7 +165,6 @@ export default function BookDetailPage() {
         <div className="md:col-span-2">
           <div className="flex flex-wrap gap-2 mb-2">
             <Badge variant="secondary">{book.category}</Badge>
-            <Badge variant="outline">{book.year}</Badge>
           </div>
           <h1 className="font-headline text-3xl md:text-5xl font-bold">{book.title}</h1>
           <p className="mt-2 text-lg md:text-xl text-muted-foreground">by {book.author}</p>
