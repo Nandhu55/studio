@@ -142,29 +142,6 @@ export default function BookDetailPage() {
                 data-ai-hint={book.dataAiHint}
               />
             </div>
-            <div className="mt-6 space-y-2">
-                {hasPdf ? (
-                    <Button className="w-full" size="lg" onClick={() => setIsReading(true)}>
-                        <BookOpen className="mr-2 h-5 w-5" />
-                        Read Now
-                    </Button>
-                ) : (
-                   <Button className="w-full" size="lg" disabled>
-                        <BookOpen className="mr-2 h-5 w-5" />
-                        Reading not available
-                    </Button>
-                )}
-                <div className="flex flex-col sm:flex-row gap-2">
-                    <Button className="w-full" variant="secondary" onClick={handleDownload} disabled={!hasPdf}>
-                        <Download className="mr-2 h-5 w-5" />
-                        Download
-                    </Button>
-                    <Button className="w-full" variant="secondary" onClick={handleShare}>
-                        <Share2 className="mr-2 h-5 w-5" />
-                        Share
-                    </Button>
-                </div>
-            </div>
           </div>
         </div>
         <div className="md:col-span-2">
@@ -189,7 +166,31 @@ export default function BookDetailPage() {
               <span className="text-muted-foreground font-medium">{book.rating?.toFixed(1)}</span>
           </div>
 
-          <div className="mt-8 prose dark:prose-invert max-w-none">
+          <div className="my-6 space-y-2">
+            {hasPdf ? (
+                <Button className="w-full md:w-auto" size="lg" onClick={() => setIsReading(true)}>
+                    <BookOpen className="mr-2 h-5 w-5" />
+                    Read Now
+                </Button>
+            ) : (
+                <Button className="w-full md:w-auto" size="lg" disabled>
+                    <BookOpen className="mr-2 h-5 w-5" />
+                    Reading not available
+                </Button>
+            )}
+            <div className="flex flex-col sm:flex-row gap-2">
+                <Button className="w-full md:w-auto" variant="secondary" onClick={handleDownload} disabled={!hasPdf}>
+                    <Download className="mr-2 h-5 w-5" />
+                    Download
+                </Button>
+                <Button className="w-full md:w-auto" variant="secondary" onClick={handleShare}>
+                    <Share2 className="mr-2 h-5 w-5" />
+                    Share
+                </Button>
+            </div>
+          </div>
+
+          <div className="prose dark:prose-invert max-w-none">
             <h2 className="font-headline text-2xl font-semibold">Description</h2>
             <p>{book.description}</p>
           </div>
