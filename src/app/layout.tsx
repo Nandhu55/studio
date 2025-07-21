@@ -5,7 +5,7 @@ import { ThemeProvider } from '@/components/common/theme-provider';
 
 export const metadata: Metadata = {
   title: 'B-Tech Hub',
-  description: 'A digital library for B.Tech students with AI-powered summaries.',
+  description: 'A digital library for B.Tech students with AI-powered study tools.',
 };
 
 export default function RootLayout({
