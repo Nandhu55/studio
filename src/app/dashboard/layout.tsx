@@ -11,7 +11,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-      if (isLoggedIn !== 'true') {
+      const isAdmin = sessionStorage.getItem('isAdmin');
+      if (isLoggedIn !== 'true' && isAdmin !== 'true') {
         router.replace('/login');
       }
     }
