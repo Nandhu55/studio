@@ -3,19 +3,25 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Book, Shapes, FileText } from 'lucide-react';
+import { Users, Book, Shapes, FileText, BookHeart } from 'lucide-react';
 import { useBooks } from '@/hooks/use-books';
 import { useUsers } from '@/hooks/use-users';
 import { useCategories } from '@/hooks/use-categories';
 import { useQuestionPapers } from '@/hooks/use-question-papers';
+import { initialCategories } from '@/lib/data';
 
 export default function AdminDashboard() {
   const { books } = useBooks();
   const { users } = useUsers();
   const { categories } = useCategories();
   const { questionPapers } = useQuestionPapers();
+  
+  const academicBookCategories = initialCategories.filter(c => c !== 'All' && c !== 'Finance' && c !== 'Motivation');
+  const otherBookCategories = ['Finance', 'Motivation'];
 
-  const totalBooks = books.length;
+  const totalAcademicBooks = books.filter(b => academicBookCategories.includes(b.category)).length;
+  const totalOtherBooks = books.filter(b => otherBookCategories.includes(b.category)).length;
+
   const totalUsers = users.length;
   const totalCategories = categories.filter(c => c !== 'All').length;
   const totalQuestionPapers = questionPapers.length;
@@ -29,7 +35,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -41,16 +47,25 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Books</CardTitle>
+            <CardTitle className="text-sm font-medium">Academic Books</CardTitle>
             <Book className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalBooks}</div>
+            <div className="text-2xl font-bold">{totalAcademicBooks}</div>
+          </CardContent>
+        </Card>
+         <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Other Books</CardTitle>
+            <BookHeart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalOtherBooks}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Exam Papers</CardTitle>
+            <CardTitle className="text-sm font-medium">Exam Papers</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -76,10 +91,20 @@ export default function AdminDashboard() {
             <Link href="/admin/manage-books" className="block">
                 <Card className="hover:bg-muted/50 transition-colors">
                     <CardHeader>
-                        <CardTitle>Manage Books</CardTitle>
+                        <CardTitle>Manage Academic Books</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">View, upload, and delete books from the library.</p>
+                        <p className="text-muted-foreground">View, upload, and delete course-related books.</p>
+                    </CardContent>
+                </Card>
+            </Link>
+            <Link href="/admin/manage-other-books" className="block">
+                <Card className="hover:bg-muted/50 transition-colors">
+                    <CardHeader>
+                        <CardTitle>Manage Other Books</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground">Manage finance, motivation, and other books.</p>
                     </CardContent>
                 </Card>
             </Link>
@@ -100,16 +125,6 @@ export default function AdminDashboard() {
                     </CardHeader>
                     <CardContent>
                         <p className="text-muted-foreground">View and manage registered student accounts.</p>
-                    </CardContent>
-                </Card>
-            </Link>
-             <Link href="/admin/manage-categories" className="block">
-                <Card className="hover:bg-muted/50 transition-colors">
-                    <CardHeader>
-                        <CardTitle>Manage Categories</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-muted-foreground">Add or remove book categories from the library.</p>
                     </CardContent>
                 </Card>
             </Link>

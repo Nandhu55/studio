@@ -30,7 +30,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { type Book, years, initialCategories } from '@/lib/data';
+import { type Book } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { useBooks } from '@/hooks/use-books';
 import {
@@ -46,9 +46,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
-const academicBookCategories = initialCategories.filter(c => c !== 'All' && c !== 'Finance' && c !== 'Motivation');
+const otherBookCategories = ['Finance', 'Motivation'];
 
-export default function ManageBooksPage() {
+export default function ManageOtherBooksPage() {
   const { books, addBook, deleteBook } = useBooks();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -145,14 +145,14 @@ export default function ManageBooksPage() {
     }
   };
 
-  const academicBooks = books.filter(b => academicBookCategories.includes(b.category));
+  const otherBooks = books.filter(b => otherBookCategories.includes(b.category));
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-start">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Manage Academic Books</h2>
-          <p className="text-muted-foreground">Upload and manage course-related books for the main dashboard.</p>
+          <h2 className="text-2xl font-semibold tracking-tight">Manage Other Books</h2>
+          <p className="text-muted-foreground">Upload and manage Finance, Motivation, and other non-academic books.</p>
         </div>
         <Button onClick={() => setIsUploadDialogOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" /> Upload Book
@@ -167,17 +167,15 @@ export default function ManageBooksPage() {
               <TableHead>Title</TableHead>
               <TableHead>Author</TableHead>
               <TableHead>Category</TableHead>
-              <TableHead>Year</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {academicBooks.map(book => (
+            {otherBooks.map(book => (
               <TableRow key={book.id}>
                 <TableCell className="font-medium">{book.title}</TableCell>
                 <TableCell>{book.author}</TableCell>
                 <TableCell>{book.category}</TableCell>
-                <TableCell>{book.year}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -201,7 +199,7 @@ export default function ManageBooksPage() {
 
       {/* Cards for Mobile */}
       <div className="grid gap-4 md:hidden">
-        {academicBooks.map(book => (
+        {otherBooks.map(book => (
           <Card key={book.id}>
             <CardHeader>
               <CardTitle className="text-lg">{book.title}</CardTitle>
@@ -210,7 +208,6 @@ export default function ManageBooksPage() {
                 <p><span className="font-semibold">Author:</span> {book.author}</p>
                 <div className="flex gap-2">
                     <Badge variant="outline">{book.category}</Badge>
-                    <Badge variant="secondary">{book.year}</Badge>
                 </div>
                 <div className="pt-2">
                     <Button
@@ -233,7 +230,7 @@ export default function ManageBooksPage() {
         <DialogContent className="sm:max-w-[425px]">
           <form onSubmit={handleAddBook}>
             <DialogHeader>
-              <DialogTitle>Upload Academic Book</DialogTitle>
+              <DialogTitle>Upload Other Book</DialogTitle>
               <DialogDescription>Fill in the details for the new book. Click upload when you're done.</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -252,21 +249,11 @@ export default function ManageBooksPage() {
                         <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
-                        {academicBookCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                        {otherBookCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
                     </SelectContent>
                 </Select>
               </div>
-               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="year" className="text-right">Year</Label>
-                <Select name="year" required>
-                    <SelectTrigger className="col-span-3">
-                        <SelectValue placeholder="Select a year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
-                    </SelectContent>
-                </Select>
-              </div>
+              <Input type="hidden" id="year" name="year" value="All" />
               <div className="grid grid-cols-4 items-start gap-4">
                 <Label htmlFor="description" className="text-right pt-2">Description</Label>
                 <Textarea id="description" name="description" className="col-span-3" required/>

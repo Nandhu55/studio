@@ -33,7 +33,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const getPageTitle = () => {
     if (pathname === '/admin/dashboard') return 'Dashboard';
-    if (pathname === '/admin/manage-books') return 'Manage Books';
+    if (pathname === '/admin/manage-books') return 'Manage Academic Books';
+    if (pathname === '/admin/manage-other-books') return 'Manage Other Books';
     if (pathname === '/admin/manage-question-papers') return 'Manage Exam Papers';
     if (pathname === '/admin/manage-users') return 'Manage Users';
     if (pathname === '/admin/manage-categories') return 'Manage Categories';
@@ -82,13 +83,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <SidebarMenuButton asChild tooltip="Manage Books" isActive={pathname === '/admin/manage-books'}>
                   <Link href="/admin/manage-books">
                     <Book />
-                    <span>Manage Books</span>
+                    <span>Manage Academic Books</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
                <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Manage Other Books" isActive={pathname === '/admin/manage-books'}>
-                   <Link href="/admin/manage-books">
+                <SidebarMenuButton asChild tooltip="Manage Other Books" isActive={pathname === '/admin/manage-other-books'}>
+                   <Link href="/admin/manage-other-books">
                     <BookHeart />
                     <span>Manage Other Books</span>
                   </Link>
