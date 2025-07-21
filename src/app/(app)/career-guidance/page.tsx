@@ -12,16 +12,21 @@ export default function CareerGuidancePage() {
       title: 'Resume Building',
       description: 'Learn how to craft a professional resume that stands out to recruiters. Tips on formatting, content, and keywords.',
       href: 'https://www.resume-now.com/build-resume/choose-template',
+      external: true,
     },
     {
       icon: Compass,
       title: 'Interview Preparation',
       description: 'Master common interview questions, learn the STAR method, and get tips on how to present yourself confidently.',
+      href: '#', // Placeholder, can be a future page
+      external: false,
     },
     {
       icon: Lightbulb,
       title: 'Exploring Career Paths',
       description: 'Discover various career paths available for your engineering discipline. Understand roles, responsibilities, and future scope.',
+      href: '/career-guidance/paths',
+      external: false,
     },
   ];
 
@@ -47,15 +52,24 @@ export default function CareerGuidancePage() {
           );
 
           if (topic.href) {
-            return (
-              <a href={topic.href} target="_blank" rel="noopener noreferrer" key={index} className="block h-full">
-                {cardContent}
-              </a>
-            );
+            if (topic.external) {
+                 return (
+                    <a href={topic.href} target="_blank" rel="noopener noreferrer" key={index} className="block h-full">
+                        {cardContent}
+                    </a>
+                );
+            }
+            if (topic.href !== '#') {
+                return (
+                    <Link href={topic.href} key={index} className="block h-full">
+                        {cardContent}
+                    </Link>
+                );
+            }
           }
 
           return (
-            <div key={index}>
+            <div key={index} className="opacity-50 cursor-not-allowed">
               {cardContent}
             </div>
           );
