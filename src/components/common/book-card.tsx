@@ -12,8 +12,6 @@ interface BookCardProps {
 }
 
 export default function BookCard({ book }: BookCardProps) {
-  const isOtherBook = book.category === 'Finance' || book.category === 'Motivation';
-  const hasPdf = book.pdfUrl && book.pdfUrl !== '#';
 
   const cardContent = (
     <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 ease-in-out bg-card/60 backdrop-blur-sm border-primary/20 hover:border-primary/80 hover:shadow-[0_0_20px_theme(colors.primary.DEFAULT)] hover:-translate-y-1">
@@ -40,14 +38,6 @@ export default function BookCard({ book }: BookCardProps) {
       </CardContent>
     </Card>
   );
-
-  if (isOtherBook && hasPdf) {
-    return (
-      <a href={book.pdfUrl} target="_blank" rel="noopener noreferrer" className="group block h-full">
-        {cardContent}
-      </a>
-    );
-  }
 
   return (
     <Link href={`/book/${book.id}`} className="group block h-full">
