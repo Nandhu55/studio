@@ -4,7 +4,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { BookMarked, LayoutDashboard, LogOut, Users, Book, Shapes, Home, User, FileText, BookHeart, BookCopy } from 'lucide-react';
+import { BookMarked, LayoutDashboard, LogOut, Users, Book, Shapes, Home, User, FileText, BookHeart } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -66,17 +66,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Home">
-                  <Link href="/">
+                  <Link href="/dashboard">
                     <Home />
                     <span>Home</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Student Homepage">
-                  <Link href="/dashboard">
-                    <BookCopy />
-                    <span>Student Homepage</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
