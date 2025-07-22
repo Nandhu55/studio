@@ -1,5 +1,5 @@
 
-import { books as initialBooks, years, initialCategories } from '@/lib/data';
+import { books as allBooks, years, initialCategories } from '@/lib/data';
 import BookCard from '@/components/common/book-card';
 import { Terminal } from 'lucide-react';
 import {
@@ -12,9 +12,12 @@ import {
 import { Separator } from '@/components/ui/separator';
 import BookFilters from '@/components/features/book-filters';
 
-
+// This is a Server Component. It fetches data and passes it to Client Components.
 export default function LibraryPage() {
-  const featuredBooks = initialBooks.slice(0, 10);
+  const featuredBooks = allBooks.slice(0, 10);
+  const academicBooks = allBooks.filter(book => book.category !== 'Finance' && book.category !== 'Motivation');
+  const academicCategories = initialCategories.filter(c => c !== 'Finance' && c !== 'Motivation');
+  const displayYears = ['All', ...years];
 
   return (
     <div className="space-y-8 sm:space-y-12">
@@ -54,21 +57,15 @@ export default function LibraryPage() {
             </div>
         </div>
       
-      <div>
-        <div className="mb-6">
-            <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-primary">Full Library Access</h2>
-            {/* The filtering UI is now a client component */}
-            <BookFilters 
-              allBooks={initialBooks} 
-              categories={initialCategories}
-              years={['All', ...years]}
-            />
-        </div>
-        
-        <Separator className="my-6 bg-primary/20" />
-
-        {/* The book grid is now rendered by the client component */}
-      </div>
+      <Separator className="my-6 bg-primary/20" />
+      
+      {/* The filtering UI and book grid are now handled by this client component */}
+      {/* We pass the server-fetched data as props for the initial render. */}
+      <BookFilters 
+        initialBooks={academicBooks} 
+        categories={academicCategories}
+        years={displayYears}
+      />
     </div>
   );
 }
