@@ -101,7 +101,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-sm">
       <div className="container flex h-16 items-center px-4">
-        <Link href="/dashboard" className="flex items-center gap-3 group">
+        <Link href="/" className="flex items-center gap-3 group">
             <Terminal className="h-8 w-8 text-primary group-hover:text-primary/80 transition-colors duration-300" />
             <span className="font-headline text-2xl font-bold text-foreground tracking-tighter group-hover:text-primary transition-colors duration-300">
                 B-Tech Hub
