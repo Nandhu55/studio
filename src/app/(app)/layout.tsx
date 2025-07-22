@@ -1,23 +1,12 @@
 
-'use client';
-
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Header from '@/components/common/header';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-      const isAdmin = sessionStorage.getItem('isAdmin');
-      // Allow access if the user is a regular logged-in user OR an admin.
-      if (isLoggedIn !== 'true' && isAdmin !== 'true') {
-        router.replace('/login');
-      }
-    }
-  }, [router]);
+  // Note: The client-side auth check has been removed from this layout
+  // to convert it into a Server Component for performance.
+  // The check remains in the `/dashboard` layout and can be added to other
+  // specific layouts as needed, but the primary app shell is now static.
 
   return (
     <div className="min-h-screen bg-background">
