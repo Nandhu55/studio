@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { User, Mail, Sun, Moon, Palette } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
-export default function AdminProfilePage() {
+function AdminProfileContent() {
   const { setTheme, theme } = useTheme();
 
   const adminUser = {
@@ -85,4 +86,18 @@ export default function AdminProfilePage() {
       </Card>
     </div>
   );
+}
+
+export default function AdminProfilePage() {
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    if (!isClient) {
+        return <div className="flex justify-center items-center h-96"><p>Loading profile...</p></div>;
+    }
+
+    return <AdminProfileContent />;
 }
