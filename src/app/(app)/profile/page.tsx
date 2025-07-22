@@ -40,34 +40,25 @@ export default function ProfilePage() {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && currentUser) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newAvatarUrl = reader.result as string;
-        
-        // 1. Create the updated user object
-        const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
-        
-        // 2. Update the component's state for immediate UI feedback
-        setCurrentUser(updatedUser);
-        
-        // 3. Update the session storage to persist the change for the current session
-        sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
-        
-        // 4. Manually trigger a storage event so other tabs (like the header) can update
-        window.dispatchEvent(
-            new StorageEvent('storage', {
-                key: 'currentUser',
-                newValue: JSON.stringify(updatedUser),
-            })
-        );
-        
-        // 5. Inform the user
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
         toast({
-            title: 'Avatar Updated',
-            description: 'Your new profile picture has been saved for this session.',
+          title: 'Image Too Large',
+          description: 'Please select an image smaller than 5MB.',
+          variant: 'destructive',
         });
-      };
-      reader.readAsDataURL(file);
+        return;
+      }
+      
+      const newAvatarUrl = URL.createObjectURL(file);
+      
+      // Update the component's state for immediate UI feedback.
+      // This change is temporary and will not persist across reloads.
+      setCurrentUser({ ...currentUser, avatarUrl: newAvatarUrl });
+      
+      toast({
+        title: 'Avatar Updated',
+        description: 'Your new profile picture is shown. This is a temporary preview and will not be saved permanently.',
+      });
     }
   };
 
