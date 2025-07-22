@@ -16,20 +16,25 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { Book } from '@/lib/data';
+import { useBooks } from '@/hooks/use-books';
 
 // This is now a CLIENT component that handles its own state for filtering.
 export default function LibraryPage() {
-    const featuredBooks = allBooks.slice(0, 10);
-    const academicBooks = allBooks.filter(book => book.category !== 'Finance' && book.category !== 'Motivation');
-    const academicCategories = initialCategories.filter(c => c !== 'Finance' && c !== 'Motivation');
-    const displayYears = ['All', ...years];
+    const { books } = useBooks();
+    
+    const featuredBooks = useMemo(() => books.slice(0, 10), [books]);
+    const academicCategories = useMemo(() => initialCategories.filter(c => c !== 'Finance' && c !== 'Motivation'), []);
+    const displayYears = useMemo(() => ['All', ...years], []);
 
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [selectedYear, setSelectedYear] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredBooks = useMemo(() => {
-        return academicBooks.filter(book => {
+        return books.filter(book => {
+            const isAcademic = academicCategories.includes(book.category);
+            if (!isAcademic) return false;
+
             const categoryMatch = selectedCategory === 'All' || book.category === selectedCategory;
             const yearMatch = selectedYear === 'All' || book.year === selectedYear;
             const searchMatch = searchQuery.trim() === '' || 
@@ -39,7 +44,7 @@ export default function LibraryPage() {
             
             return categoryMatch && yearMatch && searchMatch;
         });
-    }, [academicBooks, selectedCategory, selectedYear, searchQuery]);
+    }, [books, selectedCategory, selectedYear, searchQuery, academicCategories]);
 
 
   return (
