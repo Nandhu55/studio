@@ -65,5 +65,15 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
     setIsClient(true);
   }, []);
 
-  return isClient ? <BookDetails bookId={params.id} /> : null;
+  if (!isClient) {
+    // Render a server-side loading state or null
+    return (
+        <div className="flex justify-center items-center h-96">
+            <Loader2 className="h-8 w-8 animate-spin text-primary mr-2" />
+            <span>Loading...</span>
+        </div>
+    );
+  }
+
+  return <BookDetails bookId={params.id} />;
 }
