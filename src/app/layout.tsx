@@ -2,6 +2,8 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from '@/components/common/theme-provider';
+import { exo2, orbitron } from '@/app/fonts';
+import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'B-Tech Hub',
@@ -15,12 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;700&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet" />
-      </head>
-      <body className="font-body antialiased">
+      <body className={cn("font-body antialiased", exo2.variable, orbitron.variable)}>
         <ThemeProvider
             attribute="class"
             defaultTheme="dark"

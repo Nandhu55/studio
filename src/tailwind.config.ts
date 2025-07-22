@@ -18,8 +18,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['"Exo 2"', 'sans-serif'],
-        headline: ['Orbitron', 'sans-serif'],
+        body: ['var(--font-exo2)', 'sans-serif'],
+        headline: ['var(--font-orbitron)', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
