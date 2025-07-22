@@ -4,6 +4,7 @@ import { notFound, useRouter } from 'next/navigation';
 import { useBooks } from '@/hooks/use-books';
 import { useEffect } from 'react';
 import BookDisplay from '@/components/features/book-display';
+import React from 'react';
 
 interface BookDetailPageProps {
   params: {
@@ -11,7 +12,8 @@ interface BookDetailPageProps {
   };
 }
 
-export default function BookDetailPage({ params: { id } }: BookDetailPageProps) {
+export default function BookDetailPage({ params }: BookDetailPageProps) {
+  const { id } = params;
   const { books } = useBooks();
   const router = useRouter();
 
