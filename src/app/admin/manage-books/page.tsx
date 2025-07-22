@@ -97,7 +97,8 @@ export default function ManageBooksPage() {
             description: formData.get('description') as string,
             coverImage: coverImageUri,
             pdfUrl: fileUri,
-            dataAiHint: 'book cover'
+            dataAiHint: 'book cover',
+            rating: 0,
         };
         
         const result = addBook(newBook);
