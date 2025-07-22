@@ -12,7 +12,8 @@ interface BookDetailPageProps {
   };
 }
 
-export default function BookDetailPage({ params: { id } }: BookDetailPageProps) {
+export default function BookDetailPage({ params }: BookDetailPageProps) {
+  const { id } = params;
   const { books } = useBooks(); // Use the hook to get all books
   const router = useRouter();
 
