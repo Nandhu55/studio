@@ -14,11 +14,10 @@ interface BookDetailPageProps {
 
 export default function BookDetailPage({ params }: BookDetailPageProps) {
   const { id } = params;
-  const { books } = useBooks(); // Use the hook to get all books
+  const { books } = useBooks();
   const router = useRouter();
 
   useEffect(() => {
-    // Auth check for client component
     if (typeof window !== 'undefined') {
       const isLoggedIn = sessionStorage.getItem('isLoggedIn');
       if (isLoggedIn !== 'true') {
@@ -27,16 +26,24 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
     }
   }, [router]);
 
-  // Find the book from the comprehensive list from the hook
   const book = books.find(b => b.id === id);
 
-  if (!book) {
-    // If the book isn't found after the hook has loaded, show 404.
-    // We can add a loading state here if books load asynchronously.
-    // For now, returning null while waiting for books hook to populate.
-    if(books.length > 0) {
-      notFound();
+  // This effect handles redirection if the book is not an "other" book.
+  useEffect(() => {
+    if (books.length > 0 && book) {
+        const isOtherBook = book.category === 'Finance' || book.category === 'Motivation';
+        if (!isOtherBook) {
+            router.replace('/dashboard');
+        }
     }
+  }, [book, books.length, router]);
+
+
+  if (books.length > 0 && !book) {
+    notFound();
+  }
+
+  if (!book) {
     return null; // or a loading spinner
   }
   
