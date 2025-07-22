@@ -2,9 +2,10 @@
 
 import { notFound, useRouter } from 'next/navigation';
 import { useBooks } from '@/hooks/use-books';
-import { useEffect, use } from 'react';
+import { useEffect, useState, use } from 'react';
 import BookDisplay from '@/components/features/book-display';
 import React from 'react';
+import { Loader2 } from 'lucide-react';
 
 interface BookDetailPageProps {
   params: {
@@ -13,14 +14,20 @@ interface BookDetailPageProps {
 }
 
 export default function BookDetailPage({ params }: BookDetailPageProps) {
-  const { id } = use(params); // Correctly unwrap params using React.use()
+  const { id } = use(params);
   const { books } = useBooks();
   const router = useRouter();
+  const [authStatus, setAuthStatus] = useState('checking');
 
   useEffect(() => {
+    // This effect handles client-side authentication check
     if (typeof window !== 'undefined') {
       const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-      if (isLoggedIn !== 'true') {
+      const isAdmin = sessionStorage.getItem('isAdmin');
+      if (isLoggedIn === 'true' || isAdmin === 'true') {
+        setAuthStatus('authenticated');
+      } else {
+        setAuthStatus('unauthenticated');
         router.replace('/login');
       }
     }
@@ -28,13 +35,21 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
 
   const book = books.find(b => b.id === id);
 
-  if (books.length > 0 && !book) {
+  // Still loading books from storage or waiting for auth check
+  if (books.length === 0 || authStatus === 'checking') {
+    return (
+      <div className="flex justify-center items-center h-96">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mr-2" />
+        <span>Loading book details...</span>
+      </div>
+    );
+  }
+  
+  // Auth has finished, books are loaded, but the specific book wasn't found
+  if (!book) {
     notFound();
   }
 
-  if (!book) {
-    return null; // or a loading spinner
-  }
-  
+  // If we get here, auth is good and the book is found
   return <BookDisplay book={book} />;
 }
