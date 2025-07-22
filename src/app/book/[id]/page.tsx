@@ -2,7 +2,7 @@
 
 import { notFound, useRouter } from 'next/navigation';
 import { useBooks } from '@/hooks/use-books';
-import { useEffect } from 'react';
+import { useEffect, use } from 'react';
 import BookDisplay from '@/components/features/book-display';
 import React from 'react';
 
@@ -13,7 +13,7 @@ interface BookDetailPageProps {
 }
 
 export default function BookDetailPage({ params }: BookDetailPageProps) {
-  const { id } = params;
+  const { id } = use(params); // Correctly unwrap params using React.use()
   const { books } = useBooks();
   const router = useRouter();
 
