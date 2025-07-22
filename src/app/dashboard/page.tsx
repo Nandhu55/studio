@@ -1,7 +1,10 @@
 
+'use client';
+
+import { useState, useMemo } from 'react';
 import { books as allBooks, years, initialCategories } from '@/lib/data';
 import BookCard from '@/components/common/book-card';
-import { Terminal } from 'lucide-react';
+import { Terminal, Search } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -10,14 +13,34 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Separator } from '@/components/ui/separator';
-import BookFilters from '@/components/features/book-filters';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import type { Book } from '@/lib/data';
 
-// This is a Server Component. It fetches data and passes it to Client Components.
+// This is now a CLIENT component that handles its own state for filtering.
 export default function LibraryPage() {
-  const featuredBooks = allBooks.slice(0, 10);
-  const academicBooks = allBooks.filter(book => book.category !== 'Finance' && book.category !== 'Motivation');
-  const academicCategories = initialCategories.filter(c => c !== 'Finance' && c !== 'Motivation');
-  const displayYears = ['All', ...years];
+    const featuredBooks = allBooks.slice(0, 10);
+    const academicBooks = allBooks.filter(book => book.category !== 'Finance' && book.category !== 'Motivation');
+    const academicCategories = initialCategories.filter(c => c !== 'Finance' && c !== 'Motivation');
+    const displayYears = ['All', ...years];
+
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [selectedYear, setSelectedYear] = useState('All');
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const filteredBooks = useMemo(() => {
+        return academicBooks.filter(book => {
+            const categoryMatch = selectedCategory === 'All' || book.category === selectedCategory;
+            const yearMatch = selectedYear === 'All' || book.year === selectedYear;
+            const searchMatch = searchQuery.trim() === '' || 
+                                book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                book.category.toLowerCase().includes(searchQuery.toLowerCase());
+            
+            return categoryMatch && yearMatch && searchMatch;
+        });
+    }, [academicBooks, selectedCategory, selectedYear, searchQuery]);
+
 
   return (
     <div className="space-y-8 sm:space-y-12">
@@ -59,13 +82,63 @@ export default function LibraryPage() {
       
       <Separator className="my-6 bg-primary/20" />
       
-      {/* The filtering UI and book grid are now handled by this client component */}
-      {/* We pass the server-fetched data as props for the initial render. */}
-      <BookFilters 
-        initialBooks={academicBooks} 
-        categories={academicCategories}
-        years={displayYears}
-      />
+      <div>
+            <div className="mb-6">
+                <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-primary">Full Library Access</h2>
+                <div className="mt-4 flex flex-col gap-4">
+                    <div className="relative rounded-lg bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-0.5">
+                        <div className="relative flex items-center bg-background rounded-[calc(0.5rem-2px)]">
+                            <Search className="absolute left-3 h-5 w-5 text-muted-foreground" />
+                            <Input
+                                placeholder="Search by title, author, or category..."
+                                className="pl-10 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                        <span className="text-sm font-medium text-muted-foreground w-full sm:w-20 shrink-0">Category:</span>
+                        {academicCategories.map(category => (
+                            <Button 
+                                key={category}
+                                size="sm"
+                                variant={selectedCategory === category ? 'default' : 'outline'}
+                                onClick={() => setSelectedCategory(category)}
+                            >
+                                {category}
+                            </Button>
+                        ))}
+                    </div>
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                        <span className="text-sm font-medium text-muted-foreground w-full sm:w-20 shrink-0">Year:</span>
+                        {displayYears.map(year => (
+                            <Button 
+                                key={year}
+                                size="sm"
+                                variant={selectedYear === year ? 'default' : 'outline'}
+                                onClick={() => setSelectedYear(year)}
+                            >
+                                {year}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4">
+                {filteredBooks.length > 0 ? (
+                    filteredBooks.map(book => (
+                        <BookCard key={book.id} book={book} />
+                    ))
+                ) : (
+                    <div className="col-span-full text-center py-12">
+                        <p className="text-muted-foreground">No books found for the selected filters.</p>
+                    </div>
+                )}
+            </div>
+       </div>
+
     </div>
   );
 }
