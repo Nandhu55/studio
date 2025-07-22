@@ -31,6 +31,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [router]);
 
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('isAdmin');
+      sessionStorage.removeItem('currentUser');
+      router.push('/login');
+    }
+  };
+
   const getPageTitle = () => {
     if (pathname === '/admin/dashboard') return 'Dashboard';
     if (pathname === '/admin/manage-books') return 'Manage Academic Books';
@@ -132,11 +141,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarFooter>
             <SidebarMenu>
               <SidebarMenuItem>
-                 <SidebarMenuButton asChild tooltip="Logout">
-                  <Link href="/login">
+                 <SidebarMenuButton onClick={handleLogout} tooltip="Logout">
                     <LogOut />
                     <span>Logout</span>
-                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
