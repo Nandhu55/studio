@@ -57,7 +57,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Home">
-                  <Link href="/">
+                  <Link href="/dashboard">
                     <Home />
                     <span>Home</span>
                   </Link>
