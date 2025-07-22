@@ -13,7 +13,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     // It runs only on the client-side after the initial page load.
     if (typeof window !== 'undefined') {
       const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-      if (isLoggedIn !== 'true') {
+      const isAdmin = sessionStorage.getItem('isAdmin');
+      if (isLoggedIn !== 'true' && isAdmin !== 'true') {
         router.replace('/login');
       }
     }
