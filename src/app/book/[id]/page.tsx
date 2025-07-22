@@ -11,7 +11,6 @@ import { useBooks } from '@/hooks/use-books';
 import { useToast } from '@/hooks/use-toast';
 import dynamic from 'next/dynamic';
 import { Separator } from '@/components/ui/separator';
-import ChatExplainer from '@/components/features/chat-explainer';
 import { cn } from '@/lib/utils';
 
 const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
@@ -19,6 +18,16 @@ const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
   loading: () => (
     <div className="flex justify-center items-center min-h-96 border rounded-lg bg-muted/20">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    </div>
+  ),
+});
+
+const ChatExplainer = dynamic(() => import('@/components/features/chat-explainer'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex justify-center items-center min-h-96 border rounded-lg bg-muted/20">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+       <p className="ml-2">Loading AI Explainer...</p>
     </div>
   ),
 });
