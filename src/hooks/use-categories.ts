@@ -1,4 +1,6 @@
 
+'use client';
+
 import { useState, useEffect } from 'react';
 import { initialCategories } from '@/lib/data';
 

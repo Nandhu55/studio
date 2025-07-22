@@ -1,4 +1,6 @@
 
+'use client';
+
 import { useState, useEffect, useCallback } from 'react';
 import { books as initialBooks, type Book } from '@/lib/data';
 import { useNotifications } from '@/hooks/use-notifications';
