@@ -12,7 +12,7 @@ interface BookDetailPageProps {
 // It unwraps the params promise using `use` and passes the ID
 // to the client component that handles all client-side logic.
 export default function BookDetailPage({ params }: BookDetailPageProps) {
-  const { id } = params;
+  const { id } = use(params);
 
   return <BookDetails bookId={id} />;
 }
