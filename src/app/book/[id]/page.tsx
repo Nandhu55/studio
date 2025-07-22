@@ -2,7 +2,7 @@
 
 import { notFound, useRouter } from 'next/navigation';
 import { useBooks } from '@/hooks/use-books';
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState } from 'react';
 import BookDisplay from '@/components/features/book-display';
 import React from 'react';
 import { Loader2 } from 'lucide-react';
@@ -13,8 +13,8 @@ interface BookDetailPageProps {
   };
 }
 
-export default function BookDetailPage({ params }: BookDetailPageProps) {
-  const { id } = use(params);
+// This is a new client component that safely handles data loading and rendering.
+function BookDetails({ bookId }: { bookId: string }) {
   const { books } = useBooks();
   const router = useRouter();
   const [authStatus, setAuthStatus] = useState('checking');
@@ -33,9 +33,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
     }
   }, [router]);
 
-  const book = books.find(b => b.id === id);
-
-  // Still loading books from storage or waiting for auth check
+  // While books are loading from storage or auth is being checked
   if (books.length === 0 || authStatus === 'checking') {
     return (
       <div className="flex justify-center items-center h-96">
@@ -44,12 +42,28 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
       </div>
     );
   }
+
+  const book = books.find(b => b.id === bookId);
   
-  // Auth has finished, books are loaded, but the specific book wasn't found
+  // After loading, if the book is not found, show the 404 page.
   if (!book) {
     notFound();
+    return null; // notFound() throws an error, so this is for type safety.
   }
 
-  // If we get here, auth is good and the book is found
+  // If auth is good and the book is found, render the display component.
   return <BookDisplay book={book} />;
+}
+
+
+// The main page component is now simpler.
+// It ensures the component is mounted on the client before rendering the logic.
+export default function BookDetailPage({ params }: BookDetailPageProps) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  return isClient ? <BookDetails bookId={params.id} /> : null;
 }
