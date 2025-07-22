@@ -4,7 +4,7 @@ import { books as initialBooks, type Book } from '@/lib/data';
 import { useNotifications } from '@/hooks/use-notifications';
 
 const BOOKS_STORAGE_KEY = 'b-tech-hub-books';
-const MAX_USER_BOOKS = 10; // Limit the number of user-added books to prevent storage overflow
+const MAX_USER_BOOKS = 50; // Limit the number of user-added books to prevent storage overflow
 
 export function useBooks() {
   const [books, setBooks] = useState<Book[]>([]);
