@@ -1,8 +1,6 @@
-'use client';
-
 import { notFound, useRouter } from 'next/navigation';
 import { useBooks } from '@/hooks/use-books';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import BookDisplay from '@/components/features/book-display';
 import React from 'react';
 import { Loader2 } from 'lucide-react';
@@ -13,8 +11,10 @@ interface BookDetailPageProps {
   };
 }
 
-// This is a new client component that safely handles data loading and rendering.
+// This client component safely handles data loading and rendering.
 function BookDetails({ bookId }: { bookId: string }) {
+  'use client';
+  
   const { books } = useBooks();
   const router = useRouter();
   const [authStatus, setAuthStatus] = useState('checking');
@@ -56,24 +56,12 @@ function BookDetails({ bookId }: { bookId: string }) {
 }
 
 
-// The main page component is now simpler.
-// It ensures the component is mounted on the client before rendering the logic.
+// The main page component is now a Server Component.
+// It unwraps the params promise and passes the ID to the client component.
 export default function BookDetailPage({ params }: BookDetailPageProps) {
-  const [isClient, setIsClient] = useState(false);
+  // `use` is the correct way to resolve the params promise in a Server Component.
+  const { id } = use(params);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    // Render a server-side loading state or null
-    return (
-        <div className="flex justify-center items-center h-96">
-            <Loader2 className="h-8 w-8 animate-spin text-primary mr-2" />
-            <span>Loading...</span>
-        </div>
-    );
-  }
-
-  return <BookDetails bookId={params.id} />;
+  // We pass the resolved ID to the client component that handles all client-side logic.
+  return <BookDetails bookId={id} />;
 }
