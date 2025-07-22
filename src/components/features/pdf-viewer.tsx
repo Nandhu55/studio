@@ -42,7 +42,7 @@ export default function PdfViewer({ file }: PdfViewerProps) {
   const goToPrevPage = () => setPageNumber(prev => Math.max(prev - 1, 1));
   const goToNextPage = () => setPageNumber(prev => Math.min(prev + 1, numPages!));
 
-  if (!file || !file.startsWith('data:application/pdf;base64,')) {
+  if (!file || file === '#') {
     return (
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />

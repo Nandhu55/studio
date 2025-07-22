@@ -54,7 +54,7 @@ export default function BookDetailPage() {
     );
   }
 
-  const hasPdf = book.pdfUrl && book.pdfUrl.startsWith('data:application/pdf;base64,');
+  const hasPdf = book.pdfUrl && book.pdfUrl !== '#';
   const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
 
   const handleShare = async () => {
