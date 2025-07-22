@@ -28,17 +28,6 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
 
   const book = books.find(b => b.id === id);
 
-  // This effect handles redirection if the book is not an "other" book.
-  useEffect(() => {
-    if (books.length > 0 && book) {
-        const isOtherBook = book.category === 'Finance' || book.category === 'Motivation';
-        if (!isOtherBook) {
-            router.replace('/dashboard');
-        }
-    }
-  }, [book, books.length, router]);
-
-
   if (books.length > 0 && !book) {
     notFound();
   }
@@ -47,6 +36,5 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
     return null; // or a loading spinner
   }
   
-  // The UI that requires state is in a separate client component.
   return <BookDisplay book={book} />;
 }
