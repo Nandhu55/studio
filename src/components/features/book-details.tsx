@@ -6,6 +6,7 @@ import { notFound, useRouter } from 'next/navigation';
 import { useBooks } from '@/hooks/use-books';
 import BookDisplay from '@/components/features/book-display';
 import { Loader2 } from 'lucide-react';
+import type { Book } from '@/lib/data';
 
 interface BookDetailsProps {
   bookId: string;
@@ -15,8 +16,8 @@ interface BookDetailsProps {
 export default function BookDetails({ bookId }: BookDetailsProps) {
   const { books } = useBooks();
   const router = useRouter();
-  const [authStatus, setAuthStatus] = useState('checking');
-  const [isLoading, setIsLoading] = useState(true);
+  const [authStatus, setAuthStatus] = useState<'checking' | 'authenticated' | 'unauthenticated'>('checking');
+  const [bookData, setBookData] = useState<Book | null | undefined>(undefined); // undefined: not checked, null: not found
 
   useEffect(() => {
     // This effect handles client-side authentication check
@@ -32,14 +33,16 @@ export default function BookDetails({ bookId }: BookDetailsProps) {
   }, [router]);
 
   useEffect(() => {
-    // This effect determines if we are done loading.
-    // It waits for auth check and for books to be loaded from storage.
-    if (authStatus !== 'checking' && books.length > 0) {
-      setIsLoading(false);
+    // This effect finds the book once the books array is populated and auth is checked.
+    // It will only run when `books` has loaded or `authStatus` changes.
+    if (authStatus === 'authenticated' && books.length > 0) {
+      const foundBook = books.find(b => b.id === bookId);
+      setBookData(foundBook || null); // Set to the book or null if not found
     }
-  }, [authStatus, books]);
+  }, [authStatus, books, bookId]);
 
-  if (isLoading) {
+  // Combined loading state: wait for auth and for the book search to complete.
+  if (authStatus === 'checking' || bookData === undefined) {
     return (
       <div className="flex justify-center items-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-primary mr-2" />
@@ -48,19 +51,17 @@ export default function BookDetails({ bookId }: BookDetailsProps) {
     );
   }
 
-  // If auth has failed, the redirect is in flight, so we render nothing.
+  // If auth fails, we're redirecting, so render nothing.
   if (authStatus !== 'authenticated') {
     return null;
   }
 
-  const book = books.find(b => b.id === bookId);
-
-  // After loading, if the book is not found, show the 404 page.
-  if (!book) {
+  // After loading, if the book is definitively not found, show the 404 page.
+  if (bookData === null) {
     notFound();
     return null; // notFound() throws an error, so this is for type safety.
   }
 
   // If auth is good and the book is found, render the display component.
-  return <BookDisplay book={book} />;
+  return <BookDisplay book={bookData} />;
 }
