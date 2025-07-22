@@ -56,8 +56,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </SidebarHeader>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Home" isActive={pathname === '/dashboard'}>
-                  <Link href="/dashboard">
+                <SidebarMenuButton asChild tooltip="Home">
+                  <Link href="/">
                     <Home />
                     <span>Home</span>
                   </Link>
