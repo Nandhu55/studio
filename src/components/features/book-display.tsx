@@ -4,33 +4,16 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Download, Share2, Loader2, BookOpen, ArrowLeft, Star } from 'lucide-react';
+import { Download, Share2, BookOpen, ArrowLeft, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import dynamic from 'next/dynamic';
 import { Separator } from '@/components/ui/separator';
 import { cn, transformGoogleDriveLink } from '@/lib/utils';
 import type { Book } from '@/lib/data';
-
-const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex justify-center items-center min-h-96 border rounded-lg bg-muted/20">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-    </div>
-  ),
-});
-
-const ChatExplainer = dynamic(() => import('@/components/features/chat-explainer'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex justify-center items-center min-h-96 border rounded-lg bg-muted/20">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-       <p className="ml-2">Loading AI Explainer...</p>
-    </div>
-  ),
-});
+import ChatExplainer from '@/components/features/chat-explainer';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertTriangle } from 'lucide-react';
 
 interface BookDisplayProps {
   book: Book;
@@ -51,9 +34,11 @@ export default function BookDisplay({ book }: BookDisplayProps) {
     }
   }, [router]);
 
-  const hasPdf = book.pdfUrl && book.pdfUrl !== '#' && (book.pdfUrl.startsWith('http') || book.pdfUrl.startsWith('data:application/pdf'));
+  const hasPdf = book.pdfUrl && book.pdfUrl !== '#';
   const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
-  const readableUrl = hasPdf ? transformGoogleDriveLink(book.pdfUrl) : '#';
+  
+  // Get the embeddable URL for the iframe
+  const readableUrl = hasPdf ? transformGoogleDriveLink(book.pdfUrl, true) : '#';
 
   const handleShare = async () => {
     const fallbackCopyLink = () => {
@@ -89,7 +74,8 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       return;
     }
     
-    const downloadUrl = transformGoogleDriveLink(book.pdfUrl);
+    // Get the direct download URL
+    const downloadUrl = transformGoogleDriveLink(book.pdfUrl, false);
 
     if (downloadUrl.startsWith('http')) {
       window.open(downloadUrl, '_blank');
@@ -118,7 +104,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
 
   if (isReading) {
     return (
-      <div className="max-w-5xl mx-auto space-y-4">
+      <div className="max-w-7xl mx-auto space-y-4">
         <div className="flex justify-between items-center">
             <h1 className="font-headline text-2xl font-bold truncate">{book.title}</h1>
             <Button onClick={() => setIsReading(false)}>
@@ -126,7 +112,24 @@ export default function BookDisplay({ book }: BookDisplayProps) {
                 Back to Details
             </Button>
         </div>
-        <PdfViewer file={readableUrl} />
+        {readableUrl !== '#' ? (
+            <div className="aspect-video border rounded-lg overflow-hidden">
+                <iframe
+                    src={readableUrl}
+                    className="w-full h-full"
+                    allow="autoplay"
+                    title={`PDF viewer for ${book.title}`}
+                ></iframe>
+            </div>
+        ) : (
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>PDF Not Available</AlertTitle>
+              <AlertDescription>
+                A readable PDF document is not available for this item. Please ensure a valid link is provided.
+              </AlertDescription>
+            </Alert>
+        )}
       </div>
     );
   }

@@ -6,17 +6,24 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function transformGoogleDriveLink(url: string): string {
+export function transformGoogleDriveLink(url: string, embed: boolean = false): string {
   if (!url || typeof url !== 'string') {
     return '#';
   }
+  
   const googleDriveRegex = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
   const match = url.match(googleDriveRegex);
   
   if (match && match[1]) {
     const fileId = match[1];
+    if (embed) {
+      // Use the embeddable URL for iframes
+      return `https://drive.google.com/file/d/${fileId}/preview`;
+    }
+    // Use the direct download link for downloading
     return `https://drive.google.com/uc?export=download&id=${fileId}`;
   }
   
+  // Return the original URL if it's not a standard Google Drive file link
   return url;
 }

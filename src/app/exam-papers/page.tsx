@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Download, BookOpen, Loader2 } from 'lucide-react';
+import { Download, BookOpen, Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -28,15 +28,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { transformGoogleDriveLink } from '@/lib/utils';
-
-const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex justify-center items-center min-h-96">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-    </div>
-  ),
-});
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function ExamPapersPage() {
   const { questionPapers } = useQuestionPapers();
@@ -57,7 +49,7 @@ export default function ExamPapersPage() {
         return;
     }
 
-    const downloadUrl = transformGoogleDriveLink(paper.downloadUrl);
+    const downloadUrl = transformGoogleDriveLink(paper.downloadUrl, false);
 
     if (downloadUrl.startsWith('http')) {
         window.open(downloadUrl, '_blank');
@@ -107,6 +99,7 @@ export default function ExamPapersPage() {
   });
 
   const displayYears = ['All', ...years];
+  const readableUrl = selectedPaper ? transformGoogleDriveLink(selectedPaper.downloadUrl, true) : '#';
 
   return (
     <div className="space-y-6">
@@ -223,7 +216,22 @@ export default function ExamPapersPage() {
             <DialogTitle>{selectedPaper?.subject}</DialogTitle>
           </DialogHeader>
           <div className="flex-grow overflow-hidden">
-            {selectedPaper && <PdfViewer file={transformGoogleDriveLink(selectedPaper.downloadUrl)} />}
+            {readableUrl !== '#' ? (
+                <iframe
+                    src={readableUrl}
+                    className="w-full h-full border-0"
+                    allow="autoplay"
+                    title={`PDF viewer for ${selectedPaper?.subject}`}
+                ></iframe>
+            ) : (
+                <div className="flex justify-center items-center h-full">
+                    <Alert variant="destructive" className="w-auto">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle>Document Not Available</AlertTitle>
+                        <AlertDescription>A readable document for this paper is not available.</AlertDescription>
+                    </Alert>
+                </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>

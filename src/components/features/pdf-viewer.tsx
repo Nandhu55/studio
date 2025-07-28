@@ -17,7 +17,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 interface PdfViewerProps {
-  file: string;
+  file: any;
 }
 
 export default function PdfViewer({ file }: PdfViewerProps) {
@@ -42,7 +42,7 @@ export default function PdfViewer({ file }: PdfViewerProps) {
   const goToPrevPage = () => setPageNumber(prev => Math.max(prev - 1, 1));
   const goToNextPage = () => setPageNumber(prev => Math.min(prev + 1, numPages!));
 
-  const isInvalidSource = !file || file === '#' || !(file.startsWith('http') || file.startsWith('data:application/pdf'));
+  const isInvalidSource = !file || file === '#';
 
   if (isInvalidSource) {
     return (
