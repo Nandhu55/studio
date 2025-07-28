@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Download, Share2, BookOpen, ArrowLeft, Star } from 'lucide-react';
+import { Download, Share2, BookOpen, ArrowLeft, Star, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -33,6 +33,18 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       }
     }
   }, [router]);
+
+  useEffect(() => {
+    // Hide body scrollbar when reading
+    if (isReading) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isReading]);
 
   const hasPdf = book.pdfUrl && book.pdfUrl !== '#';
   const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
@@ -81,131 +93,114 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       window.open(downloadUrl, '_blank');
       return;
     }
-
-    try {
-        const response = await fetch(downloadUrl);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = downloadFileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-    } catch (error) {
-        toast({
-            title: "Download Failed",
-            description: "There was an error preparing the file for download.",
-            variant: "destructive"
-        });
-    }
   };
-
-  if (isReading) {
-    return (
-      <div className="flex flex-col h-[calc(100vh-8rem)]">
-        <div className="flex justify-between items-center mb-4">
-            <h1 className="font-headline text-2xl font-bold truncate">{book.title}</h1>
-            <Button onClick={() => setIsReading(false)}>
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Details
-            </Button>
-        </div>
-        {readableUrl !== '#' ? (
-            <div className="flex-grow border rounded-lg overflow-hidden">
-                <iframe
-                    src={readableUrl}
-                    className="w-full h-full"
-                    allow="autoplay"
-                    title={`PDF viewer for ${book.title}`}
-                ></iframe>
-            </div>
-        ) : (
-            <Alert variant="destructive">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>PDF Not Available</AlertTitle>
-              <AlertDescription>
-                A readable PDF document is not available for this item. Please ensure a valid link is provided.
-              </AlertDescription>
-            </Alert>
-        )}
-      </div>
-    );
-  }
   
   return (
-    <div className="max-w-5xl mx-auto space-y-8 md:space-y-12">
-      <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-        <div className="md:col-span-1">
-          <div className="md:sticky md:top-24">
-            <div className="relative aspect-[2/3] w-full max-w-xs mx-auto shadow-lg rounded-lg overflow-hidden">
-              <Image
-                src={book.coverImage}
-                alt={`Cover of ${book.title}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 33vw"
-                data-ai-hint={book.dataAiHint}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="md:col-span-2">
-          <Badge variant="secondary">{book.category}</Badge>
-          <h1 className="font-headline text-3xl md:text-5xl font-bold mt-2">{book.title}</h1>
-          <p className="mt-2 text-lg md:text-xl text-muted-foreground">by {book.author}</p>
-          
-          <div className="mt-4 flex items-center gap-2">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                    <Star
-                    key={i}
-                    className={cn(
-                        'h-6 w-6',
-                        book.rating && i < Math.floor(book.rating)
-                        ? 'text-yellow-400 fill-yellow-400'
-                        : 'text-gray-300'
-                    )}
-                    />
-                ))}
+    <>
+      <div className="max-w-5xl mx-auto space-y-8 md:space-y-12">
+        <div className="grid md:grid-cols-3 gap-8 md:gap-12">
+          <div className="md:col-span-1">
+            <div className="md:sticky md:top-24">
+              <div className="relative aspect-[2/3] w-full max-w-xs mx-auto shadow-lg rounded-lg overflow-hidden">
+                <Image
+                  src={book.coverImage}
+                  alt={`Cover of ${book.title}`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  data-ai-hint={book.dataAiHint}
+                />
               </div>
-              <span className="text-muted-foreground font-medium">{book.rating?.toFixed(1)}</span>
-          </div>
-
-          <div className="my-6 space-y-2">
-            
-            <Button className="w-full md:w-auto" size="lg" onClick={() => setIsReading(true)} disabled={!hasPdf}>
-                <BookOpen className="mr-2 h-5 w-5" />
-                {hasPdf ? 'Read Now' : 'Reading not available'}
-            </Button>
-           
-            <div className="flex flex-col sm:flex-row gap-2">
-                <Button className="w-full md:w-auto" variant="secondary" onClick={handleDownload} disabled={!hasPdf}>
-                    <Download className="mr-2 h-5 w-5" />
-                    Download
-                </Button>
-                <Button className="w-full md:w-auto" variant="secondary" onClick={handleShare}>
-                    <Share2 className="mr-2 h-5 w-5" />
-                    Share
-                </Button>
             </div>
           </div>
+          <div className="md:col-span-2">
+            <Badge variant="secondary">{book.category}</Badge>
+            <h1 className="font-headline text-3xl md:text-5xl font-bold mt-2">{book.title}</h1>
+            <p className="mt-2 text-lg md:text-xl text-muted-foreground">by {book.author}</p>
+            
+            <div className="mt-4 flex items-center gap-2">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                      <Star
+                      key={i}
+                      className={cn(
+                          'h-6 w-6',
+                          book.rating && i < Math.floor(book.rating)
+                          ? 'text-yellow-400 fill-yellow-400'
+                          : 'text-gray-300'
+                      )}
+                      />
+                  ))}
+                </div>
+                <span className="text-muted-foreground font-medium">{book.rating?.toFixed(1)}</span>
+            </div>
 
-          <div className="prose dark:prose-invert max-w-none">
-            <h2 className="font-headline text-2xl font-semibold">Description</h2>
-            <p>{book.description}</p>
+            <div className="my-6 space-y-2">
+              
+              <Button className="w-full md:w-auto" size="lg" onClick={() => setIsReading(true)} disabled={!hasPdf}>
+                  <BookOpen className="mr-2 h-5 w-5" />
+                  {hasPdf ? 'Read Now' : 'Reading not available'}
+              </Button>
+            
+              <div className="flex flex-col sm:flex-row gap-2">
+                  <Button className="w-full md:w-auto" variant="secondary" onClick={handleDownload} disabled={!hasPdf}>
+                      <Download className="mr-2 h-5 w-5" />
+                      Download
+                  </Button>
+                  <Button className="w-full md:w-auto" variant="secondary" onClick={handleShare}>
+                      <Share2 className="mr-2 h-5 w-5" />
+                      Share
+                  </Button>
+              </div>
+            </div>
+
+            <div className="prose dark:prose-invert max-w-none">
+              <h2 className="font-headline text-2xl font-semibold">Description</h2>
+              <p>{book.description}</p>
+            </div>
+
           </div>
+        </div>
 
+        <div className="space-y-8">
+          <Separator className="my-8 bg-primary/20" />
+          <div>
+              <ChatExplainer bookContext={book.description} />
+          </div>
         </div>
       </div>
 
-      <div className="space-y-8">
-        <Separator className="my-8 bg-primary/20" />
-        <div>
-            <ChatExplainer bookContext={book.description} />
+      {isReading && (
+        <div className="fixed inset-0 z-50 bg-background flex flex-col">
+           <header className="flex items-center justify-between p-4 border-b">
+                <h1 className="font-headline text-xl font-bold truncate">{book.title}</h1>
+                <Button variant="ghost" size="icon" onClick={() => setIsReading(false)}>
+                    <X className="h-6 w-6" />
+                    <span className="sr-only">Close Reader</span>
+                </Button>
+            </header>
+            <div className="flex-1 w-full h-full">
+                {readableUrl !== '#' ? (
+                    <iframe
+                        src={readableUrl}
+                        className="w-full h-full border-0"
+                        allow="autoplay"
+                        title={`PDF viewer for ${book.title}`}
+                    ></iframe>
+                ) : (
+                   <div className="flex justify-center items-center h-full p-4">
+                        <Alert variant="destructive">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle>PDF Not Available</AlertTitle>
+                        <AlertDescription>
+                            A readable PDF document is not available for this item. Please ensure a valid link is provided.
+                        </AlertDescription>
+                        </Alert>
+                    </div>
+                )}
+            </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
