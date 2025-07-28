@@ -59,7 +59,7 @@ export default function ManageBooksPage() {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
-    const coverImage = formData.get('coverImage') as string;
+    const coverImageFile = formData.get('coverImage') as File;
     const bookUrl = formData.get('bookUrl') as string;
 
     if (!bookUrl) {
@@ -71,6 +71,36 @@ export default function ManageBooksPage() {
         return;
     }
 
+    let coverImageUrl = 'https://placehold.co/300x450.png';
+
+    if (coverImageFile && coverImageFile.size > 0) {
+        if (coverImageFile.size > 2 * 1024 * 1024) { // 2MB limit
+            toast({
+                title: 'Image too large',
+                description: 'Please select an image smaller than 2MB.',
+                variant: 'destructive'
+            });
+            return;
+        }
+        try {
+            coverImageUrl = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(coverImageFile);
+                reader.onload = () => resolve(reader.result as string);
+                reader.onerror = error => reject(error);
+            });
+        } catch (error) {
+            console.error("File reading error:", error);
+            toast({
+                title: "Upload Error",
+                description: "There was an error processing the image file.",
+                variant: "destructive"
+            });
+            return;
+        }
+    }
+
+
     try {
         const newBook: Book = {
             id: String(Date.now()),
@@ -79,7 +109,7 @@ export default function ManageBooksPage() {
             category: formData.get('category') as string,
             year: formData.get('year') as string,
             description: formData.get('description') as string,
-            coverImage: coverImage || 'https://placehold.co/300x450.png',
+            coverImage: coverImageUrl,
             pdfUrl: bookUrl,
             dataAiHint: 'book cover',
             rating: 0,
@@ -257,8 +287,8 @@ export default function ManageBooksPage() {
                 <Textarea id="description" name="description" className="col-span-3" required/>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="coverImage" className="text-right">Cover Image URL</Label>
-                <Input id="coverImage" name="coverImage" type="url" placeholder="https://placehold.co/300x450.png" className="col-span-3" />
+                <Label htmlFor="coverImage" className="text-right">Cover Image</Label>
+                <Input id="coverImage" name="coverImage" type="file" accept="image/*" className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="bookUrl" className="text-right">Document Link</Label>
@@ -293,3 +323,5 @@ export default function ManageBooksPage() {
     </div>
   );
 }
+
+    
