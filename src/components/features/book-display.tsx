@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Download, Share2, BookOpen, ArrowLeft, Star, X } from 'lucide-react';
+import { Download, Share2, BookOpen, ArrowLeft, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -19,11 +19,8 @@ interface BookDisplayProps {
 export default function BookDisplay({ book }: BookDisplayProps) {
   const { toast } = useToast();
   const router = useRouter();
-  const [showReader, setShowReader] = useState(false);
 
   const hasPdf = book.pdfUrl && book.pdfUrl !== '#';
-  const readerUrl = hasPdf ? transformGoogleDriveLink(book.pdfUrl, false) : '#';
-  const downloadUrl = hasPdf ? transformGoogleDriveLink(book.pdfUrl, true) : '#';
 
   const handleShare = async () => {
     const fallbackCopyLink = () => {
@@ -58,6 +55,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       });
       return;
     }
+    const downloadUrl = transformGoogleDriveLink(book.pdfUrl, true);
     window.open(downloadUrl, '_blank');
   };
 
@@ -70,30 +68,12 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       });
       return;
     }
-    setShowReader(true);
+    const readUrl = transformGoogleDriveLink(book.pdfUrl, false);
+    window.open(readUrl, '_blank');
   }
   
   return (
       <>
-        {showReader && hasPdf && (
-            <div className="fixed inset-0 z-50 bg-background/90 backdrop-blur-sm flex flex-col">
-                <header className="flex items-center justify-between p-4 border-b">
-                    <h2 className="font-headline text-lg font-semibold truncate">{book.title}</h2>
-                    <Button variant="ghost" size="icon" onClick={() => setShowReader(false)}>
-                        <X className="h-5 w-5" />
-                        <span className="sr-only">Close Reader</span>
-                    </Button>
-                </header>
-                <div className="flex-1">
-                    <iframe
-                        src={readerUrl}
-                        className="w-full h-full border-0"
-                        title={`PDF Reader for ${book.title}`}
-                    />
-                </div>
-            </div>
-        )}
-
         <div className="max-w-5xl mx-auto space-y-8 md:space-y-12">
             <Button variant="ghost" onClick={() => router.back()} className="mb-4">
                 <ArrowLeft className="mr-2 h-4 w-4" />

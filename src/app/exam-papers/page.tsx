@@ -21,7 +21,6 @@ import { years } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
 import type { QuestionPaper } from '@/lib/data';
 import { transformGoogleDriveLink } from '@/lib/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function ExamPapersPage() {
   const { questionPapers } = useQuestionPapers();
@@ -29,7 +28,6 @@ export default function ExamPapersPage() {
   const { categories } = useCategories();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedYear, setSelectedYear] = useState('All');
-  const [readerPaper, setReaderPaper] = useState<QuestionPaper | null>(null);
 
   const handleDownload = (paper: QuestionPaper) => {
     if (paper.downloadUrl === '#') {
@@ -46,7 +44,8 @@ export default function ExamPapersPage() {
 
   const handleRead = (paper: QuestionPaper) => {
     if (paper.downloadUrl && paper.downloadUrl !== '#') {
-      setReaderPaper(paper);
+      const readUrl = transformGoogleDriveLink(paper.downloadUrl, false);
+      window.open(readUrl, '_blank');
     } else {
        toast({
             title: "Read Unavailable",
@@ -63,27 +62,9 @@ export default function ExamPapersPage() {
   });
 
   const displayYears = ['All', ...years];
-  const readerUrl = readerPaper ? transformGoogleDriveLink(readerPaper.downloadUrl, false) : null;
 
   return (
     <>
-      <Dialog open={!!readerPaper} onOpenChange={(isOpen) => !isOpen && setReaderPaper(null)}>
-        <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-0">
-          <DialogHeader className="p-4 border-b">
-            <DialogTitle className="truncate">{readerPaper?.subject}</DialogTitle>
-          </DialogHeader>
-          <div className="flex-1">
-            {readerUrl && (
-              <iframe
-                src={readerUrl}
-                className="w-full h-full border-0"
-                title={`PDF Reader for ${readerPaper?.subject}`}
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-
       <div className="space-y-6">
         <div>
           <h1 className="font-headline text-4xl font-bold tracking-tight">Exam Question Papers</h1>

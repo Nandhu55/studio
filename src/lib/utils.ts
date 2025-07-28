@@ -20,10 +20,11 @@ export function transformGoogleDriveLink(url: string, forDownload: boolean = fal
       // This link forces a download.
       return `https://drive.google.com/uc?export=download&id=${fileId}`;
     }
-    // This is the most reliable link for embedding/viewing.
-    return `https://drive.google.com/file/d/${fileId}/preview`;
+    // This is the standard, reliable link for viewing in a new tab.
+    return `https://drive.google.com/file/d/${fileId}/view`;
   }
   
   // Return the original URL if it's not a standard Google Drive file link
   return url;
 }
+
