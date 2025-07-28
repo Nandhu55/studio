@@ -47,7 +47,6 @@ export default function BookDisplay({ book }: BookDisplayProps) {
   }, [isReading]);
 
   const hasPdf = book.pdfUrl && book.pdfUrl !== '#';
-  const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
   
   // Get the embeddable URL for the iframe
   const readableUrl = hasPdf ? transformGoogleDriveLink(book.pdfUrl, true) : '#';
