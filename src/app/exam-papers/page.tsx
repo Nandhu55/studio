@@ -21,6 +21,7 @@ import { years } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
 import type { QuestionPaper } from '@/lib/data';
 import { transformGoogleDriveLink } from '@/lib/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function ExamPapersPage() {
   const { questionPapers } = useQuestionPapers();
@@ -28,6 +29,7 @@ export default function ExamPapersPage() {
   const { categories } = useCategories();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedYear, setSelectedYear] = useState('All');
+  const [readerPaper, setReaderPaper] = useState<QuestionPaper | null>(null);
 
   const handleDownload = (paper: QuestionPaper) => {
     if (paper.downloadUrl === '#') {
@@ -38,14 +40,13 @@ export default function ExamPapersPage() {
         });
         return;
     }
-    const downloadUrl = transformGoogleDriveLink(paper.downloadUrl, false);
+    const downloadUrl = transformGoogleDriveLink(paper.downloadUrl, true);
     window.open(downloadUrl, '_blank');
   }
 
   const handleRead = (paper: QuestionPaper) => {
     if (paper.downloadUrl && paper.downloadUrl !== '#') {
-      const readUrl = transformGoogleDriveLink(paper.downloadUrl, true);
-      window.open(readUrl, '_blank');
+      setReaderPaper(paper);
     } else {
        toast({
             title: "Read Unavailable",
@@ -62,115 +63,135 @@ export default function ExamPapersPage() {
   });
 
   const displayYears = ['All', ...years];
+  const readerUrl = readerPaper ? transformGoogleDriveLink(readerPaper.downloadUrl, false) : null;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="font-headline text-4xl font-bold tracking-tight">Exam Question Papers</h1>
-        <p className="mt-2 text-muted-foreground">Browse and download previous year question papers.</p>
-      </div>
-      
-      <div className="space-y-4">
-        <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="text-sm font-medium text-muted-foreground w-full sm:w-20 shrink-0">Branch:</span>
-            {categories.map(category => (
-            <Button 
-                key={category}
-                size="sm"
-                variant={selectedCategory === category ? 'default' : 'outline'}
-                onClick={() => setSelectedCategory(category)}
-            >
-                {category}
-            </Button>
-            ))}
-        </div>
-        <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="text-sm font-medium text-muted-foreground w-full sm:w-20 shrink-0">Year:</span>
-            {displayYears.map(year => (
-            <Button 
-                key={year}
-                size="sm"
-                variant={selectedYear === year ? 'default' : 'outline'}
-                onClick={() => setSelectedYear(year)}
-            >
-                {year}
-            </Button>
-            ))}
-        </div>
-      </div>
-      
-      <Separator />
+    <>
+      <Dialog open={!!readerPaper} onOpenChange={(isOpen) => !isOpen && setReaderPaper(null)}>
+        <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-0">
+          <DialogHeader className="p-4 border-b">
+            <DialogTitle className="truncate">{readerPaper?.subject}</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1">
+            {readerUrl && (
+              <iframe
+                src={readerUrl}
+                className="w-full h-full border-0"
+                title={`PDF Reader for ${readerPaper?.subject}`}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
-      {filteredPapers.length > 0 ? (
-        <>
-          {/* Table for Desktop */}
-          <div className="border rounded-lg hidden md:block">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Subject</TableHead>
-                  <TableHead>Year</TableHead>
-                  <TableHead>Semester</TableHead>
-                  <TableHead>University</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredPapers.map(paper => (
-                  <TableRow key={paper.id}>
-                    <TableCell className="font-medium">{paper.subject}</TableCell>
-                    <TableCell>{paper.year}</TableCell>
-                    <TableCell>{paper.semester}</TableCell>
-                    <TableCell>{paper.university}</TableCell>
-                    <TableCell><Badge variant="outline">{paper.type}</Badge></TableCell>
-                    <TableCell className="text-right space-x-2">
-                       <Button size="sm" variant="outline" onClick={() => handleRead(paper)}>
-                        <BookOpen className="mr-2 h-4 w-4" /> Read
-                      </Button>
-                      <Button size="sm" onClick={() => handleDownload(paper)}>
-                        <Download className="mr-2 h-4 w-4" /> Download
-                      </Button>
-                    </TableCell>
+      <div className="space-y-6">
+        <div>
+          <h1 className="font-headline text-4xl font-bold tracking-tight">Exam Question Papers</h1>
+          <p className="mt-2 text-muted-foreground">Browse and download previous year question papers.</p>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="text-sm font-medium text-muted-foreground w-full sm:w-20 shrink-0">Branch:</span>
+              {categories.map(category => (
+              <Button 
+                  key={category}
+                  size="sm"
+                  variant={selectedCategory === category ? 'default' : 'outline'}
+                  onClick={() => setSelectedCategory(category)}
+              >
+                  {category}
+              </Button>
+              ))}
+          </div>
+          <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="text-sm font-medium text-muted-foreground w-full sm:w-20 shrink-0">Year:</span>
+              {displayYears.map(year => (
+              <Button 
+                  key={year}
+                  size="sm"
+                  variant={selectedYear === year ? 'default' : 'outline'}
+                  onClick={() => setSelectedYear(year)}
+              >
+                  {year}
+              </Button>
+              ))}
+          </div>
+        </div>
+        
+        <Separator />
+
+        {filteredPapers.length > 0 ? (
+          <>
+            {/* Table for Desktop */}
+            <div className="border rounded-lg hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Subject</TableHead>
+                    <TableHead>Year</TableHead>
+                    <TableHead>Semester</TableHead>
+                    <TableHead>University</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {filteredPapers.map(paper => (
+                    <TableRow key={paper.id}>
+                      <TableCell className="font-medium">{paper.subject}</TableCell>
+                      <TableCell>{paper.year}</TableCell>
+                      <TableCell>{paper.semester}</TableCell>
+                      <TableCell>{paper.university}</TableCell>
+                      <TableCell><Badge variant="outline">{paper.type}</Badge></TableCell>
+                      <TableCell className="text-right space-x-2">
+                        <Button size="sm" variant="outline" onClick={() => handleRead(paper)}>
+                          <BookOpen className="mr-2 h-4 w-4" /> Read
+                        </Button>
+                        <Button size="sm" onClick={() => handleDownload(paper)}>
+                          <Download className="mr-2 h-4 w-4" /> Download
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
 
-          {/* Cards for Mobile */}
-          <div className="grid gap-4 md:hidden">
-            {filteredPapers.map(paper => (
-              <Card key={paper.id}>
-                <CardHeader>
-                  <CardTitle className="text-lg">{paper.subject}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                    <div className="flex flex-wrap gap-2 text-sm">
-                        <Badge variant="secondary">{paper.category}</Badge>
-                        <Badge variant="secondary">{paper.year}</Badge>
-                        <Badge variant="secondary">{paper.semester}</Badge>
-                        <Badge variant="secondary">{paper.university}</Badge>
-                        <Badge variant="outline">{paper.type}</Badge>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                         <Button variant="outline" onClick={() => handleRead(paper)}>
-                            <BookOpen className="mr-2 h-4 w-4" /> Read
-                        </Button>
-                        <Button onClick={() => handleDownload(paper)}>
-                            <Download className="mr-2 h-4 w-4" /> Download
-                        </Button>
-                    </div>
-                </CardContent>
-              </Card>
-            ))}
+            {/* Cards for Mobile */}
+            <div className="grid gap-4 md:hidden">
+              {filteredPapers.map(paper => (
+                <Card key={paper.id}>
+                  <CardHeader>
+                    <CardTitle className="text-lg">{paper.subject}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                      <div className="flex flex-wrap gap-2 text-sm">
+                          <Badge variant="secondary">{paper.category}</Badge>
+                          <Badge variant="secondary">{paper.year}</Badge>
+                          <Badge variant="secondary">{paper.semester}</Badge>
+                          <Badge variant="secondary">{paper.university}</Badge>
+                          <Badge variant="outline">{paper.type}</Badge>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                          <Button variant="outline" onClick={() => handleRead(paper)}>
+                              <BookOpen className="mr-2 h-4 w-4" /> Read
+                          </Button>
+                          <Button onClick={() => handleDownload(paper)}>
+                              <Download className="mr-2 h-4 w-4" /> Download
+                          </Button>
+                      </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-12">
+              <p className="text-muted-foreground">No question papers found for the selected filters.</p>
           </div>
-        </>
-      ) : (
-        <div className="text-center py-12">
-            <p className="text-muted-foreground">No question papers found for the selected filters.</p>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
