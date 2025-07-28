@@ -80,6 +80,13 @@ export default function PdfViewer({ file }: PdfViewerProps) {
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
                 }
+                 error={
+                    <div className="flex flex-col justify-center items-center h-96 text-destructive p-4 text-center">
+                        <AlertTriangle className="h-8 w-8 mb-2" />
+                        <p className="font-semibold">Failed to load PDF file.</p>
+                        <p className="text-sm">Please try again later or contact support.</p>
+                    </div>
+                }
                 className="flex justify-center"
              >
                 <Page 
