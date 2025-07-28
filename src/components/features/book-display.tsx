@@ -97,6 +97,10 @@ export default function BookDisplay({ book }: BookDisplayProps) {
   return (
     <>
       <div className="max-w-5xl mx-auto space-y-8 md:space-y-12">
+        <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to library
+        </Button>
         <div className="grid md:grid-cols-3 gap-8 md:gap-12">
           <div className="md:col-span-1">
             <div className="md:sticky md:top-24">
