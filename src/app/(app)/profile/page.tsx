@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, GraduationCap, Phone, LogOut } from 'lucide-react';
+import { User, Mail, Sun, Moon, Palette, Camera, BookCopy, CalendarDays, GraduationCap, LogOut } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import type { User as UserType } from '@/lib/data';
 import { useRouter } from 'next/navigation';
@@ -121,7 +121,7 @@ export default function ProfilePage() {
             />
           </div>
           <CardTitle className="text-2xl">{currentUser.name}</CardTitle>
-          <CardDescription>{currentUser.email}</CardDescription>
+          <CardDescription>@{currentUser.username}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent className="pt-6">
@@ -132,10 +132,10 @@ export default function ProfilePage() {
             </div>
             <div className="grid md:grid-cols-2 gap-6">
                 <ProfileDetailItem icon={BookCopy} label="Course/Branch" value={currentUser.course} />
-                <ProfileDetailItem icon={Phone} label="Phone Number" value={currentUser.phone} />
+                <ProfileDetailItem icon={GraduationCap} label="Year" value={currentUser.year} />
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
-                <ProfileDetailItem icon={GraduationCap} label="Year / Semester" value={`${currentUser.year} / ${currentUser.semester}`} />
+             <div className="grid md:grid-cols-2 gap-6">
+                <ProfileDetailItem icon={User} label="Username" value={currentUser.username} />
                 <ProfileDetailItem icon={CalendarDays} label="Member Since" value={format(new Date(currentUser.signedUpAt), "PPP")} />
             </div>
           </div>

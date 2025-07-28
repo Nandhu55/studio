@@ -37,10 +37,11 @@ export function useUsers() {
     }
   };
 
-  const addUser = (user: Omit<User, 'id' | 'avatarUrl' | 'signedUpAt'>): User => {
+  const addUser = (user: Omit<User, 'id' | 'avatarUrl' | 'signedUpAt' | 'name'>): User => {
     const newUser: User = {
       ...user,
       id: String(Date.now()),
+      name: `${user.firstName} ${user.lastName}`,
       signedUpAt: new Date().toISOString(),
       avatarUrl: 'https://placehold.co/100x100.png',
     }
@@ -48,7 +49,7 @@ export function useUsers() {
     updateStoredUsers(updatedUsers);
 
     addNotification({
-        title: `Welcome, ${newUser.name}!`,
+        title: `Welcome, ${newUser.firstName}!`,
         description: "Your account has been created successfully.",
         type: 'welcome'
     });
