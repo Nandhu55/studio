@@ -8,10 +8,8 @@ import { Download, Share2, BookOpen, ArrowLeft, Star, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { Separator } from '@/components/ui/separator';
 import { cn, transformGoogleDriveLink } from '@/lib/utils';
 import type { Book } from '@/lib/data';
-import ChatExplainer from '@/components/features/chat-explainer';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 
@@ -162,13 +160,6 @@ export default function BookDisplay({ book }: BookDisplayProps) {
               <p>{book.description}</p>
             </div>
 
-          </div>
-        </div>
-
-        <div className="space-y-8">
-          <Separator className="my-8 bg-primary/20" />
-          <div>
-              <ChatExplainer bookContext={book.description} />
           </div>
         </div>
       </div>
