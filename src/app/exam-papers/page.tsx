@@ -27,6 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { transformGoogleDriveLink } from '@/lib/utils';
 
 const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
   ssr: false,
@@ -56,14 +57,16 @@ export default function ExamPapersPage() {
         return;
     }
 
-    if (paper.downloadUrl.startsWith('http')) {
-        window.open(paper.downloadUrl, '_blank');
+    const downloadUrl = transformGoogleDriveLink(paper.downloadUrl);
+
+    if (downloadUrl.startsWith('http')) {
+        window.open(downloadUrl, '_blank');
         return;
     }
 
     try {
         const link = document.createElement('a');
-        link.href = paper.downloadUrl;
+        link.href = downloadUrl;
         const fileName = `${paper.subject.replace(/\s+/g, '_')}_${paper.year}_${paper.type}`;
         link.download = fileName;
         document.body.appendChild(link);
@@ -220,7 +223,7 @@ export default function ExamPapersPage() {
             <DialogTitle>{selectedPaper?.subject}</DialogTitle>
           </DialogHeader>
           <div className="flex-grow overflow-hidden">
-            {selectedPaper && <PdfViewer file={selectedPaper.downloadUrl} />}
+            {selectedPaper && <PdfViewer file={transformGoogleDriveLink(selectedPaper.downloadUrl)} />}
           </div>
         </DialogContent>
       </Dialog>

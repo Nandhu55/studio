@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import dynamic from 'next/dynamic';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+import { cn, transformGoogleDriveLink } from '@/lib/utils';
 import type { Book } from '@/lib/data';
 
 const PdfViewer = dynamic(() => import('@/components/features/pdf-viewer'), {
@@ -53,6 +53,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
 
   const hasPdf = book.pdfUrl && book.pdfUrl !== '#' && (book.pdfUrl.startsWith('http') || book.pdfUrl.startsWith('data:application/pdf'));
   const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
+  const readableUrl = hasPdf ? transformGoogleDriveLink(book.pdfUrl) : '#';
 
   const handleShare = async () => {
     const fallbackCopyLink = () => {
@@ -88,15 +89,15 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       return;
     }
     
-    // For external URLs, we just open them in a new tab.
-    // For data URIs, we use the fetch/blob method.
-    if (book.pdfUrl.startsWith('http')) {
-      window.open(book.pdfUrl, '_blank');
+    const downloadUrl = transformGoogleDriveLink(book.pdfUrl);
+
+    if (downloadUrl.startsWith('http')) {
+      window.open(downloadUrl, '_blank');
       return;
     }
 
     try {
-        const response = await fetch(book.pdfUrl);
+        const response = await fetch(downloadUrl);
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -125,7 +126,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
                 Back to Details
             </Button>
         </div>
-        <PdfViewer file={book.pdfUrl} />
+        <PdfViewer file={readableUrl} />
       </div>
     );
   }
