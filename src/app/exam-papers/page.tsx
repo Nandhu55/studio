@@ -211,15 +211,15 @@ export default function ExamPapersPage() {
       )}
 
       <Dialog open={isViewerOpen} onOpenChange={setIsViewerOpen}>
-        <DialogContent className="max-w-5xl h-[90vh] flex flex-col">
-          <DialogHeader>
+        <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-2 sm:p-4">
+          <DialogHeader className="p-2">
             <DialogTitle>{selectedPaper?.subject}</DialogTitle>
           </DialogHeader>
           <div className="flex-grow overflow-hidden">
             {readableUrl !== '#' ? (
                 <iframe
                     src={readableUrl}
-                    className="w-full h-full border-0"
+                    className="w-full h-full border-0 rounded-md"
                     allow="autoplay"
                     title={`PDF viewer for ${selectedPaper?.subject}`}
                 ></iframe>

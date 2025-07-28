@@ -104,8 +104,8 @@ export default function BookDisplay({ book }: BookDisplayProps) {
 
   if (isReading) {
     return (
-      <div className="max-w-7xl mx-auto space-y-4">
-        <div className="flex justify-between items-center">
+      <div className="flex flex-col h-[calc(100vh-8rem)]">
+        <div className="flex justify-between items-center mb-4">
             <h1 className="font-headline text-2xl font-bold truncate">{book.title}</h1>
             <Button onClick={() => setIsReading(false)}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -113,7 +113,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
             </Button>
         </div>
         {readableUrl !== '#' ? (
-            <div className="aspect-video border rounded-lg overflow-hidden">
+            <div className="flex-grow border rounded-lg overflow-hidden">
                 <iframe
                     src={readableUrl}
                     className="w-full h-full"
