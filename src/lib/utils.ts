@@ -17,8 +17,8 @@ export function transformGoogleDriveLink(url: string, forViewing: boolean = fals
   if (match && match[1]) {
     const fileId = match[1];
     if (forViewing) {
-      // The preview link is better for direct viewing in a browser tab.
-      return `https://drive.google.com/file/d/${fileId}/preview`;
+      // This is a more reliable embed/view link.
+      return `https://drive.google.com/uc?export=view&id=${fileId}`;
     }
     // This link forces a download.
     return `https://drive.google.com/uc?export=download&id=${fileId}`;
