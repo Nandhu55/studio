@@ -17,8 +17,8 @@ export function transformGoogleDriveLink(url: string, forViewing: boolean = fals
   if (match && match[1]) {
     const fileId = match[1];
     if (forViewing) {
-      // This is a more reliable embed/view link.
-      return `https://drive.google.com/uc?export=view&id=${fileId}`;
+      // This is the correct link for viewing in a new tab without forcing a download.
+      return `https://drive.google.com/file/d/${fileId}/preview`;
     }
     // This link forces a download.
     return `https://drive.google.com/uc?export=download&id=${fileId}`;
@@ -27,3 +27,4 @@ export function transformGoogleDriveLink(url: string, forViewing: boolean = fals
   // Return the original URL if it's not a standard Google Drive file link
   return url;
 }
+
