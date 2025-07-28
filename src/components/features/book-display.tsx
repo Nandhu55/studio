@@ -4,14 +4,12 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Download, Share2, BookOpen, ArrowLeft, Star, X } from 'lucide-react';
+import { Download, Share2, BookOpen, ArrowLeft, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { cn, transformGoogleDriveLink } from '@/lib/utils';
 import type { Book } from '@/lib/data';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle } from 'lucide-react';
 import Remarks from '@/components/features/remarks';
 
 interface BookDisplayProps {
@@ -20,7 +18,6 @@ interface BookDisplayProps {
 
 export default function BookDisplay({ book }: BookDisplayProps) {
   const { toast } = useToast();
-  const [isReading, setIsReading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -33,22 +30,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
     }
   }, [router]);
 
-  useEffect(() => {
-    // Hide body scrollbar when reading
-    if (isReading) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isReading]);
-
   const hasPdf = book.pdfUrl && book.pdfUrl !== '#';
-  
-  // Get the embeddable URL for the iframe
-  const readableUrl = hasPdf ? transformGoogleDriveLink(book.pdfUrl, true) : '#';
 
   const handleShare = async () => {
     const fallbackCopyLink = () => {
@@ -86,15 +68,23 @@ export default function BookDisplay({ book }: BookDisplayProps) {
     
     // Get the direct download URL
     const downloadUrl = transformGoogleDriveLink(book.pdfUrl, false);
+    window.open(downloadUrl, '_blank');
+  };
 
-    if (downloadUrl.startsWith('http')) {
-      window.open(downloadUrl, '_blank');
+  const handleRead = () => {
+     if (!hasPdf) {
+      toast({
+          title: "Read Unavailable",
+          description: "No PDF document is available for this book.",
+          variant: "destructive"
+      });
       return;
     }
-  };
+    const readUrl = transformGoogleDriveLink(book.pdfUrl, true);
+    window.open(readUrl, '_blank');
+  }
   
   return (
-    <>
       <div className="max-w-5xl mx-auto space-y-8 md:space-y-12">
         <Button variant="ghost" onClick={() => router.back()} className="mb-4">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -139,7 +129,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
 
             <div className="my-6 space-y-2">
               
-              <Button className="w-full md:w-auto" size="lg" onClick={() => setIsReading(true)} disabled={!hasPdf}>
+              <Button className="w-full md:w-auto" size="lg" onClick={handleRead} disabled={!hasPdf}>
                   <BookOpen className="mr-2 h-5 w-5" />
                   {hasPdf ? 'Read Now' : 'Reading not available'}
               </Button>
@@ -165,38 +155,5 @@ export default function BookDisplay({ book }: BookDisplayProps) {
         </div>
         <Remarks bookId={book.id} />
       </div>
-
-      {isReading && (
-        <div className="fixed inset-0 z-50 bg-background flex flex-col">
-           <header className="flex items-center justify-between p-4 border-b">
-                <h1 className="font-headline text-xl font-bold truncate">{book.title}</h1>
-                <Button variant="ghost" size="icon" onClick={() => setIsReading(false)}>
-                    <X className="h-6 w-6" />
-                    <span className="sr-only">Close Reader</span>
-                </Button>
-            </header>
-            <div className="flex-1 w-full h-full">
-                {readableUrl !== '#' ? (
-                    <iframe
-                        src={readableUrl}
-                        className="w-full h-full border-0"
-                        allow="autoplay"
-                        title={`PDF viewer for ${book.title}`}
-                    ></iframe>
-                ) : (
-                   <div className="flex justify-center items-center h-full p-4">
-                        <Alert variant="destructive">
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertTitle>PDF Not Available</AlertTitle>
-                        <AlertDescription>
-                            A readable PDF document is not available for this item. Please ensure a valid link is provided.
-                        </AlertDescription>
-                        </Alert>
-                    </div>
-                )}
-            </div>
-        </div>
-      )}
-    </>
   );
 }

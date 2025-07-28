@@ -2,8 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
-import { Download, BookOpen, Loader2, AlertTriangle } from 'lucide-react';
+import { Download, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -21,14 +20,7 @@ import { useCategories } from '@/hooks/use-categories';
 import { years } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
 import type { QuestionPaper } from '@/lib/data';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { transformGoogleDriveLink } from '@/lib/utils';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function ExamPapersPage() {
   const { questionPapers } = useQuestionPapers();
@@ -36,8 +28,6 @@ export default function ExamPapersPage() {
   const { categories } = useCategories();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedYear, setSelectedYear] = useState('All');
-  const [isViewerOpen, setIsViewerOpen] = useState(false);
-  const [selectedPaper, setSelectedPaper] = useState<QuestionPaper | null>(null);
 
   const handleDownload = (paper: QuestionPaper) => {
     if (paper.downloadUrl === '#') {
@@ -50,39 +40,13 @@ export default function ExamPapersPage() {
     }
 
     const downloadUrl = transformGoogleDriveLink(paper.downloadUrl, false);
-
-    if (downloadUrl.startsWith('http')) {
-        window.open(downloadUrl, '_blank');
-        return;
-    }
-
-    try {
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        const fileName = `${paper.subject.replace(/\s+/g, '_')}_${paper.year}_${paper.type}`;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        toast({
-            title: "Download Started",
-            description: `Downloading ${paper.subject} ${paper.type} paper.`
-        });
-    } catch(e) {
-        console.error("Download error:", e);
-        toast({
-            title: "Download Failed",
-            description: "Could not initiate the download.",
-            variant: "destructive"
-        });
-    }
+    window.open(downloadUrl, '_blank');
   }
 
   const handleRead = (paper: QuestionPaper) => {
     if (paper.downloadUrl && paper.downloadUrl !== '#') {
-      setSelectedPaper(paper);
-      setIsViewerOpen(true);
+      const readUrl = transformGoogleDriveLink(paper.downloadUrl, true);
+      window.open(readUrl, '_blank');
     } else {
        toast({
             title: "Read Unavailable",
@@ -99,7 +63,6 @@ export default function ExamPapersPage() {
   });
 
   const displayYears = ['All', ...years];
-  const readableUrl = selectedPaper ? transformGoogleDriveLink(selectedPaper.downloadUrl, true) : '#';
 
   return (
     <div className="space-y-6">
@@ -209,32 +172,6 @@ export default function ExamPapersPage() {
             <p className="text-muted-foreground">No question papers found for the selected filters.</p>
         </div>
       )}
-
-      <Dialog open={isViewerOpen} onOpenChange={setIsViewerOpen}>
-        <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-2 sm:p-4">
-          <DialogHeader className="p-2">
-            <DialogTitle>{selectedPaper?.subject}</DialogTitle>
-          </DialogHeader>
-          <div className="flex-grow overflow-hidden">
-            {readableUrl !== '#' ? (
-                <iframe
-                    src={readableUrl}
-                    className="w-full h-full border-0 rounded-md"
-                    allow="autoplay"
-                    title={`PDF viewer for ${selectedPaper?.subject}`}
-                ></iframe>
-            ) : (
-                <div className="flex justify-center items-center h-full">
-                    <Alert variant="destructive" className="w-auto">
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertTitle>Document Not Available</AlertTitle>
-                        <AlertDescription>A readable document for this paper is not available.</AlertDescription>
-                    </Alert>
-                </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
