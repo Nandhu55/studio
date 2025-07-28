@@ -21,7 +21,6 @@ import { years } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
 import type { QuestionPaper } from '@/lib/data';
 import { transformGoogleDriveLink } from '@/lib/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function ExamPapersPage() {
   const { questionPapers } = useQuestionPapers();
@@ -64,9 +63,8 @@ export default function ExamPapersPage() {
 
   const displayYears = ['All', ...years];
   
-  const readUrl = readingPaper ? transformGoogleDriveLink(readingPaper.downloadUrl, false) : '';
-
   if (readingPaper) {
+    const readUrl = transformGoogleDriveLink(readingPaper.downloadUrl, false);
     return (
        <div className="fixed inset-0 bg-background z-50 flex flex-col">
           <header className="flex items-center justify-between p-2 sm:p-4 border-b bg-card">
