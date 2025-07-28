@@ -85,7 +85,7 @@ export default function ExamPapersPage() {
   }
 
   const handleRead = (paper: QuestionPaper) => {
-    if (paper.downloadUrl && (paper.downloadUrl.startsWith('data:application/pdf;base64,') || paper.downloadUrl.startsWith('http'))) {
+    if (paper.downloadUrl && paper.downloadUrl !== '#') {
       setSelectedPaper(paper);
       setIsViewerOpen(true);
     } else {
@@ -227,5 +227,3 @@ export default function ExamPapersPage() {
     </div>
   );
 }
-
-    
