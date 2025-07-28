@@ -12,6 +12,7 @@ import { cn, transformGoogleDriveLink } from '@/lib/utils';
 import type { Book } from '@/lib/data';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
+import Remarks from '@/components/features/remarks';
 
 interface BookDisplayProps {
   book: Book;
@@ -162,6 +163,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
 
           </div>
         </div>
+        <Remarks bookId={book.id} />
       </div>
 
       {isReading && (

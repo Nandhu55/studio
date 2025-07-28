@@ -1,4 +1,13 @@
 
+export type Remark = {
+  id: string;
+  bookId: string;
+  text: string;
+  authorName: string;
+  authorAvatarUrl?: string;
+  timestamp: string;
+};
+
 export type Book = {
   id: string;
   title: string;
