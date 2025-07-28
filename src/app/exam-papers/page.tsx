@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Download, BookOpen } from 'lucide-react';
+import { Download, BookOpen, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -22,7 +22,6 @@ import { Separator } from '@/components/ui/separator';
 import type { QuestionPaper } from '@/lib/data';
 import { transformGoogleDriveLink } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import PdfViewer from '@/components/features/pdf-viewer';
 
 export default function ExamPapersPage() {
   const { questionPapers } = useQuestionPapers();
@@ -64,6 +63,28 @@ export default function ExamPapersPage() {
   });
 
   const displayYears = ['All', ...years];
+  
+  const readUrl = readingPaper ? transformGoogleDriveLink(readingPaper.downloadUrl, false) : '';
+
+  if (readingPaper) {
+    return (
+       <div className="fixed inset-0 bg-background z-50 flex flex-col">
+          <header className="flex items-center justify-between p-2 sm:p-4 border-b bg-card">
+              <div>
+                  <h1 className="font-bold text-lg line-clamp-1">{readingPaper.subject}</h1>
+                  <p className="text-sm text-muted-foreground">{readingPaper.category} - {readingPaper.year}</p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setReadingPaper(null)}>
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close Reader</span>
+              </Button>
+          </header>
+          <div className="flex-1 overflow-auto">
+             <iframe src={readUrl} className="w-full h-full" title={readingPaper.subject} />
+          </div>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -175,19 +196,6 @@ export default function ExamPapersPage() {
           </div>
         )}
       </div>
-
-       <Dialog open={!!readingPaper} onOpenChange={(isOpen) => !isOpen && setReadingPaper(null)}>
-        <DialogContent className="max-w-5xl w-full h-[90vh] flex flex-col p-0">
-          <DialogHeader className="p-4 border-b">
-            <DialogTitle>{readingPaper?.subject}</DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 overflow-auto">
-            {readingPaper && (
-              <PdfViewer file={transformGoogleDriveLink(readingPaper.downloadUrl, true)} />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

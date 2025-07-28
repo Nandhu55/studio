@@ -16,9 +16,12 @@ export function transformGoogleDriveLink(url: string, forDownload = false): stri
   
   if (match && match[1]) {
     const fileId = match[1];
-    // Always use the export=download link. The browser can choose to display it or download it.
-    // This is the most reliable way to get the raw PDF data for react-pdf.
-    return `https://drive.google.com/uc?export=download&id=${fileId}`;
+    if (forDownload) {
+      // This link forces a download prompt.
+      return `https://drive.google.com/uc?export=download&id=${fileId}`;
+    }
+    // This link is for embedding and is the most reliable for viewing.
+    return `https://drive.google.com/file/d/${fileId}/preview`;
   }
   
   // Return the original URL if it's not a standard Google Drive file link

@@ -11,7 +11,6 @@ import { useToast } from '@/hooks/use-toast';
 import { cn, transformGoogleDriveLink } from '@/lib/utils';
 import type { Book } from '@/lib/data';
 import Remarks from '@/components/features/remarks';
-import PdfViewer from '@/components/features/pdf-viewer';
 
 interface BookDisplayProps {
   book: Book;
@@ -74,6 +73,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
   }
 
   if (isReading) {
+    const readUrl = transformGoogleDriveLink(book.pdfUrl, false);
     return (
       <div className="fixed inset-0 bg-background z-50 flex flex-col">
           <header className="flex items-center justify-between p-2 sm:p-4 border-b bg-card">
@@ -94,7 +94,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
               </Button>
           </header>
           <div className="flex-1 overflow-auto">
-             <PdfViewer file={transformGoogleDriveLink(book.pdfUrl, true)} />
+             <iframe src={readUrl} className="w-full h-full" title={book.title} />
           </div>
       </div>
     );
