@@ -38,13 +38,13 @@ export default function ExamPapersPage() {
         });
         return;
     }
-    const downloadUrl = transformGoogleDriveLink(paper.downloadUrl, true);
+    const downloadUrl = transformGoogleDriveLink(paper.downloadUrl);
     window.open(downloadUrl, '_blank');
   }
 
   const handleRead = (paper: QuestionPaper) => {
     if (paper.downloadUrl && paper.downloadUrl !== '#') {
-      const readUrl = transformGoogleDriveLink(paper.downloadUrl, false);
+      const readUrl = transformGoogleDriveLink(paper.downloadUrl);
       window.open(readUrl, '_blank');
     } else {
        toast({

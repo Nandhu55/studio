@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function transformGoogleDriveLink(url: string, forDownload: boolean = false): string {
+export function transformGoogleDriveLink(url: string): string {
   if (!url || typeof url !== 'string') {
     return '#';
   }
@@ -16,15 +16,10 @@ export function transformGoogleDriveLink(url: string, forDownload: boolean = fal
   
   if (match && match[1]) {
     const fileId = match[1];
-    if (forDownload) {
-      // This link forces a download.
-      return `https://drive.google.com/uc?export=download&id=${fileId}`;
-    }
-    // This is the standard, reliable link for viewing in a new tab.
-    return `https://drive.google.com/file/d/${fileId}/view`;
+    // This link forces a download, which is more reliable than any previewer.
+    return `https://drive.google.com/uc?export=download&id=${fileId}`;
   }
   
   // Return the original URL if it's not a standard Google Drive file link
   return url;
 }
-

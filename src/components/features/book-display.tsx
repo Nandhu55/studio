@@ -55,7 +55,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       });
       return;
     }
-    const downloadUrl = transformGoogleDriveLink(book.pdfUrl, true);
+    const downloadUrl = transformGoogleDriveLink(book.pdfUrl);
     window.open(downloadUrl, '_blank');
   };
 
@@ -68,7 +68,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       });
       return;
     }
-    const readUrl = transformGoogleDriveLink(book.pdfUrl, false);
+    const readUrl = transformGoogleDriveLink(book.pdfUrl);
     window.open(readUrl, '_blank');
   }
   
