@@ -51,7 +51,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
     }
   }, [router]);
 
-  const hasPdf = book.pdfUrl && book.pdfUrl !== '#';
+  const hasPdf = book.pdfUrl && book.pdfUrl !== '#' && (book.pdfUrl.startsWith('http') || book.pdfUrl.startsWith('data:application/pdf'));
   const downloadFileName = `${book.title.replace(/\s+/g, '_')}.pdf`;
 
   const handleShare = async () => {
@@ -170,17 +170,12 @@ export default function BookDisplay({ book }: BookDisplayProps) {
           </div>
 
           <div className="my-6 space-y-2">
-            {hasPdf ? (
-                <Button className="w-full md:w-auto" size="lg" onClick={() => setIsReading(true)}>
-                    <BookOpen className="mr-2 h-5 w-5" />
-                    Read Now
-                </Button>
-            ) : (
-                <Button className="w-full md:w-auto" size="lg" disabled>
-                    <BookOpen className="mr-2 h-5 w-5" />
-                    Reading not available
-                </Button>
-            )}
+            
+            <Button className="w-full md:w-auto" size="lg" onClick={() => setIsReading(true)} disabled={!hasPdf}>
+                <BookOpen className="mr-2 h-5 w-5" />
+                {hasPdf ? 'Read Now' : 'Reading not available'}
+            </Button>
+           
             <div className="flex flex-col sm:flex-row gap-2">
                 <Button className="w-full md:w-auto" variant="secondary" onClick={handleDownload} disabled={!hasPdf}>
                     <Download className="mr-2 h-5 w-5" />
@@ -210,5 +205,3 @@ export default function BookDisplay({ book }: BookDisplayProps) {
     </div>
   );
 }
-
-    

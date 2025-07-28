@@ -34,7 +34,7 @@ export default function PdfViewer({ file }: PdfViewerProps) {
     console.error('PDF Load Error:', error);
     toast({
       title: 'Error loading PDF',
-      description: 'The document could not be loaded. It may be corrupted or unavailable.',
+      description: 'The document could not be loaded. It may be corrupted or the link may be broken.',
       variant: 'destructive',
     });
   };
@@ -42,13 +42,15 @@ export default function PdfViewer({ file }: PdfViewerProps) {
   const goToPrevPage = () => setPageNumber(prev => Math.max(prev - 1, 1));
   const goToNextPage = () => setPageNumber(prev => Math.min(prev + 1, numPages!));
 
-  if (!file || file === '#') {
+  const isInvalidSource = !file || file === '#' || !(file.startsWith('http') || file.startsWith('data:application/pdf'));
+
+  if (isInvalidSource) {
     return (
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>PDF Not Available</AlertTitle>
           <AlertDescription>
-            A readable PDF document is not available for this book. It may need to be uploaded again.
+            A readable PDF document is not available for this item. Please ensure a valid link is provided.
           </AlertDescription>
         </Alert>
     );
