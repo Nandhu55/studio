@@ -21,6 +21,8 @@ import { years } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
 import type { QuestionPaper } from '@/lib/data';
 import { transformGoogleDriveLink } from '@/lib/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import PdfViewer from '@/components/features/pdf-viewer';
 
 export default function ExamPapersPage() {
   const { questionPapers } = useQuestionPapers();
@@ -28,6 +30,7 @@ export default function ExamPapersPage() {
   const { categories } = useCategories();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedYear, setSelectedYear] = useState('All');
+  const [readingPaper, setReadingPaper] = useState<QuestionPaper | null>(null);
 
   const handleDownload = (paper: QuestionPaper) => {
     if (paper.downloadUrl === '#') {
@@ -38,14 +41,13 @@ export default function ExamPapersPage() {
         });
         return;
     }
-    const downloadUrl = transformGoogleDriveLink(paper.downloadUrl);
+    const downloadUrl = transformGoogleDriveLink(paper.downloadUrl, true);
     window.open(downloadUrl, '_blank');
   }
 
   const handleRead = (paper: QuestionPaper) => {
     if (paper.downloadUrl && paper.downloadUrl !== '#') {
-      const readUrl = transformGoogleDriveLink(paper.downloadUrl);
-      window.open(readUrl, '_blank');
+      setReadingPaper(paper);
     } else {
        toast({
             title: "Read Unavailable",
@@ -173,6 +175,19 @@ export default function ExamPapersPage() {
           </div>
         )}
       </div>
+
+       <Dialog open={!!readingPaper} onOpenChange={(isOpen) => !isOpen && setReadingPaper(null)}>
+        <DialogContent className="max-w-5xl w-full h-[90vh] flex flex-col p-0">
+          <DialogHeader className="p-4 border-b">
+            <DialogTitle>{readingPaper?.subject}</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto">
+            {readingPaper && (
+              <PdfViewer file={transformGoogleDriveLink(readingPaper.downloadUrl, true)} />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

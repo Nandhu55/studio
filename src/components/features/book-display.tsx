@@ -4,13 +4,14 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Download, Share2, BookOpen, ArrowLeft, Star } from 'lucide-react';
+import { Download, Share2, BookOpen, ArrowLeft, Star, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { cn, transformGoogleDriveLink } from '@/lib/utils';
 import type { Book } from '@/lib/data';
 import Remarks from '@/components/features/remarks';
+import PdfViewer from '@/components/features/pdf-viewer';
 
 interface BookDisplayProps {
   book: Book;
@@ -19,6 +20,7 @@ interface BookDisplayProps {
 export default function BookDisplay({ book }: BookDisplayProps) {
   const { toast } = useToast();
   const router = useRouter();
+  const [isReading, setIsReading] = useState(false);
 
   const hasPdf = book.pdfUrl && book.pdfUrl !== '#';
 
@@ -55,7 +57,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       });
       return;
     }
-    const downloadUrl = transformGoogleDriveLink(book.pdfUrl);
+    const downloadUrl = transformGoogleDriveLink(book.pdfUrl, true);
     window.open(downloadUrl, '_blank');
   };
 
@@ -68,8 +70,34 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       });
       return;
     }
-    const readUrl = transformGoogleDriveLink(book.pdfUrl);
-    window.open(readUrl, '_blank');
+    setIsReading(true);
+  }
+
+  if (isReading) {
+    return (
+      <div className="fixed inset-0 bg-background z-50 flex flex-col">
+          <header className="flex items-center justify-between p-2 sm:p-4 border-b bg-card">
+              <div className="flex items-center gap-4">
+                <Button variant="ghost" onClick={() => router.back()} className="hidden sm:inline-flex">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to library
+                </Button>
+                 <div className="w-px h-8 bg-border mx-2 hidden sm:block" />
+                <div>
+                    <h1 className="font-bold text-lg line-clamp-1">{book.title}</h1>
+                    <p className="text-sm text-muted-foreground">{book.author}</p>
+                </div>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setIsReading(false)}>
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close Reader</span>
+              </Button>
+          </header>
+          <div className="flex-1 overflow-auto">
+             <PdfViewer file={transformGoogleDriveLink(book.pdfUrl, true)} />
+          </div>
+      </div>
+    );
   }
   
   return (

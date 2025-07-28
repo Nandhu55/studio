@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function transformGoogleDriveLink(url: string): string {
+export function transformGoogleDriveLink(url: string, forDownload = false): string {
   if (!url || typeof url !== 'string') {
     return '#';
   }
@@ -16,7 +16,8 @@ export function transformGoogleDriveLink(url: string): string {
   
   if (match && match[1]) {
     const fileId = match[1];
-    // This link forces a download, which is more reliable than any previewer.
+    // Always use the export=download link. The browser can choose to display it or download it.
+    // This is the most reliable way to get the raw PDF data for react-pdf.
     return `https://drive.google.com/uc?export=download&id=${fileId}`;
   }
   
