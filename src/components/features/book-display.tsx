@@ -87,6 +87,14 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       });
       return;
     }
+    
+    // For external URLs, we just open them in a new tab.
+    // For data URIs, we use the fetch/blob method.
+    if (book.pdfUrl.startsWith('http')) {
+      window.open(book.pdfUrl, '_blank');
+      return;
+    }
+
     try {
         const response = await fetch(book.pdfUrl);
         const blob = await response.blob();
@@ -202,3 +210,5 @@ export default function BookDisplay({ book }: BookDisplayProps) {
     </div>
   );
 }
+
+    

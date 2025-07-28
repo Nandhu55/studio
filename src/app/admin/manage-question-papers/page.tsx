@@ -58,29 +58,18 @@ export default function ManageQuestionPapersPage() {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
-    const paperFile = formData.get('paperFile') as File;
+    const paperUrl = formData.get('paperUrl') as string;
 
-    if (!paperFile || paperFile.size === 0) {
+    if (!paperUrl) {
         toast({
             title: "Upload Error",
-            description: "A document file (PDF, Word, PPT) is required.",
+            description: "A document link is required.",
             variant: "destructive"
         });
         return;
     }
 
-    const readFileAsDataURL = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = (error) => reject(error);
-            reader.readAsDataURL(file);
-        });
-    }
-
     try {
-        const fileUri = await readFileAsDataURL(paperFile);
-
         const newPaper: QuestionPaper = {
             id: String(Date.now()),
             subject: formData.get('subject') as string,
@@ -89,7 +78,7 @@ export default function ManageQuestionPapersPage() {
             semester: formData.get('semester') as string,
             university: formData.get('university') as string,
             type: formData.get('type') as 'Mid-1' | 'Mid-2' | 'Semester End' | 'Quiz',
-            downloadUrl: fileUri,
+            downloadUrl: paperUrl,
         };
         
         addQuestionPaper(newPaper);
@@ -105,7 +94,7 @@ export default function ManageQuestionPapersPage() {
         console.error("File reading error:", error);
         toast({
             title: "Upload Error",
-            description: "There was an error processing the file. Please try again.",
+            description: "There was an error processing the request. Please try again.",
             variant: "destructive"
         });
     }
@@ -280,8 +269,8 @@ export default function ManageQuestionPapersPage() {
                 </Select>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="paperFile" className="text-right">Document</Label>
-                <Input id="paperFile" name="paperFile" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx" className="col-span-3" required />
+                <Label htmlFor="paperUrl" className="text-right">Document Link</Label>
+                <Input id="paperUrl" name="paperUrl" type="url" placeholder="https://example.com/paper.pdf" className="col-span-3" required />
               </div>
             </div>
             <DialogFooter>
@@ -312,3 +301,5 @@ export default function ManageQuestionPapersPage() {
     </div>
   );
 }
+
+    

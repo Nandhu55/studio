@@ -56,6 +56,11 @@ export default function ExamPapersPage() {
         return;
     }
 
+    if (paper.downloadUrl.startsWith('http')) {
+        window.open(paper.downloadUrl, '_blank');
+        return;
+    }
+
     try {
         const link = document.createElement('a');
         link.href = paper.downloadUrl;
@@ -80,7 +85,7 @@ export default function ExamPapersPage() {
   }
 
   const handleRead = (paper: QuestionPaper) => {
-    if (paper.downloadUrl && paper.downloadUrl.startsWith('data:application/pdf;base64,')) {
+    if (paper.downloadUrl && (paper.downloadUrl.startsWith('data:application/pdf;base64,') || paper.downloadUrl.startsWith('http'))) {
       setSelectedPaper(paper);
       setIsViewerOpen(true);
     } else {
@@ -222,3 +227,5 @@ export default function ExamPapersPage() {
     </div>
   );
 }
+
+    

@@ -60,12 +60,12 @@ export default function ManageBooksPage() {
     const form = e.currentTarget;
     const formData = new FormData(form);
     const imageFile = formData.get('coverImage') as File;
-    const bookFile = formData.get('bookFile') as File;
+    const bookUrl = formData.get('bookUrl') as string;
 
-    if (!bookFile || bookFile.size === 0) {
+    if (!bookUrl) {
         toast({
             title: "Upload Error",
-            description: "A document file (PDF, Word, PPT) is required to upload a book.",
+            description: "A document link is required to upload a book.",
             variant: "destructive"
         });
         return;
@@ -81,7 +81,6 @@ export default function ManageBooksPage() {
     }
 
     try {
-        const fileUri = await readFileAsDataURL(bookFile);
         let coverImageUri = 'https://placehold.co/300x450.png';
 
         if (imageFile && imageFile.size > 0) {
@@ -96,7 +95,7 @@ export default function ManageBooksPage() {
             year: formData.get('year') as string,
             description: formData.get('description') as string,
             coverImage: coverImageUri,
-            pdfUrl: fileUri,
+            pdfUrl: bookUrl,
             dataAiHint: 'book cover',
             rating: 0,
         };
@@ -277,8 +276,8 @@ export default function ManageBooksPage() {
                 <Input id="coverImage" name="coverImage" type="file" accept="image/*" className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="bookFile" className="text-right">Document File</Label>
-                <Input id="bookFile" name="bookFile" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx" className="col-span-3" required />
+                <Label htmlFor="bookUrl" className="text-right">Document Link</Label>
+                <Input id="bookUrl" name="bookUrl" type="url" placeholder="https://example.com/book.pdf" className="col-span-3" required />
               </div>
             </div>
             <DialogFooter>
@@ -309,3 +308,5 @@ export default function ManageBooksPage() {
     </div>
   );
 }
+
+    

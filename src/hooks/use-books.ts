@@ -6,7 +6,6 @@ import { books as initialBooks, type Book } from '@/lib/data';
 import { useNotifications } from '@/hooks/use-notifications';
 
 const BOOKS_STORAGE_KEY = 'b-tech-hub-books';
-const MAX_USER_BOOKS = 50; // Limit the number of user-added books to prevent storage overflow
 
 export function useBooks() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -44,7 +43,6 @@ export function useBooks() {
   }, [fetchBooksFromStorage]);
 
   const updateStoredBooks = (updatedBooks: Book[]) => {
-    // This might throw a QuotaExceededError, which will be caught in `addBook`
     localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(updatedBooks));
     setBooks(updatedBooks);
     // Manually dispatch a storage event to notify other tabs/windows
@@ -58,14 +56,6 @@ export function useBooks() {
   
   const addBook = (book: Book): { success: boolean; message?: string } => {
     const currentBooks = JSON.parse(localStorage.getItem(BOOKS_STORAGE_KEY) || '[]');
-    const userBooks = currentBooks.filter((b: Book) => !initialBooks.some(ib => ib.id === b.id));
-
-    if (userBooks.length >= MAX_USER_BOOKS) {
-      return {
-        success: false,
-        message: `Storage limit reached. You can only store up to ${MAX_USER_BOOKS} uploaded books.`
-      };
-    }
     
     const updatedBooks = [book, ...currentBooks];
     
@@ -85,7 +75,7 @@ export function useBooks() {
             fetchBooksFromStorage();
             return {
               success: false,
-              message: "Upload failed. The file is too large for browser storage. Please try a smaller file."
+              message: "Storage limit reached. Could not save the new book."
             };
         } else {
             // Re-throw other errors
@@ -107,3 +97,5 @@ export function useBooks() {
 
   return { books, addBook, deleteBook };
 }
+
+    
