@@ -59,7 +59,7 @@ export default function ManageOtherBooksPage() {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
-    const imageFile = formData.get('coverImage') as File;
+    const coverImage = formData.get('coverImage') as string;
     const bookUrl = formData.get('bookUrl') as string;
 
     if (!bookUrl) {
@@ -71,30 +71,15 @@ export default function ManageOtherBooksPage() {
         return;
     }
 
-    const readFileAsDataURL = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = (error) => reject(error);
-            reader.readAsDataURL(file);
-        });
-    }
-
     try {
-        let coverImageUri = 'https://placehold.co/300x450.png';
-
-        if (imageFile && imageFile.size > 0) {
-            coverImageUri = await readFileAsDataURL(imageFile);
-        }
-
         const newBook: Book = {
             id: String(Date.now()),
             title: formData.get('title') as string,
             author: formData.get('author') as string,
             category: formData.get('category') as string,
-            year: formData.get('year') as string,
+            year: 'All',
             description: formData.get('description') as string,
-            coverImage: coverImageUri,
+            coverImage: coverImage || 'https://placehold.co/300x450.png',
             pdfUrl: bookUrl,
             dataAiHint: 'book cover'
         };
@@ -252,14 +237,13 @@ export default function ManageOtherBooksPage() {
                     </SelectContent>
                 </Select>
               </div>
-              <Input type="hidden" id="year" name="year" value="All" />
               <div className="grid grid-cols-4 items-start gap-4">
                 <Label htmlFor="description" className="text-right pt-2">Description</Label>
                 <Textarea id="description" name="description" className="col-span-3" required/>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="coverImage" className="text-right">Cover Image</Label>
-                <Input id="coverImage" name="coverImage" type="file" accept="image/*" className="col-span-3" />
+                <Label htmlFor="coverImage" className="text-right">Cover Image URL</Label>
+                <Input id="coverImage" name="coverImage" type="url" placeholder="https://placehold.co/300x450.png" className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="bookUrl" className="text-right">Document Link</Label>
@@ -294,5 +278,3 @@ export default function ManageOtherBooksPage() {
     </div>
   );
 }
-
-    
