@@ -38,7 +38,6 @@ export default function ExamPapersPage() {
         });
         return;
     }
-
     const downloadUrl = transformGoogleDriveLink(paper.downloadUrl, false);
     window.open(downloadUrl, '_blank');
   }

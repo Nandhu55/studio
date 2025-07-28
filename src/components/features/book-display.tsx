@@ -1,10 +1,10 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Download, Share2, BookOpen, ArrowLeft, Star } from 'lucide-react';
+import { Download, Share2, BookOpen, ArrowLeft, Star, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -19,16 +19,6 @@ interface BookDisplayProps {
 export default function BookDisplay({ book }: BookDisplayProps) {
   const { toast } = useToast();
   const router = useRouter();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-      const isAdmin = sessionStorage.getItem('isAdmin');
-      if (isLoggedIn !== 'true' && isAdmin !== 'true') {
-        router.replace('/login');
-      }
-    }
-  }, [router]);
 
   const hasPdf = book.pdfUrl && book.pdfUrl !== '#';
 
@@ -56,7 +46,7 @@ export default function BookDisplay({ book }: BookDisplayProps) {
     }
   };
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     if (!hasPdf) {
       toast({
           title: "Download Unavailable",
@@ -65,8 +55,6 @@ export default function BookDisplay({ book }: BookDisplayProps) {
       });
       return;
     }
-    
-    // Get the direct download URL
     const downloadUrl = transformGoogleDriveLink(book.pdfUrl, false);
     window.open(downloadUrl, '_blank');
   };

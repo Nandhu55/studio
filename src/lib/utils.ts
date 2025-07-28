@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function transformGoogleDriveLink(url: string, embed: boolean = false): string {
+export function transformGoogleDriveLink(url: string, forViewing: boolean = false): string {
   if (!url || typeof url !== 'string') {
     return '#';
   }
@@ -16,11 +16,11 @@ export function transformGoogleDriveLink(url: string, embed: boolean = false): s
   
   if (match && match[1]) {
     const fileId = match[1];
-    if (embed) {
-      // Use the embeddable URL for iframes
+    if (forViewing) {
+      // The preview link is better for direct viewing in a browser tab.
       return `https://drive.google.com/file/d/${fileId}/preview`;
     }
-    // Use the direct download link for downloading
+    // This link forces a download.
     return `https://drive.google.com/uc?export=download&id=${fileId}`;
   }
   
